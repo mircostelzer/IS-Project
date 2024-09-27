@@ -11,3 +11,5 @@ Sium
 
 
 Hasbulla
+
+- [] capire come funziona sto github
