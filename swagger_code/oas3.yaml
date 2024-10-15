@@ -66,7 +66,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/User'
         "400":
           description: bad input parameter
     post:
@@ -80,7 +80,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InventoryItem'
+              $ref: '#/components/schemas/User'
       responses:
         "201":
           description: item created
@@ -90,24 +90,27 @@ paths:
           description: an existing item already exists
 components:
   schemas:
-    InventoryItem:
+    User:
       required:
+      - email
       - id
-      - manufacturer
-      - name
-      - releaseDate
+      - password
       type: object
       properties:
         id:
           type: string
+          description: id univoco per l'utente
           format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
-        name:
+        email:
           type: string
-          example: Widget Adapter
-        releaseDate:
+          description: indirizzo email dell'utente
+          format: email
+          example: mario.rossi@gmail.com
+        password:
           type: string
-          format: date-time
+          description: password criptata dell'utente
+          format: password
           example: 2016-08-29T09:12:33.001Z
         manufacturer:
           $ref: '#/components/schemas/Manufacturer'
