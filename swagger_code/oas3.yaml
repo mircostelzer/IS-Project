@@ -1,131 +1,269 @@
 openapi: 3.0.0
 info:
   title: Ocio API
-  description: API della Web App Ocio
-  contact:
-    email: mirco.stelzer@studenti.unitn.it
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: API for emergencies communication and users management. 
   version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/MIRCOSTELZER/Ocio/1.0.0
-  description: Server di SwaggerHub
-- url: http://localhost:8000/api/v1
-  description: Localhost
-tags:
-- name: admins
-  description: Secured Admin-only calls
-- name: developers
-  description: Operations available to regular developers
+  - url: https://api.ocio.it/v1
+    description: Localhost
+
 paths:
-  /inventory:
+  /emergenze:
     get:
-      tags:
-      - developers
-      summary: searches inventory
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
-      operationId: searchInventory
+      summary: Ottieni la lista delle emergenze (in corso e terminate) con possibilità di filtrare
       parameters:
-      - name: searchString
-        in: query
-        description: pass an optional search string for looking up inventory
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: skip
-        in: query
-        description: number of records to skip for pagination
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-      - name: limit
-        in: query
-        description: maximum number of records to return
-        required: false
-        style: form
-        explode: true
-        schema:
-          maximum: 50
-          minimum: 0
-          type: integer
-          format: int32
+        - name: stato
+          in: query
+          description: Filtro per lo stato delle emergenze
+          required: false
+          schema:
+            type: string
+            enum: [in_corso, terminata]
+        - name: category
+          in: query
+          description: Filtro per la categoria delle emergenze
+          required: false
+          schema:
+            type: string
+            example: "Frana"
+        - name: dataInizio
+          in: query
+          description: Filtro per data di inizio dell'emergenza (dopo una certa data)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-10-25T00:00:00Z"
+        - name: keyword
+          in: query
+          description: Filtro per una o più parole chiave nel titolo o nella categoria. Può essere ripetuto per cercare più parole.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          explode: true
+          example: ["frana", "alluvione"]
       responses:
-        "200":
-          description: search results matching criteria
+        '200':
+          description: Lista delle emergenze filtrata
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Emergenza'
+      tags:
+        - Emergenze
+
+    post:
+      summary: Crea una nuova emergenza
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Emergenza'
+      responses:
+        '201':
+          description: Emergenza creata con successo
+      tags:
+        - Emergenze
+
+  /emergenze/{id}:
+    get:
+      summary: Ottieni i dettagli di una singola emergenza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dettagli dell'emergenza
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Emergenza'
+        '404':
+          description: Emergenza non trovata
+      tags:
+        - Emergenze
+
+    put:
+      summary: Aggiorna i dettagli di un'emergenza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Emergenza'
+      responses:
+        '200':
+          description: Emergenza aggiornata con successo
+        '404':
+          description: Emergenza non trovata
+      tags:
+        - Emergenze
+
+    delete:
+      summary: Termina o rimuovi un'emergenza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Emergenza terminata/rimossa con successo
+        '404':
+          description: Emergenza non trovata
+      tags:
+        - Emergenze
+
+  /users:
+    get:
+      summary: Ottieni la lista degli utenti
+      responses:
+        '200':
+          description: Lista degli utenti
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        "400":
-          description: bad input parameter
-    post:
       tags:
-      - admins
-      summary: adds an inventory item
-      description: Adds an item to the system
-      operationId: addInventory
+        - Utenti
+
+    post:
+      summary: Registra un nuovo utente
       requestBody:
-        description: Inventory item to add
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        "201":
-          description: item created
-        "400":
-          description: "invalid input, object invalid"
-        "409":
-          description: an existing item already exists
+        '201':
+          description: Utente registrato con successo
+        '400':
+          description: Richiesta non valida
+      tags:
+        - Utenti
+
+  /users/{id}:
+    get:
+      summary: Ottieni le informazioni di un utente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Informazioni dell'utente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Utente non trovato
+      tags:
+        - Utenti
+
+    delete:
+      summary: Elimina un utente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Utente eliminato con successo
+        '404':
+          description: Utente non trovato
+      tags:
+        - Utenti
+
 components:
   schemas:
     User:
-      required:
-      - email
-      - id
-      - password
       type: object
+      required:
+        - id
+        - email
+        - password
       properties:
         id:
-          type: string
-          description: id univoco per l'utente
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          type: integer
+          description: "ID dell'utente"
+          example: 10
         email:
           type: string
-          description: indirizzo email dell'utente
-          format: email
-          example: mario.rossi@gmail.com
+          description: "Email dell'utente"
+          example: "mario.rossi@gmail.com"
         password:
           type: string
-          description: password criptata dell'utente
-          format: password
-          example: 2016-08-29T09:12:33.001Z
-        manufacturer:
-          $ref: '#/components/schemas/Manufacturer'
-    Manufacturer:
-      required:
-      - name
+          description: "Password dell'utente"
+          example: "password123"
+
+    Emergenza:
       type: object
+      required:
+        - id
+        - titolo
+        - categoria
+        - dataInizio
+        - luogo
+        - stato
       properties:
-        name:
+        id:
+          type: integer
+          description: "ID dell'emergenza"
+          example: 2
+        titolo:
           type: string
-          example: ACME Corporation
-        homePage:
+          description: "Titolo dell'emergenza"
+          example: "Alluvione del sottopassaggio"
+        categoria:
           type: string
-          format: url
-          example: https://www.acme-corp.com
-        phone:
+          description: "Categoria dell'emergenza"
+          example: "Frana"
+        dataInizio:
           type: string
-          example: 408-867-5309
+          format: date-time
+          description: "Timestamp dell'inizio dell'emergenza"
+          example: "2024-10-26T10:02:00Z"
+        dataFine:
+          type: string
+          format: date-time
+          description: "Timestamp della fine dell'emergenza"
+          example: "2024-10-26T15:30:00Z"
+        luogo:
+          type: string
+          description: "Posizione o area colpita dall'emergenza"
+          example: "Via Sommarive 9"
+        stato:
+          type: string
+          enum: [in_corso, terminata]
+          default: in_corso
+        descrizione:
+          type: string
+          description: "Descrizione dell'emergenza"
+          example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilita' e' stata di conseguenza sospesa temporaneamente."
+          
+
+          
+        
