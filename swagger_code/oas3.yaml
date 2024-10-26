@@ -208,15 +208,15 @@ components:
       properties:
         id:
           type: integer
-          description: "ID dell'utente"
+          description: ID dell'utente
           example: 10
         email:
           type: string
-          description: "Email dell'utente"
+          description: Email dell'utente
           example: "mario.rossi@gmail.com"
         password:
           type: string
-          description: "Password dell'utente"
+          description: Password dell'utente
           example: "password123"
 
     Emergenza:
@@ -231,29 +231,29 @@ components:
       properties:
         id:
           type: integer
-          description: "ID dell'emergenza"
+          description: ID dell'emergenza
           example: 2
         titolo:
           type: string
-          description: "Titolo dell'emergenza"
+          description: Titolo dell'emergenza
           example: "Alluvione del sottopassaggio"
         categoria:
           type: string
-          description: "Categoria dell'emergenza"
+          description: Categoria dell'emergenza
           example: "Frana"
         dataInizio:
           type: string
           format: date-time
-          description: "Timestamp dell'inizio dell'emergenza"
+          description: Timestamp dell'inizio dell'emergenza
           example: "2024-10-26T10:02:00Z"
         dataFine:
           type: string
           format: date-time
-          description: "Timestamp della fine dell'emergenza"
+          description: Timestamp della fine dell'emergenza
           example: "2024-10-26T15:30:00Z"
         luogo:
           type: string
-          description: "Posizione o area colpita dall'emergenza"
+          description: Posizione o area colpita dall'emergenza
           example: "Via Sommarive 9"
         stato:
           type: string
@@ -261,8 +261,8 @@ components:
           default: in_corso
         descrizione:
           type: string
-          description: "Descrizione dell'emergenza"
-          example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilita' e' stata di conseguenza sospesa temporaneamente."
+          description: Descrizione dell'emergenza
+          example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilità è stata di conseguenza sospesa temporaneamente."
           
 
           
