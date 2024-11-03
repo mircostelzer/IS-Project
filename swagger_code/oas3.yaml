@@ -1,0 +1,283 @@
+openapi: 3.0.0
+info:
+  title: Ocio API
+  description: API for emergencies communication and users management. 
+  version: 1.0.1
+servers:
+  - url: https://api.ocio.it/v1
+    description: Localhost
+
+paths:
+  /emergenze:
+    get:
+      summary: Ottieni la lista delle emergenze (in corso e terminate) con possibilità di filtrare
+      parameters:
+        - name: stato
+          in: query
+          description: Filtro per lo stato delle emergenze
+          required: false
+          schema:
+            type: string
+            enum: [in_corso, terminata]
+        - name: category
+          in: query
+          description: Filtro per la categoria delle emergenze
+          required: false
+          schema:
+            type: string
+            example: "Frana"
+        - name: dataInizio
+          in: query
+          description: Filtro per data di inizio dell'emergenza (dopo una certa data)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-10-25T00:00:00Z"
+        - name: keyword
+          in: query
+          description: Filtro per una o più parole chiave nel titolo o nella categoria. Può essere ripetuto per cercare più parole.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          explode: true
+          example: ["frana", "alluvione"]
+      responses:
+        '200':
+          description: Lista delle emergenze filtrata
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Emergenza'
+      tags:
+        - Emergenze
+
+    post:
+      summary: Crea una nuova emergenza
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Emergenza'
+      responses:
+        '201':
+          description: Emergenza creata con successo. Link nell'header Location
+          headers:
+            Location:
+              description: Link alla nuova emergenza creata
+              style: simple
+              explode: false
+              schema:
+                type: string
+      tags:
+        - Emergenze
+
+  /emergenze/{id}:
+    get:
+      summary: Ottieni i dettagli di una singola emergenza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dettagli dell'emergenza
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Emergenza'
+        '404':
+          description: Emergenza non trovata
+      tags:
+        - Emergenze
+
+    put:
+      summary: Aggiorna i dettagli di un'emergenza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Emergenza'
+      responses:
+        '200':
+          description: Emergenza aggiornata con successo
+        '404':
+          description: Emergenza non trovata
+      tags:
+        - Emergenze
+
+    delete:
+      summary: Termina o rimuovi un'emergenza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Emergenza terminata/rimossa con successo
+        '404':
+          description: Emergenza non trovata
+      tags:
+        - Emergenze
+
+  /users:
+    get:
+      summary: Ottieni la lista degli utenti
+      responses:
+        '200':
+          description: Lista degli utenti
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+      tags:
+        - Utenti
+
+    post:
+      summary: Registra un nuovo utente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Utente registrato con successo. Link nell'header Location
+          headers:
+            Location:
+              description: Link al nuovo utente creato
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '400':
+          description: Richiesta non valida
+      tags:
+        - Utenti
+
+  /users/{id}:
+    get:
+      summary: Ottieni le informazioni di un utente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Informazioni dell'utente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Utente non trovato
+      tags:
+        - Utenti
+
+    delete:
+      summary: Elimina un utente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Utente eliminato con successo
+        '404':
+          description: Utente non trovato
+      tags:
+        - Utenti
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - password
+      properties:
+        id:
+          type: integer
+          description: ID dell'utente
+          example: 10
+        email:
+          type: string
+          description: Email dell'utente
+          example: "mario.rossi@gmail.com"
+        password:
+          type: string
+          description: Password dell'utente
+          example: "password123"
+
+    Emergenza:
+      type: object
+      required:
+        - id
+        - titolo
+        - categoria
+        - dataInizio
+        - luogo
+        - stato
+      properties:
+        id:
+          type: integer
+          description: ID dell'emergenza
+          example: 2
+        titolo:
+          type: string
+          description: Titolo dell'emergenza
+          example: "Alluvione del sottopassaggio"
+        categoria:
+          type: string
+          description: Categoria dell'emergenza
+          example: "Frana"
+        dataInizio:
+          type: string
+          format: date-time
+          description: Timestamp dell'inizio dell'emergenza
+          example: "2024-10-26T10:02:00Z"
+        dataFine:
+          type: string
+          format: date-time
+          description: Timestamp della fine dell'emergenza
+          example: "2024-10-26T15:30:00Z"
+        luogo:
+          type: string
+          description: Posizione o area colpita dall'emergenza
+          example: "Via Sommarive 9"
+        stato:
+          type: string
+          enum: [in_corso, terminata]
+          default: in_corso
+        descrizione:
+          type: string
+          description: Descrizione dell'emergenza
+          example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilità è stata di conseguenza sospesa temporaneamente."
+          
+
+          
+        
