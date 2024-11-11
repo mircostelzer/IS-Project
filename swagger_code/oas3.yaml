@@ -253,6 +253,7 @@ components:
           example: "Alluvione del sottopassaggio"
         categoria:
           type: string
+          enum: [frana, alluvione, ghiaccio, crollo_strutturale, incendio, neve, tempesta, caduta_albero]
           description: Categoria dell'emergenza
           example: "Frana"
         dataInizio:
