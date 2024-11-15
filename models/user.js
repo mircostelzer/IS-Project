@@ -6,6 +6,6 @@ const userSchema = new mongoose.Schema({
   /*role: { type: String, enum: ['citizen', 'operator'], default: 'citizen' }*/
 }, { timestamps: true });
 
-const Utente = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = Utente;
+module.exports = User;
