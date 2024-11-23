@@ -9,11 +9,22 @@ const getEmergencies = async (req, res) => {
   }
 };
 
+const getEmergencyById = async (req, res) => {
+  try {
+    const emergency = await Emergency.findById(req.params.id);
+    if (!emergency) return res.status(404).json({ message: "Emergency not found" });
+    res.json(emergency);
+  } catch (error) {
+    res.status(500).json({ message: "Error in emergency recovery" });
+  }
+};
+
 const createEmergency = async (req, res) => {
   try {
-    const emergency = new Emergency(req.body);
-    await emergency.save();
-    res.status(201).json(emergency);
+    let emergency = new Emergency(req.body);
+    emergencyv = await emergency.save();
+    let emergencyId = emergency._id;
+    res.location('/api/emergencies/' + emergencyId).status(201).json(emergency);
   } catch (error) {
     res.status(400).json({ message: "Error in emergency creation" });
   }
@@ -39,4 +50,4 @@ const deleteEmergency = async (req, res) => {
   }
 };
 
-module.exports = { getEmergencies, createEmergency, updateEmergency, deleteEmergency };
+module.exports = { getEmergencies, getEmergencyById, createEmergency, updateEmergency, deleteEmergency };
