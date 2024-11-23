@@ -9,11 +9,22 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error in user recovery" });
+  }
+}
+
 const createUser = async (req, res) => {
   try {
     const user = new User(req.body);
-    await user.save();
-    res.status(201).json(user);
+    user = await user.save();
+    let userId = user._id;
+    res.location('/api/users/' + userId).status(201).json(user);
   } catch (error) {
     res.status(400).json({ message: "Error in user creation" });
   }
@@ -29,4 +40,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, createUser, deleteUser };
+module.exports = { getUsers, getUserById, createUser, deleteUser };
