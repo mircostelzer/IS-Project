@@ -8,6 +8,35 @@ servers:
     description: Localhost
 
 paths:
+  /login:
+    post:
+      summary: Sends a request for the JWT
+      requestBody:
+        description: User's credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT for authentication
+        '401':
+          description: Wrong credentials
+  
   /emergencies:
     get:
       summary: Gets the list of the emergencies (in progress and ended), with the possibility to filter them
@@ -60,6 +89,8 @@ paths:
 
     post:
       summary: Creates a new emergency
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -106,6 +137,8 @@ paths:
 
     put:
       summary: Updates the details of an emergency
+      security:
+        - bearerAuth: []      
       parameters:
         - name: id
           in: path
@@ -128,6 +161,8 @@ paths:
 
     delete:
       summary: Deletes an emergency
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -207,6 +242,8 @@ paths:
 
     delete:
       summary: Deletes a user
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -290,7 +327,9 @@ components:
           type: string
           description: Description of the emergency
           example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilità è stata di conseguenza sospesa temporaneamente."
-          
 
-          
-        
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
