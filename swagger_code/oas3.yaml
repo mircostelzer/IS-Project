@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Ocio API
   description: API for emergencies communication and users management. 
-  version: 1.0.2
+  version: 1.1.0
 servers:
   - url: https://api.ocio.it/v1
     description: Localhost
@@ -24,7 +24,7 @@ paths:
                 password:
                   type: string
       responses:
-        '200':
+        '201':
           description: JWT generated successfully
           content:
             application/json:
@@ -34,8 +34,14 @@ paths:
                   token:
                     type: string
                     description: JWT for authentication
+        '404':
+          description: User not found
         '401':
           description: Wrong credentials
+        '500':
+          description: Error in token creation
+      tags:
+        - Login
   
   /emergencies:
     get:
