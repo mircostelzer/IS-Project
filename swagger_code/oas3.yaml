@@ -2,33 +2,68 @@ openapi: 3.0.0
 info:
   title: Ocio API
   description: API for emergencies communication and users management. 
-  version: 1.0.1
+  version: 1.1.0
 servers:
   - url: https://api.ocio.it/v1
     description: Localhost
 
 paths:
-  /emergenze:
+  /login:
+    post:
+      summary: Sends a request for the JWT
+      requestBody:
+        description: User's credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: JWT generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT for authentication
+        '404':
+          description: User not found
+        '401':
+          description: Wrong credentials
+        '500':
+          description: Error in token creation
+      tags:
+        - Login
+  
+  /emergencies:
     get:
-      summary: Ottieni la lista delle emergenze (in corso e terminate) con possibilità di filtrare
+      summary: Gets the list of the emergencies (in progress and ended), with the possibility to filter them
       parameters:
-        - name: stato
+        - name: state
           in: query
-          description: Filtro per lo stato delle emergenze
+          description: Filter for the state of the emergencies
           required: false
           schema:
             type: string
-            enum: [in_corso, terminata]
+            enum: [in_progress, ended]
         - name: category
           in: query
-          description: Filtro per la categoria delle emergenze
+          description: Filter for the category of the emergencies
           required: false
           schema:
             type: string
-            example: "Frana"
-        - name: dataInizio
+            enum: [frana, alluvione, ghiaccio, crollo_strutturale, incendio, neve, tempesta, caduta_albero]
+        - name: startDate
           in: query
-          description: Filtro per data di inizio dell'emergenza (dopo una certa data)
+          description: Filter based on the start date of the emergency (and forth) 
           required: false
           schema:
             type: string
@@ -36,7 +71,7 @@ paths:
             example: "2024-10-25T00:00:00Z"
         - name: keyword
           in: query
-          description: Filtro per una o più parole chiave nel titolo o nella categoria. Può essere ripetuto per cercare più parole.
+          description: Filter using one or more keywords
           required: false
           schema:
             type: array
@@ -46,40 +81,46 @@ paths:
           example: ["frana", "alluvione"]
       responses:
         '200':
-          description: Lista delle emergenze filtrata
+          description: (Filtered) list of the emergencies
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Emergenza'
+                  $ref: '#/components/schemas/Emergency'
+        '500':
+          description: Error in emergencies recovery
       tags:
-        - Emergenze
+        - Emergencies
 
     post:
-      summary: Crea una nuova emergenza
+      summary: Creates a new emergency
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Emergenza'
+              $ref: '#/components/schemas/Emergency'
       responses:
         '201':
-          description: Emergenza creata con successo. Link nell'header Location
+          description: Emergency created. Link in the Location header
           headers:
             Location:
-              description: Link alla nuova emergenza creata
+              description: Link to the new emergency
               style: simple
               explode: false
               schema:
                 type: string
+        '400':
+          description: Error in emergency creation
       tags:
-        - Emergenze
+        - Emergencies
 
   /emergenze/{id}:
     get:
-      summary: Ottieni i dettagli di una singola emergenza
+      summary: Gets a single emergency
       parameters:
         - name: id
           in: path
@@ -88,18 +129,22 @@ paths:
             type: integer
       responses:
         '200':
-          description: Dettagli dell'emergenza
+          description: Details of the emergency
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Emergenza'
+                $ref: '#/components/schemas/Emergency'
         '404':
-          description: Emergenza non trovata
+          description: Emergency not found
+        '500':
+          description: Error in emergency recovery
       tags:
-        - Emergenze
+        - Emergencies
 
     put:
-      summary: Aggiorna i dettagli di un'emergenza
+      summary: Updates the details of an emergency
+      security:
+        - bearerAuth: []      
       parameters:
         - name: id
           in: path
@@ -111,17 +156,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Emergenza'
+              $ref: '#/components/schemas/Emergency'
       responses:
         '200':
-          description: Emergenza aggiornata con successo
+          description: Emergency updated successfully
         '404':
-          description: Emergenza non trovata
+          description: Error in emergency update
       tags:
-        - Emergenze
+        - Emergency
 
     delete:
-      summary: Termina o rimuovi un'emergenza
+      summary: Deletes an emergency
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -130,29 +177,33 @@ paths:
             type: integer
       responses:
         '204':
-          description: Emergenza terminata/rimossa con successo
+          description: Emergency deleted successfully
         '404':
-          description: Emergenza non trovata
+          description: Emergency not found
+        '500':
+          description: Error in emergency deletion
       tags:
-        - Emergenze
+        - Emergencies
 
   /users:
     get:
-      summary: Ottieni la lista degli utenti
+      summary: Get a list of all the users
       responses:
         '200':
-          description: Lista degli utenti
+          description: List of the users
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '500':
+          description: Error in users recovery
       tags:
-        - Utenti
+        - Users
 
     post:
-      summary: Registra un nuovo utente
+      summary: Creates a new user
       requestBody:
         required: true
         content:
@@ -161,22 +212,22 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '201':
-          description: Utente registrato con successo. Link nell'header Location
+          description: User created. Link in the Location header
           headers:
             Location:
-              description: Link al nuovo utente creato
+              description: Link to the new user
               style: simple
               explode: false
               schema:
                 type: string
         '400':
-          description: Richiesta non valida
+          description: Error in user creation
       tags:
         - Utenti
 
   /users/{id}:
     get:
-      summary: Ottieni le informazioni di un utente
+      summary: Gets a single user
       parameters:
         - name: id
           in: path
@@ -185,18 +236,20 @@ paths:
             type: integer
       responses:
         '200':
-          description: Informazioni dell'utente
+          description: Details of the user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
-          description: Utente non trovato
+          description: Error in user recovery
       tags:
-        - Utenti
+        - Users
 
     delete:
-      summary: Elimina un utente
+      summary: Deletes a user
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -205,11 +258,13 @@ paths:
             type: integer
       responses:
         '204':
-          description: Utente eliminato con successo
+          description: User deleted successfully
         '404':
-          description: Utente non trovato
+          description: User not found
+        '500':
+          description: Error in user deletion
       tags:
-        - Utenti
+        - Users
 
 components:
   schemas:
@@ -222,63 +277,65 @@ components:
       properties:
         id:
           type: integer
-          description: ID dell'utente
+          description: ID of the user
           example: 10
         email:
           type: string
-          description: Email dell'utente
+          description: Email of the user
           example: "mario.rossi@gmail.com"
         password:
           type: string
-          description: Password dell'utente
+          description: Password of the user
           example: "password123"
 
-    Emergenza:
+    Emergency:
       type: object
       required:
         - id
-        - titolo
-        - categoria
-        - dataInizio
-        - luogo
-        - stato
+        - title
+        - category
+        - startDate
+        - location
+        - state
       properties:
         id:
           type: integer
-          description: ID dell'emergenza
+          description: ID of the emergency
           example: 2
-        titolo:
+        title:
           type: string
-          description: Titolo dell'emergenza
+          description: Title of the emergency
           example: "Alluvione del sottopassaggio"
-        categoria:
+        category:
           type: string
           enum: [frana, alluvione, ghiaccio, crollo_strutturale, incendio, neve, tempesta, caduta_albero]
-          description: Categoria dell'emergenza
-          example: "Frana"
-        dataInizio:
+          description: Category of the emergency
+          example: "frana"
+        startDate:
           type: string
           format: date-time
-          description: Timestamp dell'inizio dell'emergenza
+          description: Timestamp indicating when the emergency started
           example: "2024-10-26T10:02:00Z"
-        dataFine:
+        endDate:
           type: string
           format: date-time
-          description: Timestamp della fine dell'emergenza
+          description: Timestamp indicating when the emergency finished
           example: "2024-10-26T15:30:00Z"
-        luogo:
+        location:
           type: string
-          description: Posizione o area colpita dall'emergenza
+          description: Location of the emergency
           example: "Via Sommarive 9"
-        stato:
+        state:
           type: string
-          enum: [in_corso, terminata]
-          default: in_corso
-        descrizione:
+          enum: [in_progress, ended]
+          default: "in_corso"
+        description:
           type: string
-          description: Descrizione dell'emergenza
+          description: Description of the emergency
           example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilità è stata di conseguenza sospesa temporaneamente."
-          
 
-          
-        
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
