@@ -1,9 +1,17 @@
 const User = require('../models/user');
+const pathApiUsers = '/api/users/';
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    let users = await User.find();
+    users = users.map(user => {
+      return {
+        self: pathApiUsers + user._id,
+        email: user.email,
+        role: user.role
+      };
+    });
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: "Error in user recovery" });
   }
@@ -11,9 +19,14 @@ const getUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    let user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+    user = {
+      self: pathApiUsers + user._id,
+      email: user.email,
+      role: user.role
+    };
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: "Error in user recovery" });
   }
