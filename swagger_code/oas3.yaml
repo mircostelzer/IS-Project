@@ -163,7 +163,7 @@ paths:
         '404':
           description: Error in emergency update
       tags:
-        - Emergency
+        - Emergencies
 
     delete:
       summary: Deletes an emergency
@@ -223,7 +223,7 @@ paths:
         '400':
           description: Error in user creation
       tags:
-        - Utenti
+        - Users
 
   /users/{id}:
     get:
@@ -328,7 +328,7 @@ components:
         state:
           type: string
           enum: [in_progress, ended]
-          default: "in_corso"
+          default: "in_progress"
         description:
           type: string
           description: Description of the emergency

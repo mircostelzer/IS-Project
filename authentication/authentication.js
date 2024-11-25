@@ -15,7 +15,7 @@ router.post('', async function(req, res) {
         }
 
         if (req.params.password !== user.password) {
-            return res.status(401).json({ success: false, message: "Authentication failes: incorrect password" });
+            return res.status(401).json({ success: false, message: "Authentication failed: incorrect password" });
         }
 
         var payload = {
@@ -31,7 +31,7 @@ router.post('', async function(req, res) {
             success: true,
             message: "JWT generated successfully",
             token: token,
-            self: "api/users/" + user._id,
+            self: 'api/users/' + user._id,
             email: user.email
         });
     } catch(error) {
