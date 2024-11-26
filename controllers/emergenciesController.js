@@ -47,7 +47,7 @@ const createEmergency = async (req, res) => {
     let emergency = new Emergency(req.body);
     emergency = await emergency.save();
     let emergencyId = emergency._id;
-    res.location('/api/emergencies/' + emergencyId).status(201).json(emergency);
+    res.location(pathApiEmergencies + emergencyId).status(201).send();
   } catch (error) {
     res.status(400).json({ message: "Error in emergency creation" });
   }
