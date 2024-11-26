@@ -6,7 +6,7 @@ const User = require('../models/user');
 router.post('', async function(req, res) {
     
     try {
-        var user = User.findOne({
+        var user = await User.findOne({
             email: req.body.email
         }).exec();
     
@@ -14,13 +14,15 @@ router.post('', async function(req, res) {
             return res.status(404).json({ success: false, message: "Authentication failed: user not found" });
         }
 
-        if (req.params.password !== user.password) {
-            return res.status(401).json({ success: false, message: "Authentication failes: incorrect password" });
+        if (req.body.password !== user.password) {
+            return res.status(401).json({ success: false, message: "Authentication failed: incorrect password" });
         }
 
         var payload = {
             email: user.email,
-            password: user.password
+            id: user.id,
+            // including the role for future authorization check
+            role: user.role
         }
         var options = {
             expiresIn: 86400
@@ -31,7 +33,7 @@ router.post('', async function(req, res) {
             success: true,
             message: "JWT generated successfully",
             token: token,
-            self: "api/users/" + user._id,
+            self: 'api/users/' + user._id,
             email: user.email
         });
     } catch(error) {
