@@ -45,7 +45,7 @@ const getEmergencyById = async (req, res) => {
 const createEmergency = async (req, res) => {
   try {
     let emergency = new Emergency(req.body);
-    emergencyv = await emergency.save();
+    emergency = await emergency.save();
     let emergencyId = emergency._id;
     res.location('/api/emergencies/' + emergencyId).status(201).json(emergency);
   } catch (error) {

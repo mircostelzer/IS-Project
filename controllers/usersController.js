@@ -34,7 +34,7 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const user = new User(req.body);
+    let user = new User(req.body);
     user = await user.save();
     let userId = user._id;
     res.location('/api/users/' + userId).status(201).json(user);

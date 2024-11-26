@@ -2,7 +2,14 @@ const jwt = require('jsonwebtoken');
 
 const tokenChecker = function(req, res, next) {
 
-    var token = req.body.token || req.header['x-access-token'] || req.query.token;
+    var token;
+    const authHeader = req.headers['authorization'];
+
+    if (authHeader) {
+        token = authHeader.split(' ')[1];
+    } else {
+        token = req.body.token || req.headers['x-access-token'] || req.query.token;
+    }
 
     if (!token) {
         return res.status(401).json({ success: false, message: "Token not found"});
