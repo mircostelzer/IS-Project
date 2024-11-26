@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+import jsonwebtoken from 'jsonwebtoken';
+const { verify } = jsonwebtoken;
 
-const tokenChecker = function(req, res, next) {
-
+export const tokenChecker = function(req, res, next) {
     var token;
     const authHeader = req.headers['authorization'];
 
@@ -15,7 +15,7 @@ const tokenChecker = function(req, res, next) {
         return res.status(401).json({ success: false, message: "Token not found"});
     }
 
-    jwt.verify(token, process.env.SUPER_SECRET, function(err, decoded) {
+    verify(token, process.env.SUPER_SECRET, function(err, decoded) {
         if (err) {
             return res.status(403).json({ success: false, message: "Failed to authenticate the token"});
         }
@@ -25,7 +25,7 @@ const tokenChecker = function(req, res, next) {
     });
 }
 
-const verifyRole = function(role) {
+export const verifyRole = function(role) {
     return (req, res, next) => {
         if (req.user.role !== role) {
             return res.status(401).json({ success: false, message: "Access denied"});
@@ -33,5 +33,3 @@ const verifyRole = function(role) {
         next();
     };
 }
-
-module.exports = { tokenChecker, verifyRole };

@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+import { Router } from 'express';
+const router = Router();
+import jsonwebtoken from 'jsonwebtoken';
+const { sign } = jsonwebtoken;
+import User from '../models/user.js';
 
 router.post('', async function(req, res) {
-    
     try {
         var user = await User.findOne({
             email: req.body.email
@@ -27,7 +27,7 @@ router.post('', async function(req, res) {
         var options = {
             expiresIn: 86400
         }
-        var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
+        var token = sign(payload, process.env.SUPER_SECRET, options);
 
         return res.status(201).json({ 
             success: true,
@@ -41,4 +41,4 @@ router.post('', async function(req, res) {
     }
 } );
 
-module.exports = router;
+export default router;
