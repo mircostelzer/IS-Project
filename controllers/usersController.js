@@ -3,7 +3,7 @@ const pathApiUsers = "/api/users/";
 
 export const getUsers = async (req, res) => {
     try {
-        let users = await find();
+        let users = await User.find();
         users = users.map((user) => {
             return {
                 self: pathApiUsers + user._id,
@@ -19,7 +19,7 @@ export const getUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        let user = await findById(req.params.id);
+        let user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: "User not found" });
         user = {
             self: pathApiUsers + user._id,
@@ -47,7 +47,7 @@ export const createUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const user = await findByIdAndDelete(req.params.id);
+        const user = await User.findByIdAndDelete(req.params.id);
         if (!user) return res.status(404).json({ message: "User not found" });
         res.status(204).end();
     } catch (error) {
