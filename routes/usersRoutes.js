@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const { getUsers, getUserById, createUser, deleteUser } = require('../controllers/usersController');
-const { tokenChecker, verifyRole} = require('../authentication/verification');
+import { Router } from 'express';
+const router = Router();
+import { getUsers, getUserById, createUser, deleteUser } from '../controllers/usersController.js';
+import { tokenChecker, verifyRole } from '../authentication/verification.js';
 
 router.get('/', tokenChecker, verifyRole('operator'), getUsers);
 router.get('/:id', tokenChecker, verifyRole('operator'), getUserById);
 router.post('/', createUser);
 router.delete('/:id', tokenChecker, verifyRole('operator'), deleteUser);
 
-module.exports = router;
+export default router;

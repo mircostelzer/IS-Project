@@ -1,0 +1,44 @@
+/* src/assets/main.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --text: #e6e6e6;
+    --foreground: #12250e;
+    --background: #2b4026;
+    --primary: #45b82e;
+    --secondary: #1f321b;
+    --accent: #ffd500;
+
+    color: var(--text);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.input {
+    background-color: var(--background);
+}
+
+@keyframes shine {
+    0% {
+        -webkit-mask-position: 200%;
+    }
+    50% {
+        -webkit-mask-position: -100%;
+    }
+    100% {
+        -webkit-mask-position: -100%;
+    }
+}

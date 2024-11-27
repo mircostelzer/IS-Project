@@ -1,14 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const connectDB = require('./config/db');
-const emergenciesRoutes = require('./routes/emergenciesRoutes');
-const usersRoutes = require('./routes/usersRoutes');
-const authentication = require('./authentication/authentication');
+import dotenv from 'dotenv';
+dotenv.config();
+import express, { json } from 'express';
+import connectDB from './config/db.js';
+import emergenciesRoutes from './routes/emergenciesRoutes.js';
+import usersRoutes from './routes/usersRoutes.js';
+import authentication from './authentication/authentication.js';
 
 const app = express();
 connectDB();
 
-app.use(express.json());
+app.use(json());
 
 app.use('/api/login', authentication);
 
