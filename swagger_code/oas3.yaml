@@ -118,7 +118,7 @@ paths:
       tags:
         - Emergencies
 
-  /emergenze/{id}:
+  /emergencies/{id}:
     get:
       summary: Gets a single emergency
       parameters:
