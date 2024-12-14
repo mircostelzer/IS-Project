@@ -1,11 +1,14 @@
 <script setup>
+import Mappa from "../components/Mappa/Mappa.vue";
 </script>
 
 <template>
-    <div class="text-center w-1/2 h-32 mx-auto bg-secondary">
-        <p class="font-2xl mt-12">Pagina Home!</p>
+    <div class="max-height flex flex-row">
+        <div class="to-center w-1/3 bg-gray-600">
+            <h1 class="text-2xl">Emergenze in corso qui</h1>
+        </div>
+        <Mappa />
     </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -2,11 +2,28 @@
 </script>
 
 <template>
-    <div class="text-center w-1/2 h-32 mx-auto bg-primary">
-        <p class="font-2xl mt-12 text-secondary text-red-500">Error 404: page not found</p>
-		<RouterLink to="/">Ritorna alla home</RouterLink>
+    <div class="to-center max-height w-full background">
+        <div class="container flex flex-col justify-center text-center">
+            <p class="text-6xl">404</p>
+            <p class="mb-8">Nessuna pagina trovata!</p>
+            <RouterLink to="/">
+                <button class="btn btn-primary">Ritorna alla home</button>
+            </RouterLink>
+        </div>
     </div>
 </template>
 
 <style scoped>
+.background {
+    background-color: #181818;
+}
+
+
+.container {
+    width: min(400px, 100%);
+    height: min(300px, 100%);
+    margin: 10px;
+    border-radius: 10px;
+    background-color: var(--background);
+}
 </style>

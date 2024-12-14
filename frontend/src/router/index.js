@@ -9,9 +9,19 @@ const router = createRouter({
       component: () => import('../views/ViewHome.vue'),
     },
     {
-      path: '/emergencies',
-      name: 'emergencies',
-      component: () => import('../views/ViewEmergencies.vue'),
+      path: '/storico',
+      name: 'storico',
+      component: () => import('../views/ViewStorico.vue'),
+    },
+    {
+      path: '/profilo',
+      name: 'profilo',
+      component: () => import('../views/ViewProfilo.vue'),
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/ViewDashboard.vue'),
     },
     {
       path: '/:pathMatch(.*)',
