@@ -3,7 +3,7 @@
 
 <template>
     <div class="max-height flex flex-row">
-        <div class="to-center w-full bg-background">
+        <div class="to-center w-full div-background">
             <h1 class="text-4xl">Profilo</h1>
         </div>
     </div>

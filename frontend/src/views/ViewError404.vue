@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="to-center max-height w-full background">
+    <div class="to-center max-height w-full">
         <div class="container flex flex-col justify-center text-center">
             <p class="text-6xl">404</p>
             <p class="mb-8">Nessuna pagina trovata!</p>
@@ -14,11 +14,6 @@
 </template>
 
 <style scoped>
-.background {
-    background-color: #181818;
-}
-
-
 .container {
     width: min(400px, 100%);
     height: min(300px, 100%);

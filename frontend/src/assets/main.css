@@ -20,7 +20,11 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--background);
+
+    background-color: var(--foreground);
+    background-image: url(/texture/waves.jpg);
+    background-blend-mode: color-burn;
+    background-size: 300px;
 }
 
 #app {
@@ -41,6 +45,10 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.div-background {
+    background-color: var(--background);
 }
 
 /* Animazioni per rendere un elemento "shiny" */
