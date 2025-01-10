@@ -9,7 +9,7 @@ export default {
         // Custom dark theme palette
         colors: {
             text: "#e6e6e6",
-            foreground: "#12250e",
+            foreground: "#182515",
             background: "#2b4026",
             primary: "#45b82e",
             secondary: "#1f321b",
@@ -22,7 +22,7 @@ export default {
                 // Custom dark theme palette
                 darkTheme: {
                     text: "#e6e6e6",
-                    foreground: "#12250e",
+                    foreground: "#182515",
                     background: "#2b4026",
                     primary: "#45b82e",
                     secondary: "#1f321b",

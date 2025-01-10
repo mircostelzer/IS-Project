@@ -1,0 +1,94 @@
+/* src/assets/main.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --text: #e6e6e6;
+    --foreground: #182515;
+    --background: #2b4026;
+    --primary: #45b82e;
+    --secondary: #1f321b;
+    --accent: #ffd500;
+
+    color: var(--text);
+	--navbar-height: 64px;
+    --verdeScuro: #222722;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+
+    background-color: var(--foreground);
+    background-image: url(/texture/waves.jpg);
+    background-blend-mode: color-burn;
+    background-size: 300px;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.input {
+    background-color: var(--background);
+}
+
+.max-height {
+	height: calc(100vh - var(--navbar-height));
+}
+
+.to-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.div-background {
+    background-color: var(--background);
+}
+
+/* Animazioni per rendere un elemento "shiny" */
+@keyframes shine {
+    0% {
+        -webkit-mask-position: 150%;
+    }
+    50% {
+        -webkit-mask-position: -100%;
+    }
+    100% {
+        -webkit-mask-position: -100%;
+    }
+}
+
+.shine-anim {
+    mask-image: linear-gradient(-75deg, rgb(0, 0, 0) 35%, rgba(0, 0, 0, 0.5), rgb(0, 0, 0) 65%);
+    mask-size: 150%;
+    mask-position: 200%;
+    animation: shine 4s infinite;
+    animation-delay: 2s;
+}
+
+.shine-anim-hover {
+    mask-image: linear-gradient(-75deg, rgb(0, 0, 0) 45%, rgba(0, 0, 0, 0.8), rgb(0, 0, 0) 65%);
+    mask-size: 150%;
+    mask-position: 200%;
+}
+
+.shine-anim-hover:hover {
+    animation: shine 3s normal;
+}
+
+/* Nasconde la barra di navigazione laterale */
+* {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+  
