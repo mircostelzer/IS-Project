@@ -16,8 +16,6 @@ const requestTime = new Date().toLocaleString('it-IT', {
 });
 
 onMounted(() => {
-
-
     // Recupero i dati delle emergenze con una chiamata fetch
     fetch('http://localhost:5000/api/emergencies')
         .then(response => response.json())
@@ -44,14 +42,16 @@ onMounted(() => {
 
 <template>
     <div class="max-height flex flex-col lg:flex-row">
-        <div class="div-emergenze h-2/5 lg:h-full w-full xl:w-2/5 3xl:w-1/4 p-6">
+        <div class="div-emergenze h-2/5 lg:h-full w-full lg:max-w-xl p-6">
             <h1 class="text-2xl font-semibold my-2">&#128680 Emergenze in corso</h1>
-            <p class="text-md font-light mb-8">Ultimo aggiornamento: {{ requestTime }}</p>
+            <p class="text-md font-light mb-8">
+                Ultimo aggiornamento: <span class="text-gray-300">{{ requestTime }}</span>
+            </p>
 
             <transition-group name="fade" tag="div">
                 <div v-for="(emergency, index) in emergencies" :key="emergency.id"
                     class="collapse-emergenza collapse collapse-arrow mt-2 fade-in"
-                    :style="{ animationDelay: `${index * 0.1}s` }">
+                    :style="{ animationDelay: `${index * 0.05}s` }">
                     <input type="radio" name="lista-emergenze" />
                     <div class="collapse-title text-xl font-medium text-white">{{ emergency.title }}</div>
                     <div class="collapse-content">
@@ -82,21 +82,22 @@ onMounted(() => {
 }
 
 .collapse-emergenza {
-    background-color: #405f39;
-    transition: background-color 0.3s, transform 0.3s;
+    background-color: #555e53;
+    transition: background-color 0.3s ease-out, translate 0.3s ease-out;
 }
 
 .collapse-emergenza:hover, 
 .collapse-emergenza:focus, 
-.collapse-emergenza:focus-visible {
-    background-color: #4b6e42;
-    transform: translateX(5px);
+.collapse-emergenza:focus-visible,
+.collapse-emergenza:focus-within {
+    background-color: #405f39;
+    translate: 5px 0px;
 }
 
 .fade-in {
     opacity: 0;
     transform: translateX(-25px);
-    animation: fadeIn 0.25s ease-out forwards, transform 0.25s ease-out forwards;
+    animation: fadeIn 0.3s ease-out forwards, transform 0.3s ease-out forwards;
 }
 
 @keyframes fadeIn {
