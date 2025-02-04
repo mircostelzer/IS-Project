@@ -31,7 +31,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w-full h-full m-0 p-0">
+    <div class="w-full h-full m-0 p-0 z-40">
         <l-map :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker :lat-lng="markerDiProva"></l-marker>
