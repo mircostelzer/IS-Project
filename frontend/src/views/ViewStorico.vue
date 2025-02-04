@@ -151,7 +151,6 @@ onMounted(() => {
 
 .div-risultati {
     background-color: #23351f80;
-    overflow-y: scroll;
 }
 
 .div-risultato {
