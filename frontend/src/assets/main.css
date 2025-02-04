@@ -82,13 +82,13 @@ body {
     animation: shine 3s normal;
 }
 
-/* Nasconde la barra di navigazione laterale */
-* {
+/* Nasconde la barra di navigazione laterale (solo della pagina) */
+body {
 	scrollbar-width: none; /* Firefox */
 	-ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
 
-*::-webkit-scrollbar {
+body::-webkit-scrollbar {
 	display: none;
 }
   

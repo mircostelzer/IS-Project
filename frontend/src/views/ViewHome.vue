@@ -1,14 +1,108 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import Mappa from "../components/Mappa/Mappa.vue";
+
+const emergencies = ref([]);
+
+// Funzione per gestire la descrizione delle emergenze
+const conDescrizione = (descrizione) => {
+    return descrizione ? descrizione : '<i>Nessuna descrizione disponibile</i>';
+};
+
+// Ottengo l'ora attuale
+const requestTime = new Date().toLocaleString('it-IT', {
+    hour: '2-digit',
+    minute: '2-digit'
+});
+
+onMounted(() => {
+
+
+    // Recupero i dati delle emergenze con una chiamata fetch
+    fetch('http://localhost:5000/api/emergencies')
+        .then(response => response.json())
+        .then(data => {
+            // Modifico l'array di emergenze per formattare startDate
+            emergencies.value = data.map(emergency => {
+                return {
+                    ...emergency,
+                    startDate: new Date(emergency.startDate).toLocaleString('it-IT', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+            });
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+        });
+});
 </script>
 
 <template>
-    <div class="max-height flex flex-row">
-        <div class="to-center w-1/3 bg-gray-600">
-            <h1 class="text-2xl">Emergenze in corso qui</h1>
+    <div class="max-height flex flex-col lg:flex-row">
+        <div class="div-emergenze h-2/5 lg:h-full w-full xl:w-2/5 3xl:w-1/4 p-6">
+            <h1 class="text-2xl font-semibold my-2">&#128680 Emergenze in corso</h1>
+            <p class="text-md font-light mb-8">Ultimo aggiornamento: {{ requestTime }}</p>
+
+            <transition-group name="fade" tag="div">
+                <div v-for="(emergency, index) in emergencies" :key="emergency.id"
+                    class="collapse-emergenza collapse collapse-arrow mt-2 fade-in"
+                    :style="{ animationDelay: `${index * 0.1}s` }">
+                    <input type="radio" name="lista-emergenze" />
+                    <div class="collapse-title text-xl font-medium text-white">{{ emergency.title }}</div>
+                    <div class="collapse-content">
+                        <p class="text-sm text-gray-300 mb-4" v-html="conDescrizione(emergency.description)"></p>
+                        <div class="columns-2">
+                            <div>
+                                <p class="text-slate-100">Categoria: </p>
+                                <div class="badge badge-warning mt-1 text-sm">{{ emergency.category }}</div>
+                            </div>
+                            <div>
+                                <p class="text-slate-100">Data segnalazione: </p>
+                                <p class="text-sm text-gray-300">{{ emergency.startDate }}</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm float-end mt-3">Espandi</button>
+                    </div>
+                </div>
+            </transition-group>
         </div>
         <Mappa />
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.div-emergenze {
+    background-color: #464646bf;
+    overflow-y: scroll;
+}
+
+.collapse-emergenza {
+    background-color: #405f39;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.collapse-emergenza:hover, 
+.collapse-emergenza:focus, 
+.collapse-emergenza:focus-visible {
+    background-color: #4b6e42;
+    transform: translateX(5px);
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateX(-25px);
+    animation: fadeIn 0.25s ease-out forwards, transform 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+</style>
