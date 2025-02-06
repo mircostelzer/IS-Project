@@ -18,10 +18,5 @@ export const linkPagine = [
         titolo: "Dashboard admin", 
         link: "/dashboard", 
         icona: "LockClosedIcon"
-    },
-    {
-        titolo: "Link non funzionante!", 
-        link: "/linkchenonfunziona", 
-        icona: "XMarkIcon"
-    },
+    }
 ];

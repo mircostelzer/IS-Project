@@ -53,8 +53,8 @@ onMounted(() => {
     <div class="div-storico max-height w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
-                <MagnifyingGlassIcon class="w-10 h-10 md:w-12 md:h-12 me-2" />
-                <h1 class="text-3xl md:text-4xl text-white font-bold">Dettagli emergenza</h1>
+                <MagnifyingGlassIcon class="w-6 h-6 md:w-8 md:h-8 me-3" />
+                <h1 class="text-xl md:text-2xl text-white font-bold">Dettagli emergenza</h1>
             </div>
 
             <div v-if="emergency === null" class="div-risultati w-full h-auto rounded-lg p-4">

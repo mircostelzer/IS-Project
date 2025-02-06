@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { ClockIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon, CursorArrowRippleIcon } from "@heroicons/vue/24/solid";
+import { ClockIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon, InformationCircleIcon } from "@heroicons/vue/24/solid";
 
 const host = import.meta.env.VITE_API_BASE_URL;
 const apiEmergencies = host + '/emergencies';
@@ -143,8 +143,8 @@ onMounted(() => {
                         <div class="flex justify-end">
                             <router-link :to="`/dettagli?id=${recuperaId(emergency.self)}`">
                                 <button class="btn btn-secondary float-end mt-3">
-                                    Espandi
-                                    <CursorArrowRippleIcon class="w-4 h-4 opacity-80" />
+                                    <InformationCircleIcon class="w-5 h-5 opacity-80" />
+                                    Maggiori informazioni
                                 </button>
                             </router-link>
                         </div>

@@ -16,6 +16,7 @@
     color: var(--text);
     --navbar-height: 64px;
     --verdeScuro: #222722;
+    --input: #525d50;
 }
 
 body {
@@ -42,7 +43,7 @@ html:has(body.content-overflow-y) {
 }
 
 .input {
-    background-color: #525d50;
+    background-color: var(--input);
 }
 
 .max-height {

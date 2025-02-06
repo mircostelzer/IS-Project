@@ -29,14 +29,9 @@ const router = createRouter({
       component: () => import('../views/ViewRegistrati.vue'),
     },
     {
-      path: '/profilo',
-      name: 'profilo',
-      component: () => import('../views/ViewAccedi.vue'),
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/ViewDashboard.vue'),
+      path: '/invia_segnalazione',
+      name: 'invia_segnalazione',
+      component: () => import('../views/ViewSegnalazione.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Mappa from "../components/Mappa/Mappa.vue";
+import { ArrowsPointingOutIcon } from "@heroicons/vue/24/solid";
 
 const host = import.meta.env.VITE_API_BASE_URL;
 const apiEmergencies = host + '/emergencies';
@@ -78,7 +79,9 @@ onMounted(() => {
                             </div>
                         </div>
                         <router-link :to="`/dettagli?id=${recuperaId(emergency.self)}`">
-                            <button class="btn btn-secondary btn-sm float-end mt-3">Espandi</button>
+                            <button class="btn btn-secondary btn-sm float-end mt-3">
+                                <ArrowsPointingOutIcon class="w-4 h-4 opacity-80 -mx-0.5 mb-0.5" />Espandi
+                            </button>
                         </router-link>
                     </div>
                 </div>

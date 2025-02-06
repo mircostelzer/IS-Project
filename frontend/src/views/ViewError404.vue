@@ -1,4 +1,5 @@
 <script setup>
+import { HomeIcon } from "@heroicons/vue/24/solid";
 </script>
 
 <template>
@@ -7,7 +8,9 @@
             <p class="text-6xl">404</p>
             <p class="mb-8">Nessuna pagina trovata!</p>
             <RouterLink to="/">
-                <button class="btn btn-primary">Ritorna alla home</button>
+                <button class="btn btn-primary">
+                    <HomeIcon class="w-5 h-5 p-0 mb-0.5" />Ritorna alla home
+                </button>
             </RouterLink>
         </div>
     </div>

@@ -5,8 +5,8 @@ import { EnvelopeIcon, KeyIcon } from "@heroicons/vue/24/solid";
 <template>
     <div class="div-login max-height flex justify-center items-center">
         <div class="bg-secondary rounded-3xl p-8">
-            <form class="flex flex-col justify-center items-center">
-                <p class="text-2xl font-bold mb-6">Accedi</p>
+            <form class="flex flex-col justify-center">
+                <p class="text-2xl font-bold mb-6 text-center">Accedi</p>
                 <label class="input input-bordered flex items-center gap-2 mb-4">
                     <EnvelopeIcon class="h-5 w-5 opacity-70"></EnvelopeIcon>
                     <input type="email" class="grow" placeholder="Indirizzo email" required />
