@@ -24,7 +24,7 @@ const router = createRouter({
       component: () => import('../views/ViewDashboard.vue'),
     },
     {
-      path: '/:pathMatch(.*)',
+      path: '/:pathMatch(.*)*',
       name: 'error404',
       component: () => import('../views/ViewError404.vue'),
     }
