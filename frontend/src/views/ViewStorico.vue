@@ -2,7 +2,15 @@
 import { ref, onMounted } from 'vue';
 import { ClockIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon, CursorArrowRippleIcon } from "@heroicons/vue/24/solid";
 
+const host = import.meta.env.VITE_API_BASE_URL;
+const apiEmergencies = host + '/emergencies';
+
 const emergencies = ref([]);
+
+// Funzione per recuperare l'id delle emergenze
+const recuperaId = (self) => {
+    return self.substring(self.lastIndexOf('/') + 1);
+};
 
 // Funzione per gestire la descrizione delle emergenze
 const conDescrizione = (descrizione) => {
@@ -17,7 +25,7 @@ const requestTime = new Date().toLocaleString('it-IT', {
 
 onMounted(() => {
     // Recupero i dati delle emergenze con una chiamata fetch
-    fetch(import.meta.env.VITE_API_BASE_URL + '/emergencies')
+    fetch(apiEmergencies)
         .then(response => response.json())
         .then(data => {
             // Modifico l'array di emergenze per formattare startDate
@@ -41,7 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="div-storico max-height w-full flex justify-center">
+    <div class="div-storico w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <ClockIcon class="w-10 h-10 md:w-12 md:h-12 me-2" />
@@ -113,7 +121,7 @@ onMounted(() => {
             </div>
             <div v-else class="div-risultati w-full h-auto rounded-lg p-1 sm:p-2 md:p-4">
                 <transition-group name="fade" tag="div">
-                    <div v-for="(emergency, index) in emergencies" :key="emergency.id"
+                    <div v-for="(emergency, index) in emergencies" :key="recuperaId(emergency.self)"
                         class="div-risultato w-full p-4 mb-2 md:mb-4 rounded-md fade-in"
                         :style="{ animationDelay: `${index * 0.1}s` }">
                         <p class="text-medium text-2xl text-white">{{ emergency.title }}</p>
@@ -133,10 +141,12 @@ onMounted(() => {
                             </div>
                         </div>
                         <div class="flex justify-end">
-                            <button class="btn btn-secondary float-end mt-3">
-                                Espandi
-                                <CursorArrowRippleIcon class="w-4 h-4 opacity-80" />
-                            </button>
+                            <router-link :to="`/dettagli?id=${recuperaId(emergency.self)}`">
+                                <button class="btn btn-secondary float-end mt-3">
+                                    Espandi
+                                    <CursorArrowRippleIcon class="w-4 h-4 opacity-80" />
+                                </button>
+                            </router-link>
                         </div>
                     </div>
                 </transition-group>

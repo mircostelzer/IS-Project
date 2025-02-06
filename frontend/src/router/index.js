@@ -14,9 +14,19 @@ const router = createRouter({
       component: () => import('../views/ViewStorico.vue'),
     },
     {
+      path: '/accedi',
+      name: 'accedi',
+      component: () => import('../views/ViewAccedi.vue'),
+    },
+    {
+      path: '/registrati',
+      name: 'registrati',
+      component: () => import('../views/ViewRegistrati.vue'),
+    },
+    {
       path: '/profilo',
       name: 'profilo',
-      component: () => import('../views/ViewProfilo.vue'),
+      component: () => import('../views/ViewAccedi.vue'),
     },
     {
       path: '/dashboard',

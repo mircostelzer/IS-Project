@@ -2,7 +2,15 @@
 import { ref, onMounted } from 'vue';
 import Mappa from "../components/Mappa/Mappa.vue";
 
+const host = import.meta.env.VITE_API_BASE_URL;
+const apiEmergencies = host + '/emergencies';
+
 const emergencies = ref([]);
+
+// Funzione per recuperare l'id delle emergenze
+const recuperaId = (self) => {
+    return self.substring(self.lastIndexOf('/') + 1);
+};
 
 // Funzione per gestire la descrizione delle emergenze
 const conDescrizione = (descrizione) => {
@@ -17,7 +25,7 @@ const requestTime = new Date().toLocaleString('it-IT', {
 
 onMounted(() => {
     // Recupero i dati delle emergenze con una chiamata fetch
-    fetch(import.meta.env.VITE_API_BASE_URL + '/emergencies')
+    fetch(apiEmergencies)
         .then(response => response.json())
         .then(data => {
             // Modifico l'array di emergenze per formattare startDate
@@ -52,7 +60,7 @@ onMounted(() => {
                 <p class="text-gray-300"><i>Nessun risultato trovato...</i></p>
             </div>
             <transition-group v-else name="fade" tag="div">
-                <div v-for="(emergency, index) in emergencies" :key="emergency.id"
+                <div v-for="(emergency, index) in emergencies" :key="recuperaId(emergency.self)"
                     class="collapse-emergenza collapse collapse-arrow mt-2 fade-in"
                     :style="{ animationDelay: `${index * 0.05}s` }">
                     <input type="radio" name="lista-emergenze" />
@@ -69,7 +77,9 @@ onMounted(() => {
                                 <p class="text-sm text-gray-300">{{ emergency.startDate }}</p>
                             </div>
                         </div>
-                        <button class="btn btn-secondary btn-sm float-end mt-3">Espandi</button>
+                        <router-link :to="`/dettagli?id=${recuperaId(emergency.self)}`">
+                            <button class="btn btn-secondary btn-sm float-end mt-3">Espandi</button>
+                        </router-link>
                     </div>
                 </div>
             </transition-group>

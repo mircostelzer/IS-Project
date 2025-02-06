@@ -11,7 +11,7 @@ const attribution = 'Progetto Ocio, 2024/2025';
 const bordiTrento = ref([]);
 const coloreBordi = "#009600";
 const coloreFill = "#009600";
-const opacitaFill = "0.1";
+const opacitaFill = 0.1;
 
 const markerDiProva = [46.0625, 11.125];
 
