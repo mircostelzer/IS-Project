@@ -17,7 +17,7 @@ const requestTime = new Date().toLocaleString('it-IT', {
 
 onMounted(() => {
     // Recupero i dati delle emergenze con una chiamata fetch
-    fetch('http://localhost:5000/api/emergencies')
+    fetch(import.meta.env.VITE_API_BASE_URL + '/emergencies')
         .then(response => response.json())
         .then(data => {
             // Modifico l'array di emergenze per formattare startDate
@@ -41,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="div-storico h-100 w-full flex justify-center">
+    <div class="div-storico max-height w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <ClockIcon class="w-10 h-10 md:w-12 md:h-12 me-2" />
@@ -108,8 +108,10 @@ onMounted(() => {
                 <span class="label-text-alt">{{ emergencies.length }} risultati trovati</span>
             </div>
 
-
-            <div class="div-risultati w-full h-auto rounded-lg p-1 sm:p-2 md:p-4">
+            <div v-if="emergencies.length === 0" class="div-risultati w-full h-auto rounded-lg p-4">
+                <p class="text-gray-300"><i>Nessun risultato trovato...</i></p>
+            </div>
+            <div v-else class="div-risultati w-full h-auto rounded-lg p-1 sm:p-2 md:p-4">
                 <transition-group name="fade" tag="div">
                     <div v-for="(emergency, index) in emergencies" :key="emergency.id"
                         class="div-risultato w-full p-4 mb-2 md:mb-4 rounded-md fade-in"
