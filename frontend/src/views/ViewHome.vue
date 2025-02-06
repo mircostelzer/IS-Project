@@ -17,7 +17,7 @@ const requestTime = new Date().toLocaleString('it-IT', {
 
 onMounted(() => {
     // Recupero i dati delle emergenze con una chiamata fetch
-    fetch('http://localhost:5000/api/emergencies')
+    fetch(import.meta.env.VITE_API_BASE_URL + '/emergencies')
         .then(response => response.json())
         .then(data => {
             // Modifico l'array di emergenze per formattare startDate
@@ -48,7 +48,10 @@ onMounted(() => {
                 Ultimo aggiornamento: <span class="text-gray-300">{{ requestTime }}</span>
             </p>
 
-            <transition-group name="fade" tag="div">
+            <div v-if="emergencies.length === 0" class="div-risultati w-full h-auto">
+                <p class="text-gray-300"><i>Nessun risultato trovato...</i></p>
+            </div>
+            <transition-group v-else name="fade" tag="div">
                 <div v-for="(emergency, index) in emergencies" :key="emergency.id"
                     class="collapse-emergenza collapse collapse-arrow mt-2 fade-in"
                     :style="{ animationDelay: `${index * 0.05}s` }">
@@ -77,7 +80,7 @@ onMounted(() => {
 
 <style scoped>
 .div-emergenze {
-    background-color: #464646bf;
+    background-color: #424b43a6;
     overflow-y: scroll;
 }
 

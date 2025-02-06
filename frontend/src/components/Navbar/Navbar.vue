@@ -90,7 +90,7 @@ const listaIcone = {
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 class="text-2xl font-bold">Notifiche da Ocio</h3>
-            <p class="py-4 text-gray-300">Nessuna notifica ricevuta: sei apposto!</p>
+            <p class="py-4 text-gray-300">Nessuna notifica ricevuta: sei a posto!</p>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button></button>
