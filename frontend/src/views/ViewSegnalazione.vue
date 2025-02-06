@@ -3,7 +3,7 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
 </script>
 
 <template>
-    <div class="div-storico w-full flex justify-center">
+    <div class="div-segnalazione max-height w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="bg-secondary rounded-3xl p-8">
                 <div class="flex flex-row items-center ms mt-4 md:mt-0 mb-8">
@@ -63,7 +63,7 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
 </template>
 
 <style scoped>
-.div-storico {
+.div-segnalazione {
     background-color: #424b43a6;
     padding: min(50px, 3vw);
 }
