@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../views/ViewStorico.vue'),
     },
     {
+      path: '/dettagli',
+      name: 'dettagli',
+      component: () => import('../views/ViewDettagli.vue'),
+    },
+    {
       path: '/accedi',
       name: 'accedi',
       component: () => import('../views/ViewAccedi.vue'),
