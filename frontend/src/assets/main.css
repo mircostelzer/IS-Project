@@ -1,5 +1,5 @@
 /* src/assets/main.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -14,17 +14,25 @@
     --accent: #ffd500;
 
     color: var(--text);
-	--navbar-height: 64px;
+    --navbar-height: 64px;
     --verdeScuro: #222722;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
 
     background-color: var(--foreground);
     background-image: url(/texture/waves.jpg);
     background-blend-mode: color-burn;
     background-size: 300px;
+}
+
+html {
+    scrollbar-gutter: auto !important;
+}
+
+html:has(body.content-overflow-y) {
+    scrollbar-gutter: stable !important;
 }
 
 #app {
@@ -34,17 +42,17 @@ body {
 }
 
 .input {
-    background-color: var(--background);
+    background-color: #525d50;
 }
 
 .max-height {
-	height: calc(100vh - var(--navbar-height));
+    height: calc(100vh - var(--navbar-height));
 }
 
 .to-center {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .div-background {
@@ -65,7 +73,12 @@ body {
 }
 
 .shine-anim {
-    mask-image: linear-gradient(-75deg, rgb(0, 0, 0) 35%, rgba(0, 0, 0, 0.5), rgb(0, 0, 0) 65%);
+    mask-image: linear-gradient(
+        -75deg,
+        rgb(0, 0, 0) 35%,
+        rgba(0, 0, 0, 0.5),
+        rgb(0, 0, 0) 65%
+    );
     mask-size: 150%;
     mask-position: 200%;
     animation: shine 4s infinite;
@@ -73,7 +86,12 @@ body {
 }
 
 .shine-anim-hover {
-    mask-image: linear-gradient(-75deg, rgb(0, 0, 0) 45%, rgba(0, 0, 0, 0.8), rgb(0, 0, 0) 65%);
+    mask-image: linear-gradient(
+        -75deg,
+        rgb(0, 0, 0) 45%,
+        rgba(0, 0, 0, 0.8),
+        rgb(0, 0, 0) 65%
+    );
     mask-size: 150%;
     mask-position: 200%;
 }
@@ -82,13 +100,12 @@ body {
     animation: shine 3s normal;
 }
 
-/* Nasconde la barra di navigazione laterale */
-* {
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none;  /* Internet Explorer 10+ */
+/* Nasconde la barra di navigazione laterale (solo della pagina) */
+body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-*::-webkit-scrollbar {
-	display: none;
+body::-webkit-scrollbar {
+    display: none;
 }
-  
