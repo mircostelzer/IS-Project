@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Ocio API
   description: API for emergencies communication and users management. 
-  version: 1.1.0
+  version: 1.2.0
 servers:
   - url: https://api.ocio.it/v1
     description: Localhost
@@ -126,7 +126,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Details of the emergency
@@ -150,7 +150,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       requestBody:
         required: true
         content:
@@ -161,6 +161,8 @@ paths:
         '200':
           description: Emergency updated successfully
         '404':
+          description: Emergency not found 
+        '400':
           description: Error in emergency update
       tags:
         - Emergencies
@@ -174,7 +176,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '204':
           description: Emergency deleted successfully
@@ -233,7 +235,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Details of the user
@@ -242,6 +244,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
+          description: User not found
+        '400':
           description: Error in user recovery
       tags:
         - Users
@@ -255,7 +259,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '204':
           description: User deleted successfully
@@ -265,6 +269,121 @@ paths:
           description: Error in user deletion
       tags:
         - Users
+  
+  /reports:
+    get:
+      summary: Retrieve all reports
+      security: 
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of the reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+        '500':
+          description: Error in reports recovery
+      tags:
+        - Reports
+
+    post:
+      summary: Creates a new report
+      security:
+        - bearerAuth: []      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+      responses:
+        '201':
+          description: Report created. Link in the Location header
+          headers:
+            Location:
+              description: Link to the new report
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '400':
+          description: Error in report creation
+      tags:
+        - Reports
+
+  /reports/{id}:
+    get:
+      summary: Gets a single report
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '404':
+          description: Report not found
+        '500':
+          description: Error in report recovery
+      tags:
+        - Reports
+
+    put:
+      summary: Updates a report
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+      responses:
+        '200':
+          description: Report updated successfully
+        '404':
+          description: Report not found
+        '400':
+          description: Error in report update
+      tags:
+        - Reports
+
+    delete:
+      summary: Deletes a report
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Report deleted successfully
+        '404':
+          description: Report not found
+        '500':
+          description: Error in report deletion
+      tags:
+        - Reports
 
 components:
   schemas:
@@ -276,9 +395,9 @@ components:
         - password
       properties:
         id:
-          type: integer
+          type: string
           description: ID of the user
-          example: 10
+          example: "65f4b8a1d2e3a5b6c7f8d7w1"
         email:
           type: string
           description: Email of the user
@@ -299,9 +418,9 @@ components:
         - state
       properties:
         id:
-          type: integer
+          type: string
           description: ID of the emergency
-          example: 2
+          example: "65f4b8a1d2e3a5b6c7f8d3a8"
         title:
           type: string
           description: Title of the emergency
@@ -334,6 +453,48 @@ components:
           description: Description of the emergency
           example: "I forti venti hanno causato la caduta di un albero sulla strada in via Sommarive, la viabilità è stata di conseguenza sospesa temporaneamente."
 
+    Report:
+      type: object
+      required:
+        - id
+        - startDate
+        - location
+        - state
+        - description
+      properties:
+        id:
+          type: string
+          description: ID of the report
+          example: "65f4b8a1d2e3a5b6c7f8d9e0"
+        startDate:
+          type: string
+          format: date-time
+          description: Timestamp indicating when the emergency was reported
+          example: "2024-10-25T10:00:00Z"
+        location:
+          type: string
+          description: Location of the reported emergency
+          example: "Via Sommarive 9"
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              description: Latitude of the emergency location
+              example: 46.066422
+            lon:
+              type: number
+              description: Longitude of the emergency location
+              example: 11.149765
+        state:
+          type: string
+          enum: [pending, approved, rejected]
+          default: "pending"
+        description:
+          type: string
+          description: Description of the report
+          example: "A landslide has partially blocked the road, making it dangerous to drive."
+  
   securitySchemes:
     bearerAuth:
       type: http
