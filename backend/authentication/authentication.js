@@ -21,7 +21,6 @@ router.post('', async function(req, res) {
         var payload = {
             email: user.email,
             id: user.id,
-            // including the role for future authorization check
             role: user.role
         }
         var options = {
