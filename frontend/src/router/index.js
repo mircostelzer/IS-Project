@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import('../views/ViewRegistrati.vue'),
     },
     {
+      path: '/profilo',
+      name: 'profilo',
+      component: () => import('../views/ViewProfilo.vue'),
+    },
+    {
       path: '/invia_segnalazione',
       name: 'invia_segnalazione',
       component: () => import('../views/ViewSegnalazione.vue'),

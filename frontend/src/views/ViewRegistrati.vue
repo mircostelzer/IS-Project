@@ -1,33 +1,131 @@
 <script setup>
+import Toast from "../components/Toast/Toast.vue";
+import { validateEmail } from "@/data/validation";
+
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router';
 import { EnvelopeIcon, KeyIcon } from "@heroicons/vue/24/solid";
+
+const router = useRouter();
+
+const apiLogin = import.meta.env.VITE_API_BASE_URL + '/users'
+const email = ref()
+const password = ref()
+const confirmPassword = ref()
+
+const showToast = ref(false);
+const toastType = ref()
+const toastTitle = ref()
+const toastMsg = ref()
+
+async function register() {
+    if (!email.value) {
+        createToast("warning", "Attenzione!", "L'email non può essere vuota");
+        return;
+    }
+
+    if (!validateEmail(email.value)) {
+        createToast("error", "Errore!", "Indirizzo email non valido");
+        return;
+    }
+
+    if (password.value.length < 8) {
+        createToast("warning", "Attenzione!", "Inserisci una password di almeno 8 caratteri");
+        return;
+    }
+
+    if (password.value === "") {
+        createToast("warning", "Attenzione!", "La password non può essere vuota");
+        return;
+    }
+
+    if (password.value !== confirmPassword.value) {
+        createToast("warning", "Attenzione!", "Le password non corrispondono");
+        return;
+    }
+
+    try {
+        const resp = await fetch(apiLogin, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                email: email.value, 
+                password: password.value
+            }),
+        });
+
+        if (resp.ok) {
+            router.push({ path: '/accedi', query: { fromLogin: 'true' } });
+        } else {
+            const errorData = await resp.json();
+            createToast("error", "Errore!", errorData.message);
+        }
+    } catch (error) {
+        createToast("error", "Errore!", error.message);
+    }
+};
+
+function createToast(type, title, msg) {
+    showToast.value = true;
+
+    toastType.value = type;
+    toastTitle.value = title;
+    toastMsg.value = msg;
+
+    setTimeout(() => {
+        showToast.value = false;
+    }, 5000);
+}
+
+function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+}
+
+onMounted(() => {
+    google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse
+    });
+
+    google.accounts.id.renderButton(
+        document.getElementById("registratiConGoogle"),
+        {
+            text: 'signup_with',
+            size: 'large',
+            theme: 'outline',
+            logo_alignment: 'center'
+        }
+    );
+
+    google.accounts.id.prompt();
+});
 </script>
 
 <template>
+    <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
+
     <div class="div-login max-height flex justify-center items-center">
         <div class="bg-secondary rounded-3xl p-8">
             <form class="flex flex-col justify-center">
                 <p class="text-2xl font-bold mb-6 text-center">Registrati</p>
                 <label class="input input-bordered flex items-center gap-2 mb-4">
                     <EnvelopeIcon class="h-5 w-5 opacity-70"></EnvelopeIcon>
-                    <input type="email" class="grow" placeholder="Indirizzo email" required />
+                    <input v-model="email" type="email" class="grow" placeholder="Indirizzo email" required />
                 </label>
                 <label class="input input-bordered flex items-center gap-2 mb-4">
                     <KeyIcon class="h-5 w-5 opacity-70"></KeyIcon>
-                    <input type="password" class="grow" placeholder="Password" required />
+                    <input v-model="password" type="password" class="grow" placeholder="Password" required />
                 </label>
-                <label class="input input-bordered flex items-center gap-2 mb-3">
+                <label class="input input-bordered flex items-center gap-2">
                     <KeyIcon class="h-5 w-5 opacity-70"></KeyIcon>
-                    <input type="password" class="grow" placeholder="Conferma password" required />
+                    <input v-model="confirmPassword" type="password" class="grow" placeholder="Conferma password"
+                        required />
                 </label>
-                <label class="label cursor-pointer justify-normal">
-                    <input type="checkbox" class="toggle toggle-warning toggle-xs me-2" />
-                    <span class="label-text text-xs"><b>PER DEMO:</b> con privilegi operatore</span>
-                </label>
-                <input type="submit" value="Registrati" class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
+                <input @click="register()" type="button" value="Registrati"
+                    class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
             </form>
-            <p class="text-gray-400 text-sm text-center my-3">oppure</p>
-            <input type="submit" value="Registrati con Google"
-                class="btn btn-foreground btn-outline btn-block rounded-lg" />
+            <p class="text-gray-400 text-sm text-center mt-2 mb-3">oppure</p>
+            <div id="registratiConGoogle"></div>
             <router-link to="/accedi">
                 <p class="text-center text-sm mt-12">
                     Già registrato? <a class="link link-primary" href="/accedi.vue">Accedi!</a>

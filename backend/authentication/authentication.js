@@ -33,7 +33,8 @@ router.post('', async function(req, res) {
             message: "JWT generated successfully",
             token: token,
             self: 'api/users/' + user._id,
-            email: user.email
+            email: user.email,
+            role: user.role
         });
     } catch(error) {
         res.status(500).json({ message: "Error in token creation"});
