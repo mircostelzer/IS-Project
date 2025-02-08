@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/',
@@ -14,14 +14,24 @@ const router = createRouter({
       component: () => import('../views/ViewStorico.vue'),
     },
     {
-      path: '/profilo',
-      name: 'profilo',
-      component: () => import('../views/ViewProfilo.vue'),
+      path: '/dettagli',
+      name: 'dettagli',
+      component: () => import('../views/ViewDettagli.vue'),
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/ViewDashboard.vue'),
+      path: '/accedi',
+      name: 'accedi',
+      component: () => import('../views/ViewAccedi.vue'),
+    },
+    {
+      path: '/registrati',
+      name: 'registrati',
+      component: () => import('../views/ViewRegistrati.vue'),
+    },
+    {
+      path: '/invia_segnalazione',
+      name: 'invia_segnalazione',
+      component: () => import('../views/ViewSegnalazione.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

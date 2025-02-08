@@ -2,7 +2,7 @@
 import { RouterLink, RouterView } from "vue-router";
 import OcioDinamicoLetsgoski from "./OcioDinamicoLetsgoski.vue";
 
-import { linkPagine } from "../../data/linkPagine.js";
+import { linkPagine } from "../../data/pagineNavbar.js";
 
 import {
     Bars3BottomLeftIcon,
@@ -13,7 +13,13 @@ import {
     UserIcon,
     LockClosedIcon,
     XMarkIcon,
+    EllipsisHorizontalCircleIcon
 } from "@heroicons/vue/24/solid";
+
+// Per chiudere il menu della navbar dopo il click ad un'altra pagina
+function chiudiMenuNavbar() {
+    document.getElementById("navbarDrawer").checked = false;
+}
 
 // Per caricare le icone del menu laterale in maniera dinamica
 function caricaIcona(nomeIcona) {
@@ -44,9 +50,41 @@ const listaIcone = {
                     <div class="divider"></div>
                     <ul class="p-0">
                         <li v-for="(item, index) in linkPagine" :key="index" class="menu-title px-0">
-                            <router-link :to="item.link" class="px-0 flex">
+                            <router-link :to="item.link" class="px-0 flex" @click="chiudiMenuNavbar()">
                                 <component :is="caricaIcona(item.icona)" class="size-6 mx-2" />
                                 <p class="ms-1 mt-0.5">{{ item.titolo }}</p>
+                            </router-link>
+                        </li>
+                        <div class="divider"></div>
+                        <p class="text-lg text-primary">Link temporanei:</p>
+                        <li class="menu-title px-0">
+                            <router-link to="/pubblica_comunicazione" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Form invio comunicazione</p>
+                            </router-link>
+                        </li>
+                        <li class="menu-title px-0">
+                            <router-link to="/invia_segnalazione" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Form invio segnalazione</p>
+                            </router-link>
+                        </li>
+                        <li class="menu-title px-0">
+                            <router-link to="/accedi" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Pagina accesso</p>
+                            </router-link>
+                        </li>
+                        <li class="menu-title px-0">
+                            <router-link to="/registrati" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Pagina registrazione</p>
+                            </router-link>
+                        </li>
+                        <li class="menu-title px-0">
+                            <router-link to="/linknonfunzionante" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <XMarkIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Link non funzionante!</p>
                             </router-link>
                         </li>
                     </ul>
