@@ -4,8 +4,10 @@ info:
   description: API for emergencies communication and users management. 
   version: 1.2.0
 servers:
-  - url: https://api.ocio.it/v1
+  - url: https://localhost:5000/api
     description: Localhost
+  - url: https://ocio-backend.onrender.com/api
+    description: Main backend deployment
 
 paths:
   /login:
