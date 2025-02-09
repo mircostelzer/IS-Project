@@ -3,7 +3,17 @@ const pathApiEmergencies = "/api/emergencies/";
 
 export const getEmergencies = async (req, res) => {
     try {
-        let emergencies = await Emergency.find();
+        const { state, category} = req.query;
+        let filter = {};
+        if (state && (state === "in_progress" || state === "ended")) {
+            filter.state = state;
+        }
+
+        if (category) {
+            filter.category = category;
+        }
+
+        let emergencies = await Emergency.find(filter);
         emergencies = emergencies.map((emergency) => {
             return {
                 self: pathApiEmergencies + emergency._id,
