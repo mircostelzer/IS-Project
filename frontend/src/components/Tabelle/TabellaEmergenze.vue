@@ -50,19 +50,19 @@ const props = defineProps({
                             <div class="badge badge-sm badge-primary">{{ emergency.state }}</div>
                         </td>
                         <td class="pe-12">{{ emergency.location }}</td>
-                        <th class="px-1">
+                        <th class="px-1 size-0">
                             <router-link :to="`/dettagli?id=${getEmergencyId(emergency.self)}`">
                                 <button class="btn btn-xs btn-info btn-square btn-outline">
                                     <EyeIcon class="size-4 text-white opacity-80" />
                                 </button>
                             </router-link>
                         </th>
-                        <th class="px-1">
+                        <th class="px-1 size-0">
                             <button class="btn btn-xs btn-info btn-square btn-outline">
                                 <Cog6ToothIcon class="size-4 text-white opacity-80" />
                             </button>
                         </th>
-                        <th class="px-1 pe-2">
+                        <th class="px-1 size-0 pe-4">
                             <button class="btn btn-xs btn-error btn-square btn-outline">
                                 <TrashIcon class="size-4 text-white opacity-80" />
                             </button>

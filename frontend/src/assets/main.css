@@ -76,6 +76,63 @@ body {
 
 
 
+/* Formattazione degli elementi di ricerca di Algolia */
+.ais-SearchBox {
+    width: 100%;
+}
+
+.ais-SearchBox-input {
+    height: 44px;
+    border: 0 !important;
+}
+
+.ais-InfiniteHits-loadMore {
+    font-size: 1rem !important;
+    align-self: center;
+}
+
+.ais-RefinementList-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ais-RefinementList-item {
+    background-color: white;
+    border-radius: 0.25rem;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    height: 35.2px;
+}
+
+.ais-RefinementList-item--selected {
+    background-color: #91df82;
+    color: var(--foreground);
+}
+
+.ais-RefinementList-labelText {
+    color: black;
+    margin: 0 4px;
+}
+
+.ais-RefinementList-label {
+    display: flex;
+    align-items: center;
+}
+
+.ais-Stats-text {
+    color: var(--text);
+}
+
+.ais-InfiniteHits-item {
+    padding: 0 !important;
+    width: 100% !important;
+    border: 0 !important;
+    box-shadow: 0 0 0 0 #fff !important;
+}
+
+
+
 /* Nasconde la barra di navigazione laterale e la sua spaziatura */
 body {
     scrollbar-width: none; /* Firefox */

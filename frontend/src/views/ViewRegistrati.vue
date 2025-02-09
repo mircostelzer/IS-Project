@@ -18,7 +18,8 @@ const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
 
-async function register() {
+async function register(withGoogle) {
+    // Controllo degli input
     if (!email.value) {
         createToast("warning", "Attenzione!", "L'email non può essere vuota");
         return;
@@ -44,16 +45,16 @@ async function register() {
         return;
     }
 
+    // In base al tipo di accesso, modifico il corpo della richiesta POST
+    const bodyData = withGoogle ? { googleToken: googleToken } : { email: email.value, password: password.value };
+
     try {
         const resp = await fetch(apiLogin, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                email: email.value, 
-                password: password.value
-            }),
+            body: JSON.stringify(bodyData),
         });
-        
+
         // Se la registrazione va a buon fine, reindirizzo alla pagina di login
         if (resp.ok) {
             router.push({ path: '/accedi', query: { fromRegister: 'true' } });
@@ -65,10 +66,6 @@ async function register() {
         createToast("error", "Errore!", error.message);
     }
 };
-
-function handleCredentialResponse(response) {
-    console.log("Encoded JWT ID token: " + response.credential);
-}
 
 onMounted(() => {
     google.accounts.id.initialize({
@@ -88,6 +85,14 @@ onMounted(() => {
 
     google.accounts.id.prompt();
 });
+
+function handleCredentialResponse(response) {
+    if (response.credential) {
+        googleToken.value = response.credential;
+        console.log("Registrazione con Google effettuata");
+        login(true);
+    }
+}
 
 function createToast(type, title, msg) {
     showToast.value = true;

@@ -13,13 +13,15 @@ const router = useRouter();
 const apiLogin = import.meta.env.VITE_API_BASE_URL + '/login'
 const email = ref()
 const password = ref()
+const googleToken = ref()
 
 const showToast = ref(false);
 const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
 
-function login() {
+function login(withGoogle) {
+    // Controllo degli input
     if (!email.value) {
         createToast("warning", "Attenzione!", "L'email non può essere vuota");
         return;
@@ -40,13 +42,13 @@ function login() {
         return;
     }
 
+    // In base al tipo di accesso, modifico il corpo della richiesta POST
+    const bodyData = withGoogle ? { googleToken: googleToken } : { email: email.value, password: password.value };
+
     fetch(apiLogin, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            email: email.value,
-            password: password.value
-        }),
+        body: JSON.stringify(bodyData),
     }).then((resp) => {
         // Se la'accesso va a buon fine, recupero i dati dell'utente e lo reindirizzo alla pagina del profilo
         if (resp.ok) {
@@ -61,10 +63,6 @@ function login() {
         }
     });
 };
-
-function handleCredentialResponse(response) {
-    console.log("Encoded JWT ID token: " + response.credential);
-}
 
 onMounted(() => {
     // Toast di conferma registrazione
@@ -95,6 +93,14 @@ onMounted(() => {
     google.accounts.id.prompt();
 });
 
+function handleCredentialResponse(response) {
+    if (response.credential) {
+        googleToken.value = response.credential;
+        console.log("Accesso con Google effettuato");
+        login(true);
+    }
+}
+
 function createToast(type, title, msg) {
     showToast.value = true;
 
@@ -123,7 +129,7 @@ function createToast(type, title, msg) {
                     <KeyIcon class="h-5 w-5 opacity-70"></KeyIcon>
                     <input v-model="password" type="password" class="grow" placeholder="Password" required />
                 </label>
-                <input @click="login()" type="button" value="Accedi"
+                <input @click="login(false)" type="button" value="Accedi"
                     class="btn btn-primary btn-outline btn-block rounded-lg" />
             </form>
             <p class="text-gray-400 text-sm text-center mt-2 mb-3">oppure</p>
