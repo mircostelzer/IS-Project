@@ -3,11 +3,12 @@ import Toast from "../components/Toast/Toast.vue";
 import { validateEmail } from "@/data/validation";
 
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { setLoggedUser } from '../states/loggedUser.js'
 import { EnvelopeIcon, KeyIcon } from "@heroicons/vue/24/solid";
 
 const route = useRoute();
+const router = useRouter();
 
 const apiLogin = import.meta.env.VITE_API_BASE_URL + '/login'
 const email = ref()
@@ -47,10 +48,11 @@ function login() {
             password: password.value
         }),
     }).then((resp) => {
+        // Se la'accesso va a buon fine, recupero i dati dell'utente e lo reindirizzo alla pagina del profilo
         if (resp.ok) {
-            return resp.json().then(function (data) {
-                setLoggedUser(data);
-                createToast("success", "Successo!", "Login effettuato con successo");
+            return resp.json().then(function (userData) {
+                setLoggedUser(userData);
+                router.push({ path: '/profilo', query: { fromLogin: 'true' } });
             });
         } else {
             resp.json().then((errorData) => {
@@ -60,26 +62,19 @@ function login() {
     });
 };
 
-function createToast(type, title, msg) {
-    showToast.value = true;
-
-    toastType.value = type;
-    toastTitle.value = title;
-    toastMsg.value = msg;
-
-    setTimeout(() => {
-        showToast.value = false;
-    }, 5000);
-}
-
 function handleCredentialResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
 }
 
 onMounted(() => {
     // Toast di conferma registrazione
-    if (route.query.fromLogin === 'true') {
+    if (route.query.fromRegister === 'true') {
         createToast("success", "Successo!", "Account creato con successo");
+    }
+
+    // Toast di reindirizzamento accesso
+    if (route.query.fromProfile === 'true') {
+        createToast("info", "Accedi!", "Per visualizzare il tuo profilo, effettua l'accesso");
     }
 
     google.accounts.id.initialize({
@@ -99,12 +94,24 @@ onMounted(() => {
 
     google.accounts.id.prompt();
 });
+
+function createToast(type, title, msg) {
+    showToast.value = true;
+
+    toastType.value = type;
+    toastTitle.value = title;
+    toastMsg.value = msg;
+
+    setTimeout(() => {
+        showToast.value = false;
+    }, 5000);
+}
 </script>
 
 <template>
     <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
 
-    <div class="div-login max-height flex justify-center items-center">
+    <div class="div-principale flex justify-center items-center">
         <div class="bg-secondary rounded-3xl p-8">
             <form class="flex flex-col justify-center">
                 <p class="text-2xl font-bold mb-6 text-center">Accedi</p>
@@ -131,8 +138,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.div-login {
-    background-color: #424b43a6;
+.div-principale {
     padding: min(50px, 3vw);
 }
 </style>

@@ -93,7 +93,6 @@ onMounted(() => {
 
 <style scoped>
 .div-emergenze {
-    background-color: #424b43a6;
     overflow-y: scroll;
 }
 

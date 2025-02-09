@@ -53,9 +53,10 @@ async function register() {
                 password: password.value
             }),
         });
-
+        
+        // Se la registrazione va a buon fine, reindirizzo alla pagina di login
         if (resp.ok) {
-            router.push({ path: '/accedi', query: { fromLogin: 'true' } });
+            router.push({ path: '/accedi', query: { fromRegister: 'true' } });
         } else {
             const errorData = await resp.json();
             createToast("error", "Errore!", errorData.message);
@@ -64,18 +65,6 @@ async function register() {
         createToast("error", "Errore!", error.message);
     }
 };
-
-function createToast(type, title, msg) {
-    showToast.value = true;
-
-    toastType.value = type;
-    toastTitle.value = title;
-    toastMsg.value = msg;
-
-    setTimeout(() => {
-        showToast.value = false;
-    }, 5000);
-}
 
 function handleCredentialResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
@@ -99,12 +88,24 @@ onMounted(() => {
 
     google.accounts.id.prompt();
 });
+
+function createToast(type, title, msg) {
+    showToast.value = true;
+
+    toastType.value = type;
+    toastTitle.value = title;
+    toastMsg.value = msg;
+
+    setTimeout(() => {
+        showToast.value = false;
+    }, 5000);
+}
 </script>
 
 <template>
     <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
 
-    <div class="div-login max-height flex justify-center items-center">
+    <div class="div-principale flex justify-center items-center">
         <div class="bg-secondary rounded-3xl p-8">
             <form class="flex flex-col justify-center">
                 <p class="text-2xl font-bold mb-6 text-center">Registrati</p>
@@ -136,8 +137,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.div-login {
-    background-color: #424b43a6;
+.div-principale {
     padding: min(50px, 3vw);
 }
 </style>

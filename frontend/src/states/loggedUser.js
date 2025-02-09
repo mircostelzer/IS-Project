@@ -1,32 +1,36 @@
 import { reactive } from 'vue'
 
-// Funzione per recuperare l'id delle emergenze
-const recuperaId = (self) => {
-    !self ? null : self.substring(self.lastIndexOf('/') + 1);
-};
-
 const loggedUser = reactive({
+    self: undefined,
     token: undefined,
-    email: undefined,
-    role: undefined,
     id: undefined,
-    self: undefined
+    email: undefined,
+    hiddenPassword: undefined,
+    role: undefined,
+    createdAt: undefined,
+    updatedAt: undefined
 })
 
 function setLoggedUser (data) {
-    loggedUser.token = data.token;
-    loggedUser.email = data.email;
-    loggedUser.role = data.role;
-    loggedUser.id = recuperaId(data.self);
     loggedUser.self = data.self;
+    loggedUser.token = data.token;
+    loggedUser.id = data.id;
+    loggedUser.email = data.email;
+    loggedUser.hiddenPassword = data.hiddenPassword;
+    loggedUser.role = data.role;
+    loggedUser.createdAt = data.createdAt;
+    loggedUser.updatedAt = data.updatedAt;
 }
 
 function clearLoggedUser () {
-    loggedUser.token = undefined;
-    loggedUser.email = undefined;
-    loggedUser.role = undefined;
-    loggedUser.id = undefined;
     loggedUser.self = undefined;
+    loggedUser.token = undefined;
+    loggedUser.id = undefined;
+    loggedUser.email = undefined;
+    loggedUser.hiddenPassword = undefined;
+    loggedUser.role = undefined;
+    loggedUser.createdAt = undefined;
+    loggedUser.updatedAt = undefined;
 }
 
 export { loggedUser, setLoggedUser, clearLoggedUser }

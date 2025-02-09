@@ -50,7 +50,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="div-storico max-height w-full flex justify-center">
+    <div class="div-principale w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <MagnifyingGlassIcon class="w-6 h-6 md:w-8 md:h-8 me-3" />
@@ -93,8 +93,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.div-storico {
-    background-color: #424b43a6;
+.div-principale {
     padding: min(50px, 3vw);
 }
 

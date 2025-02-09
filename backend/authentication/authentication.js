@@ -61,9 +61,12 @@ router.post("", async function (req, res) {
             }
 
             const payload = {
-                email: user.email,
                 id: user.id,
+                email: user.email,
+                hiddenPassword: hidePassword(user.password),
                 role: user.role,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
             };
             const options = {
                 expiresIn: 86400,
@@ -75,13 +78,22 @@ router.post("", async function (req, res) {
                 message: "JWT generated successfully",
                 token: token,
                 self: "api/users/" + user._id,
+                id: user.id,
                 email: user.email,
+                hiddenPassword: hidePassword(user.password),
                 role: user.role,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
             });
         }
     } catch (error) {
         res.status(500).json({ message: "Error in token creation" });
     }
 });
+
+// Funzione per ottenere una versione nascosta della password
+function hidePassword(password) {
+    return password.replace(/./g, '*');
+};
 
 export default router;

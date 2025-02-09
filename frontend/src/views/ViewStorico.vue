@@ -49,7 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="div-storico w-full flex justify-center">
+    <div class="div-principale w-full my-12 flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <ClockIcon class="w-10 h-10 md:w-12 md:h-12 me-2" />
@@ -157,7 +157,6 @@ onMounted(() => {
 
 <style scoped>
 .div-storico {
-    background-color: #424b43a6;
     padding: min(50px, 3vw);
 }
 

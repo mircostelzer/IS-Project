@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+/* Classi principali del sito */
 :root {
     --text: #e6e6e6;
     --foreground: #182515;
@@ -22,18 +25,10 @@
 body {
     font-family: "Inter", sans-serif;
 
-    background-color: var(--foreground);
+    background-color: #1f2520;
     background-image: url(/texture/waves.jpg);
-    background-blend-mode: color-burn;
+    background-blend-mode: overlay;
     background-size: 300px;
-}
-
-html {
-    scrollbar-gutter: auto !important;
-}
-
-html:has(body.content-overflow-y) {
-    scrollbar-gutter: stable !important;
 }
 
 #app {
@@ -42,10 +37,9 @@ html:has(body.content-overflow-y) {
     min-height: 100vh;
 }
 
-.input {
-    background-color: var(--input);
-}
 
+
+/* Classi per utilità varie */
 .max-height {
     height: calc(100vh - var(--navbar-height));
 }
@@ -56,9 +50,51 @@ html:has(body.content-overflow-y) {
     justify-content: center;
 }
 
-.div-background {
-    background-color: var(--background);
+
+
+/* Formattazione degli elementi DaisyUi */
+.input {
+    background-color: var(--input);
 }
+
+.table-zebra :where(.table-pin-rows thead tr) {
+    background-color: var(--foreground);
+}
+
+.table-zebra tbody tr:nth-child(odd) {
+    background-color: #586a58;
+}
+
+.table-zebra tbody tr:nth-child(even) {
+    background-color: #4b5c4b;
+}
+
+.table-zebra tbody tr.hover:nth-child(odd):hover,
+.table-zebra tbody tr.hover:nth-child(even):hover {
+    background-color: #4e6f4e;
+}
+
+
+
+/* Nasconde la barra di navigazione laterale e la sua spaziatura */
+body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    scrollbar-gutter: auto !important;
+}
+
+html:has(body.content-overflow-y) {
+    scrollbar-gutter: stable !important;
+}
+
+
 
 /* Animazioni per rendere un elemento "shiny" */
 @keyframes shine {
@@ -99,14 +135,4 @@ html:has(body.content-overflow-y) {
 
 .shine-anim-hover:hover {
     animation: shine 3s normal;
-}
-
-/* Nasconde la barra di navigazione laterale (solo della pagina) */
-body {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-body::-webkit-scrollbar {
-    display: none;
 }

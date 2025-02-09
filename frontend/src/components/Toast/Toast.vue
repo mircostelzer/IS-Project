@@ -1,8 +1,11 @@
 <script setup>
+import { computed } from 'vue';
+
 import {
     CheckCircleIcon,
     ExclamationTriangleIcon,
     XCircleIcon,
+    InformationCircleIcon,
 } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
@@ -20,23 +23,39 @@ const props = defineProps({
         required: false
     }
 });
-
-// Per caricare l'icona corretta in base al tipo
-function caricaIcona(nomeIcona) {
-    return listaIcone[nomeIcona];
-}
-
-const listaIcone = {
-    success: CheckCircleIcon,
-    warning: ExclamationTriangleIcon,
-    error: XCircleIcon,
-};
 </script>
 
 <template>
-    <div class="toast">
-        <div role="alert" :class="['alert', `alert-${props.type}`]" class="shadow-xl rounded-2xl">
-            <component :is="caricaIcona(props.type)" class="text-black size-8" />
+    <div v-if="props.type === 'success'" class="toast">
+        <div role="alert" class="alert alert-success rounded-xl shadow-lg">
+            <CheckCircleIcon class="text-black size-8" />
+            <div class="pe-2">
+                <h3 class="font-bold text-black">{{ props.title }}</h3>
+                <div class="text-xs text-gray-900">{{ props.msg }}</div>
+            </div>
+        </div>
+    </div>
+    <div v-else-if="props.type === 'warning'" class="toast">
+        <div role="alert" class="alert alert-warning rounded-xl shadow-lg">
+            <ExclamationTriangleIcon class="text-black size-8" />
+            <div class="pe-2">
+                <h3 class="font-bold text-black">{{ props.title }}</h3>
+                <div class="text-xs text-gray-900">{{ props.msg }}</div>
+            </div>
+        </div>
+    </div>
+    <div v-else-if="props.type === 'error'" class="toast">
+        <div role="alert" class="alert alert-error rounded-xl shadow-lg">
+            <XCircleIcon class="text-black size-8" />
+            <div class="pe-2">
+                <h3 class="font-bold text-black">{{ props.title }}</h3>
+                <div class="text-xs text-gray-900">{{ props.msg }}</div>
+            </div>
+        </div>
+    </div>
+    <div v-else class="toast">
+        <div role="alert" class="alert alert-secondary rounded-xl shadow-lg">
+            <InformationCircleIcon class="text-black size-8" />
             <div class="pe-2">
                 <h3 class="font-bold text-black">{{ props.title }}</h3>
                 <div class="text-xs text-gray-900">{{ props.msg }}</div>
@@ -45,4 +64,8 @@ const listaIcone = {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.toast {
+    z-index: 80;
+}
+</style>
