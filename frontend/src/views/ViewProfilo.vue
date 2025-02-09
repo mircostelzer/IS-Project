@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ArrowLeftEndOnRectangleIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
+import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
 import { loggedUser, clearLoggedUser } from '../states/loggedUser.js';
 
 import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue';
@@ -100,33 +100,45 @@ function createToast(type, title, msg) {
 
             <div class="div-sfondo w-full h-auto rounded-lg p-1 sm:p-2 md:p-4">
                 <div class="div-opaco w-full p-4 mb-2 md:mb-4 rounded-md">
-                    <p class="text-xl font-bold text-slate-100 mb-2">Dati personali</p>
+                    <p class="text-2xl font-bold text-slate-100 mb-3">Dati personali:</p>
                     <div class="columns-1 sm:columns-2 lg:columns-4">
                         <div>
-                            <p class="text-white text-lg">Indirizzo email:</p>
+                            <p class="text-white text-lg">Indirizzo email</p>
                             <p class="text-slate-200">{{ loggedUser.email }}</p>
                         </div>
                         <div>
-                            <p class="text-white text-lg mt-4">Password (nascosta):</p>
+                            <p class="text-white text-lg mt-4">Password (nascosta)</p>
                             <p class="text-slate-200">{{ loggedUser.hiddenPassword }}</p>
                         </div>
                         <div>
-                            <p class="text-white text-lg">Registrato il:</p>
+                            <p class="text-white text-lg">Registrato il</p>
                             <p class="text-slate-200">{{ formatTime(loggedUser.createdAt) }}</p>
                         </div>
                         <div>
-                            <p class="text-white text-lg mt-4">Ruolo:</p>
+                            <p class="text-white text-lg mt-4">Ruolo</p>
                             <p class="text-slate-200">{{ formatRole(loggedUser.role) }}</p>
                         </div>
                     </div>
-                    <div class="flex justify-end mt-5">
-                        <button @click="logout()" class="btn btn-sm btn-error float-end">
-                            <ArrowLeftEndOnRectangleIcon class="w-5 h-5 opacity-80" />
-                            Logout
-                        </button>
+                    <div class="flex justify-between mt-5">
+                        <div>
+                            <button @click="logout()" class="btn btn-sm btn-ghost btn-outline me-2">
+                                <PaperAirplaneIcon class="w-5 h-5 opacity-80" />
+                                Invia segnalazione
+                            </button>
+                            <button @click="logout()" class="btn btn-sm btn-ghost btn-outline me-2">
+                                <ArrowPathIcon class="w-5 h-5 opacity-80" />
+                                Cambia password
+                            </button>
+                        </div>
+                        <div>
+                            <button @click="logout()" class="btn btn-sm btn-error">
+                                <ArrowLeftEndOnRectangleIcon class="w-5 h-5 opacity-80" />
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="div-opaco w-full p-4 mb-2 md:mb-4 rounded-md">
+                <div class="div-opaco w-full p-4 rounded-md">
                     <p class="text-xl font-bold text-slate-100 mb-4">Le tue segnalazioni</p>
                     <TabellaEmergenze :emergencies="emergencies" />
                 </div>
