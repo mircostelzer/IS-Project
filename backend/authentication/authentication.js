@@ -25,9 +25,7 @@ router.post("", async function (req, res) {
     var user = {};
     try {
         if (req.body.googleToken) {
-            const payload = await verify(req.body.googleToken).catch(
-                console.error
-            );
+            const payload = await verify(req.body.googleToken).catch(console.error);
 
             user = await User.findOne({ email: payload["email"] }).exec();
             if (!user) {
@@ -44,30 +42,20 @@ router.post("", async function (req, res) {
 
             if (!user) {
                 return res
-                    .status(404)
-                    .json({
-                        success: false,
-                        message: "Authentication failed: user not found",
-                    });
+                    .status(404).json({ success: false, message: "Authentication failed: user not found" });
             }
 
             if (req.body.password !== user.password) {
-                return res
-                    .status(401)
-                    .json({
-                        success: false,
-                        message: "Authentication failed: incorrect password",
-                    });
+                return res.status(401).json({ success: false, message: "Authentication failed: incorrect password"});
             }
+        }
 
             const payload = {
                 email: user.email,
                 id: user.id,
-                role: user.role,
+                role: user.role
             };
-            const options = {
-                expiresIn: 86400,
-            };
+            const options = { expiresIn: 86400 };
             const token = sign(payload, process.env.SUPER_SECRET, options);
 
             return res.status(201).json({
@@ -78,7 +66,6 @@ router.post("", async function (req, res) {
                 email: user.email,
                 role: user.role,
             });
-        }
     } catch (error) {
         res.status(500).json({ message: "Error in token creation" });
     }
