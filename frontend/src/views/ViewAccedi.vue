@@ -72,9 +72,9 @@ onMounted(() => {
         createToast("success", "Successo!", "Account creato con successo");
     }
 
-    // Toast di reindirizzamento accesso
+    // Toast di reindirizzamento da accesso
     if (route.query.fromProfile === 'true') {
-        createToast("info", "Accedi!", "Per visualizzare il tuo profilo, effettua l'accesso");
+        createToast("info", "Accedi!", "Per visualizzare il tuo profilo, devi prima effettuare l'accesso");
     }
 
     google.accounts.id.initialize({

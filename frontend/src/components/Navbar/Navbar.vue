@@ -70,18 +70,6 @@ const listaIcone = {
                             </router-link>
                         </li>
                         <li class="menu-title px-0">
-                            <router-link to="/accedi" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Pagina accesso</p>
-                            </router-link>
-                        </li>
-                        <li class="menu-title px-0">
-                            <router-link to="/registrati" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Pagina registrazione</p>
-                            </router-link>
-                        </li>
-                        <li class="menu-title px-0">
                             <router-link to="/linknonfunzionante" class="px-0 flex" @click="chiudiMenuNavbar()">
                                 <XMarkIcon class="size-6 mx-2" />
                                 <p class="ms-1 mt-0.5">Link non funzionante!</p>

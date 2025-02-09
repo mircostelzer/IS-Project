@@ -54,11 +54,11 @@ const props = defineProps({
         </div>
     </div>
     <div v-else class="toast">
-        <div role="alert" class="alert alert-secondary rounded-xl shadow-lg">
-            <InformationCircleIcon class="text-black size-8" />
+        <div role="alert" class="alert alert-ghost rounded-xl shadow-lg">
+            <InformationCircleIcon class="text-info size-8" />
             <div class="pe-2">
-                <h3 class="font-bold text-black">{{ props.title }}</h3>
-                <div class="text-xs text-gray-900">{{ props.msg }}</div>
+                <h3 class="font-bold text-white">{{ props.title }}</h3>
+                <div class="text-xs text-gray-200">{{ props.msg }}</div>
             </div>
         </div>
     </div>
