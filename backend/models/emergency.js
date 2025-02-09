@@ -7,6 +7,13 @@ const emergencySchema = new Schema(
         startDate: { type: Date, required: true },
         endDate: { type: Date },
         location: { type: String, required: true },
+        coordinates: { 
+            type: {
+                lat: { type: Number },
+                lon: { type: Number }
+	    	},
+            _id: false
+        },
         state: {
             type: String,
             enum: ["in_progress", "ended"],

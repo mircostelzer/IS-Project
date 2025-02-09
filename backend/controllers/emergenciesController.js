@@ -12,6 +12,7 @@ export const getEmergencies = async (req, res) => {
                 startDate: emergency.startDate,
                 endDate: emergency.endDate,
                 location: emergency.location,
+                coordinates: emergency.coordinates,
                 state: emergency.state,
                 description: emergency.description,
             };
@@ -34,6 +35,7 @@ export const getEmergencyById = async (req, res) => {
             startDate: emergency.startDate,
             endDate: emergency.endDate,
             location: emergency.location,
+            coordinates: emergency.coordinates,
             state: emergency.state,
             description: emergency.description,
         };
