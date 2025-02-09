@@ -4,6 +4,8 @@ import {
     Cog6ToothIcon,
     TrashIcon
 } from "@heroicons/vue/24/solid";
+import BadgeCategoria from "../Badge/BadgeCategoria.vue";
+import BadgeStato from "../Badge/BadgeStato.vue";
 
 // Funzione per recuperare l'id delle emergenze
 const getEmergencyId = (self) => {
@@ -44,10 +46,10 @@ const props = defineProps({
                             {{ emergency.title }}
                         </td>
                         <td>
-                            <div class="badge badge-sm badge-warning">{{ emergency.category }}</div>
+                            <BadgeCategoria :category="emergency.category" class="badge-sm" />
                         </td>
                         <td>
-                            <div class="badge badge-sm badge-primary">{{ emergency.state }}</div>
+                            <BadgeStato :state="emergency.state" class="badge-sm" />
                         </td>
                         <td class="pe-12">{{ emergency.location }}</td>
                         <th class="px-1 size-0">
