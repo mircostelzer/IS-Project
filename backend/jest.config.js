@@ -1,4 +1,4 @@
-const setupFiles = ["backend/.jest/setEnvVars.js"];
+const setupFiles = ["<rootDir>/.jest/setEnvVars.js"];
 const verbose = true;
 const collectCoverage = true;
 

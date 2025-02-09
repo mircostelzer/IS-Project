@@ -2,14 +2,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express, { json } from 'express';
 import cors from 'cors';
-import connectDB from './config/db.js';
 import emergenciesRoutes from './routes/emergenciesRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import reportsRoutes from './routes/reportsRoutes.js';
 import authentication from './authentication/authentication.js';
 
 const app = express();
-connectDB();
 
 app.use(json());
 app.use(cors());
@@ -20,5 +18,6 @@ app.use('/api/emergencies', emergenciesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/reports', reportsRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+export default app;

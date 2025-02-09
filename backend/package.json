@@ -3,14 +3,10 @@
     "version": "1.0.0",
     "type": "module",
     "description": "Repo per il progetto di Ingegneria del Software",
-    "main": "app.js",
+    "main": "index.js",
     "scripts": {
-        "test": "jest",
-        "start": "node app.js"
-    },
-    "jest": {
-    "verbose": true,
-    "collectCoverage": true
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "start": "node index.js"
     },
     "author": "",
     "license": "ISC",
