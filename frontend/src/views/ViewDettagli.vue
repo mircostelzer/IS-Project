@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { MagnifyingGlassIcon, HomeIcon } from "@heroicons/vue/24/solid";
+import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue';
+import BadgeStato from '@/components/Badge/BadgeStato.vue';
 
 const route = useRoute();
 
@@ -50,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="div-storico max-height w-full flex justify-center">
+    <div class="div-principale w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <MagnifyingGlassIcon class="w-6 h-6 md:w-8 md:h-8 me-3" />
@@ -67,7 +69,7 @@ onMounted(() => {
                 <div class="columns-1 md:columns-2">
                     <div class="pe-6">
                         <p class="text-slate-100 font-bold">Categoria: </p>
-                        <div class="badge badge-warning mt-1 text-sm">{{ emergency.category }}</div>
+                        <BadgeCategoria :category="emergency.category" />
                     </div>
                     <div class="pe-6 mt-6">
                         <p class="text-slate-100 font-bold">Area interessata: </p>
@@ -75,7 +77,7 @@ onMounted(() => {
                     </div>
                     <div class="pe-6 mt-6">
                         <p class="text-slate-100 font-bold">Stato: </p>
-                        <div class="badge badge-primary mt-1 text-sm">{{ emergency.state }}</div>
+                        <BadgeStato :state="emergency.state" />
                     </div>
                     <div class="pe-6 mt-6">
                         <p class="text-slate-100 font-bold">Data segnalazione: </p>
@@ -93,8 +95,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.div-storico {
-    background-color: #424b43a6;
+.div-principale {
     padding: min(50px, 3vw);
 }
 

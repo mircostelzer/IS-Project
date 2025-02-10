@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue';
 import Mappa from "../components/Mappa/Mappa.vue";
 import { ArrowsPointingOutIcon } from "@heroicons/vue/24/solid";
+import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue';
+import BadgeStato from '@/components/Badge/BadgeStato.vue';
 
 const host = import.meta.env.VITE_API_BASE_URL;
 const apiEmergencies = host + '/emergencies';
@@ -71,11 +73,11 @@ onMounted(() => {
                         <div class="columns-2">
                             <div>
                                 <p class="text-slate-100">Categoria: </p>
-                                <div class="badge badge-warning mt-1 text-sm">{{ emergency.category }}</div>
+                                <BadgeCategoria :category="emergency.category" class="badge-warning" />
                             </div>
                             <div>
                                 <p class="text-slate-100">Data segnalazione: </p>
-                                <p class="text-sm text-gray-300">{{ emergency.startDate }}</p>
+                                <BadgeStato :state="emergency.state" />
                             </div>
                         </div>
                         <router-link :to="`/dettagli?id=${recuperaId(emergency.self)}`">
@@ -93,7 +95,6 @@ onMounted(() => {
 
 <style scoped>
 .div-emergenze {
-    background-color: #424b43a6;
     overflow-y: scroll;
 }
 
@@ -102,8 +103,8 @@ onMounted(() => {
     transition: background-color 0.3s ease-out, translate 0.3s ease-out;
 }
 
-.collapse-emergenza:hover, 
-.collapse-emergenza:focus, 
+.collapse-emergenza:hover,
+.collapse-emergenza:focus,
 .collapse-emergenza:focus-visible,
 .collapse-emergenza:focus-within {
     background-color: #405f39;

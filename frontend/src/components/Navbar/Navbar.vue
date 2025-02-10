@@ -60,25 +60,13 @@ const listaIcone = {
                         <li class="menu-title px-0">
                             <router-link to="/pubblica_comunicazione" class="px-0 flex" @click="chiudiMenuNavbar()">
                                 <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Form invio comunicazione</p>
+                                <p class="ms-1 mt-0.5">Pubblica comunicazione</p>
                             </router-link>
                         </li>
                         <li class="menu-title px-0">
                             <router-link to="/invia_segnalazione" class="px-0 flex" @click="chiudiMenuNavbar()">
                                 <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Form invio segnalazione</p>
-                            </router-link>
-                        </li>
-                        <li class="menu-title px-0">
-                            <router-link to="/accedi" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Pagina accesso</p>
-                            </router-link>
-                        </li>
-                        <li class="menu-title px-0">
-                            <router-link to="/registrati" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Pagina registrazione</p>
+                                <p class="ms-1 mt-0.5">Invia segnalazione</p>
                             </router-link>
                         </li>
                         <li class="menu-title px-0">

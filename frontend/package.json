@@ -12,8 +12,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/runtime": "^7.26.7",
+    "@nuxtjs/algolia": "^1.10.2",
+    "algoliasearch": "^5.20.1",
     "leaflet": "^1.9.4",
+    "typesense": "^1.8.2",
+    "typesense-instantsearch-adapter": "^2.8.0",
     "vue": "^3.5.12",
+    "vue-instantsearch": "^4.20.4",
     "vue-leaflet": "^0.1.0",
     "vue-router": "^4.4.5"
   },

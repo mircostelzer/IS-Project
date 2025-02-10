@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -29,9 +29,19 @@ const router = createRouter({
       component: () => import('../views/ViewRegistrati.vue'),
     },
     {
+      path: '/profilo',
+      name: 'profilo',
+      component: () => import('../views/ViewProfilo.vue'),
+    },
+    {
       path: '/invia_segnalazione',
       name: 'invia_segnalazione',
       component: () => import('../views/ViewSegnalazione.vue'),
+    },
+    {
+      path: '/pubblica_comunicazione',
+      name: 'pubblica_comunicazione',
+      component: () => import('../views/ViewComunicazione.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

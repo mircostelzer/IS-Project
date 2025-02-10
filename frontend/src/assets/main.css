@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+/* Classi principali del sito */
 :root {
     --text: #e6e6e6;
     --foreground: #182515;
@@ -22,18 +25,10 @@
 body {
     font-family: "Inter", sans-serif;
 
-    background-color: var(--foreground);
+    background-color: #1f2520;
     background-image: url(/texture/waves.jpg);
-    background-blend-mode: color-burn;
+    background-blend-mode: overlay;
     background-size: 300px;
-}
-
-html {
-    scrollbar-gutter: auto !important;
-}
-
-html:has(body.content-overflow-y) {
-    scrollbar-gutter: stable !important;
 }
 
 #app {
@@ -42,10 +37,9 @@ html:has(body.content-overflow-y) {
     min-height: 100vh;
 }
 
-.input {
-    background-color: var(--input);
-}
 
+
+/* Classi per utilità varie */
 .max-height {
     height: calc(100vh - var(--navbar-height));
 }
@@ -56,9 +50,108 @@ html:has(body.content-overflow-y) {
     justify-content: center;
 }
 
-.div-background {
-    background-color: var(--background);
+
+
+/* Formattazione degli elementi DaisyUi */
+.input {
+    background-color: var(--input);
 }
+
+.table-zebra :where(.table-pin-rows thead tr) {
+    background-color: var(--foreground);
+}
+
+.table-zebra tbody tr:nth-child(odd) {
+    background-color: #586a58;
+}
+
+.table-zebra tbody tr:nth-child(even) {
+    background-color: #4b5c4b;
+}
+
+.table-zebra tbody tr.hover:nth-child(odd):hover,
+.table-zebra tbody tr.hover:nth-child(even):hover {
+    background-color: #4e6f4e;
+}
+
+
+
+/* Formattazione degli elementi di ricerca di Algolia */
+.ais-SearchBox {
+    width: 100%;
+}
+
+.ais-SearchBox-input {
+    height: 44px;
+    border: 0 !important;
+}
+
+.ais-InfiniteHits-loadMore {
+    font-size: 1rem !important;
+    align-self: center;
+}
+
+.ais-RefinementList-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ais-RefinementList-item {
+    background-color: white;
+    border-radius: 0.25rem;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    height: 35.2px;
+}
+
+.ais-RefinementList-item--selected {
+    background-color: #91df82;
+    color: var(--foreground);
+}
+
+.ais-RefinementList-labelText {
+    color: black;
+    margin: 0 4px;
+}
+
+.ais-RefinementList-label {
+    display: flex;
+    align-items: center;
+}
+
+.ais-Stats-text {
+    color: var(--text);
+}
+
+.ais-InfiniteHits-item {
+    padding: 0 !important;
+    width: 100% !important;
+    border: 0 !important;
+    box-shadow: 0 0 0 0 #fff !important;
+}
+
+
+
+/* Nasconde la barra di navigazione laterale e la sua spaziatura */
+body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    scrollbar-gutter: auto !important;
+}
+
+html:has(body.content-overflow-y) {
+    scrollbar-gutter: stable !important;
+}
+
+
 
 /* Animazioni per rendere un elemento "shiny" */
 @keyframes shine {
@@ -99,14 +192,4 @@ html:has(body.content-overflow-y) {
 
 .shine-anim-hover:hover {
     animation: shine 3s normal;
-}
-
-/* Nasconde la barra di navigazione laterale (solo della pagina) */
-body {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-body::-webkit-scrollbar {
-    display: none;
 }

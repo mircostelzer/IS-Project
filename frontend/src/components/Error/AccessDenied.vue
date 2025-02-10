@@ -5,8 +5,8 @@ import { HomeIcon } from "@heroicons/vue/24/solid";
 <template>
     <div class="to-center max-height w-full">
         <div class="div-404 flex flex-col justify-center text-center">
-            <p class="text-6xl">404</p>
-            <p class="mb-8">Nessuna pagina trovata!</p>
+            <p class="text-6xl">401</p>
+            <p class="mb-8">Accesso non consentito!</p>
             <RouterLink to="/">
                 <button class="btn btn-primary">
                     <HomeIcon class="w-5 h-5 p-0 mb-0.5" />Ritorna alla home
