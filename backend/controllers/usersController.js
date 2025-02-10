@@ -35,6 +35,9 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
     try {
         let user = new User(req.body);
+        if (!user.email || typeof user.email !== 'string' || !checkIfEmailInString(user.email)) {
+            return res.status(400).json({ message: "Invalid email" });
+        }
         user = await user.save();
         let userId = user._id;
         res.location(pathApiUsers + userId)
@@ -83,3 +86,8 @@ export const deleteUser = async (req, res) => {
         res.status(500).json({ message: "Error in user deletion" });
     }
 };
+
+function checkIfEmailInString(text) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(text);
+}

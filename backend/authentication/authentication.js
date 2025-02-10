@@ -22,7 +22,7 @@ async function verify(token) {
 }
 
 router.post("", async function (req, res) {
-    var user = {};
+    let user = {};
     try {
         if (req.body.googleToken) {
             res.setHeader(
@@ -63,18 +63,13 @@ router.post("", async function (req, res) {
             }
         }
 
-        const payload = {
-            id: user.id,
-            email: user.email,
-            hiddenPassword: hidePassword(user.password),
-            role: user.role,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        };
-        const options = {
-            expiresIn: 86400,
-        };
-        const token = sign(payload, process.env.SUPER_SECRET, options);
+            var payload = {
+                email: user.email,
+                id: user.id,
+                role: user.role
+            };
+            const options = { expiresIn: 86400 };
+            const token = sign(payload, process.env.SUPER_SECRET, options);
 
         return res.status(201).json({
             success: true,
