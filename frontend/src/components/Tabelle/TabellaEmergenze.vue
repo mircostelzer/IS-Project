@@ -16,7 +16,12 @@ const props = defineProps({
     emergencies: {
         type: Array,
         required: true
-    }
+    },
+    isAdmin: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
 });
 </script>
 
@@ -27,12 +32,12 @@ const props = defineProps({
                 <tr class="text-white">
                     <th>#</th>
                     <th>Titolo</th>
-                    <th>Categoria</th>
-                    <th>Stato</th>
-                    <th>Luogo</th>
+                    <th class="hidden sm:table-cell">Categoria</th>
+                    <th class="hidden sm:table-cell">Stato</th>
+                    <th class="hidden sm:table-cell">Luogo</th>
                     <th></th>
-                    <th></th>
-                    <th></th>
+                    <th v-if="props.isAdmin"></th>
+                    <th v-if="props.isAdmin"></th>
                 </tr>
             </thead>
             <tbody>
@@ -45,26 +50,26 @@ const props = defineProps({
                         <td>
                             {{ emergency.title }}
                         </td>
-                        <td>
+                        <td class="hidden sm:table-cell">
                             <BadgeCategoria :category="emergency.category" class="badge-sm" />
                         </td>
-                        <td>
+                        <td class="hidden sm:table-cell">
                             <BadgeStato :state="emergency.state" class="badge-sm" />
                         </td>
-                        <td class="pe-12">{{ emergency.location }}</td>
-                        <th class="px-1 size-0">
+                        <td class="hidden sm:table-cell pe-12">{{ emergency.location }}</td>
+                        <th class="px-1 size-0 pe-4">
                             <router-link :to="`/dettagli?id=${getEmergencyId(emergency.self)}`">
                                 <button class="btn btn-xs btn-info btn-square btn-outline">
                                     <EyeIcon class="size-4 text-white opacity-80" />
                                 </button>
                             </router-link>
                         </th>
-                        <th class="px-1 size-0">
+                        <th v-if="props.isAdmin" class="px-1 size-0">
                             <button class="btn btn-xs btn-info btn-square btn-outline">
                                 <Cog6ToothIcon class="size-4 text-white opacity-80" />
                             </button>
                         </th>
-                        <th class="px-1 size-0 pe-4">
+                        <th v-if="props.isAdmin" class="px-1 size-0 pe-4">
                             <button class="btn btn-xs btn-error btn-square btn-outline">
                                 <TrashIcon class="size-4 text-white opacity-80" />
                             </button>

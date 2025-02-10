@@ -24,28 +24,30 @@ const toastMsg = ref()
 
 function login(withGoogle) {
     // Controllo degli input
-    if (!email.value) {
-        createToast("warning", "Attenzione!", "L'email non può essere vuota");
-        return;
-    }
+    if (!withGoogle) {
+        if (!email.value) {
+            createToast("warning", "Attenzione!", "L'email non può essere vuota");
+            return;
+        }
 
-    if (!validateEmail(email.value)) {
-        createToast("error", "Errore!", "Indirizzo email non valido");
-        return;
-    }
+        if (!validateEmail(email.value)) {
+            createToast("error", "Errore!", "Indirizzo email non valido");
+            return;
+        }
 
-    if (password.value.length < 8) {
-        createToast("warning", "Attenzione!", "Inserisci una password di almeno 8 caratteri");
-        return;
-    }
+        if (password.value.length < 8) {
+            createToast("warning", "Attenzione!", "Inserisci una password di almeno 8 caratteri");
+            return;
+        }
 
-    if (password.value === "") {
-        createToast("warning", "Attenzione!", "La password non può essere vuota");
-        return;
+        if (password.value === "") {
+            createToast("warning", "Attenzione!", "La password non può essere vuota");
+            return;
+        }
     }
 
     // In base al tipo di accesso, modifico il corpo della richiesta POST
-    const bodyData = withGoogle ? { googleToken: googleToken } : { email: email.value, password: password.value };
+    const bodyData = withGoogle ? { googleToken: googleToken.value } : { email: email.value, password: password.value };
 
     fetch(apiLogin, {
         method: 'POST',
@@ -83,7 +85,7 @@ onMounted(() => {
     });
 
     google.accounts.id.renderButton(
-        document.getElementById("loginConGoogle"),
+        document.getElementById("accediConGoogle"),
         {
             text: 'signin_with',
             size: 'large',
@@ -98,7 +100,6 @@ onMounted(() => {
 function handleCredentialResponse(response) {
     if (response.credential) {
         googleToken.value = response.credential;
-        console.log("Accesso con Google effettuato");
         login(true);
     }
 }
@@ -155,7 +156,7 @@ function togglePasswordView() {
                     class="btn btn-primary btn-outline btn-block rounded-lg" />
             </form>
             <p class="text-gray-400 text-sm text-center mt-2 mb-3">oppure</p>
-            <div id="loginConGoogle"></div>
+            <div class="flex justify-center" id="accediConGoogle"></div>
             <router-link to="/registrati">
                 <p class="text-center text-sm mt-12">
                     Non sei registrato? <a class="link link-primary" href="/registrati.vue">Registrati!</a>

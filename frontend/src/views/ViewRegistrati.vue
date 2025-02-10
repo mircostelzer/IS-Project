@@ -8,10 +8,11 @@ import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/
 
 const router = useRouter();
 
-const apiLogin = import.meta.env.VITE_API_BASE_URL + '/users'
+const apiRegister = import.meta.env.VITE_API_BASE_URL
 const email = ref()
 const password = ref()
 const confirmPassword = ref()
+const googleToken = ref()
 
 const showPassword = ref(false)
 
@@ -22,36 +23,39 @@ const toastMsg = ref()
 
 async function register(withGoogle) {
     // Controllo degli input
-    if (!email.value) {
-        createToast("warning", "Attenzione!", "L'email non può essere vuota");
-        return;
+    if (!withGoogle) {
+        if (!email.value) {
+            createToast("warning", "Attenzione!", "L'email non può essere vuota");
+            return;
+        }
+
+        if (!validateEmail(email.value)) {
+            createToast("error", "Errore!", "Indirizzo email non valido");
+            return;
+        }
+
+        if (password.value.length < 8) {
+            createToast("warning", "Attenzione!", "Inserisci una password di almeno 8 caratteri");
+            return;
+        }
+
+        if (password.value === "") {
+            createToast("warning", "Attenzione!", "La password non può essere vuota");
+            return;
+        }
+
+        if (password.value !== confirmPassword.value) {
+            createToast("warning", "Attenzione!", "Le password non corrispondono");
+            return;
+        }
     }
 
-    if (!validateEmail(email.value)) {
-        createToast("error", "Errore!", "Indirizzo email non valido");
-        return;
-    }
-
-    if (password.value.length < 8) {
-        createToast("warning", "Attenzione!", "Inserisci una password di almeno 8 caratteri");
-        return;
-    }
-
-    if (password.value === "") {
-        createToast("warning", "Attenzione!", "La password non può essere vuota");
-        return;
-    }
-
-    if (password.value !== confirmPassword.value) {
-        createToast("warning", "Attenzione!", "Le password non corrispondono");
-        return;
-    }
-
-    // In base al tipo di accesso, modifico il corpo della richiesta POST
-    const bodyData = withGoogle ? { googleToken: googleToken } : { email: email.value, password: password.value };
+    // In base al tipo di accesso, modifico la rotta e il corpo della richiesta POST
+    const apiUrl = withGoogle ? apiRegister + "/login" : apiRegister + "/users";
+    const bodyData = withGoogle ? { googleToken: googleToken.value } : { email: email.value, password: password.value };
 
     try {
-        const resp = await fetch(apiLogin, {
+        const resp = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bodyData),
@@ -91,8 +95,7 @@ onMounted(() => {
 function handleCredentialResponse(response) {
     if (response.credential) {
         googleToken.value = response.credential;
-        console.log("Registrazione con Google effettuata");
-        login(true);
+        register(true);
     }
 }
 
@@ -124,16 +127,16 @@ function togglePasswordView() {
 <template>
     <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
 
-    <div class="div-principale flex justify-center items-center">
+    <div class="div-principale flex justify-center items-center text-center">
         <div class="bg-secondary rounded-3xl p-8">
-            <form class="flex flex-col justify-center">
-                <p class="text-2xl font-bold mb-6 text-center">Registrati</p>
+            <form>
+                <p class="text-2xl font-bold mb-6">Registrati</p>
                 <label class="input input-bordered flex items-center gap-2 mb-4">
                     <EnvelopeIcon class="size-5 opacity-70"></EnvelopeIcon>
                     <input v-model="email" type="email" class="grow" placeholder="Indirizzo email" required />
                 </label>
                 <div class="join">
-                    <label class="input input-bordered join-item flex items-center gap-2 mb-6">
+                    <label class="input input-bordered join-item flex items-center gap-2 mb-4">
                         <KeyIcon class="size-5 opacity-70" />
                         <input id="passwordInput" v-model="password" type="password" class="grow" placeholder="Password"
                             required />
@@ -152,10 +155,10 @@ function togglePasswordView() {
                 <input @click="register()" type="button" value="Registrati"
                     class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
             </form>
-            <p class="text-gray-400 text-sm text-center mt-2 mb-3">oppure</p>
-            <div id="registratiConGoogle"></div>
+            <p class="text-gray-400 text-sm mt-2 mb-3">oppure</p>
+            <div class="flex justify-center" id="registratiConGoogle"></div>
             <router-link to="/accedi">
-                <p class="text-center text-sm mt-12">
+                <p class="text-sm mt-12">
                     Già registrato? <a class="link link-primary" href="/accedi.vue">Accedi!</a>
                 </p>
             </router-link>

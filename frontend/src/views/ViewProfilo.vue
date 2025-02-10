@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
+import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, EyeIcon, EyeSlashIcon, KeyIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
 import { loggedUser, clearLoggedUser } from '../states/loggedUser.js';
 
 import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue';
@@ -14,6 +14,10 @@ const router = useRouter();
 const host = import.meta.env.VITE_API_BASE_URL;
 const apiEmergencies = host + '/emergencies';
 const emergencies = ref([]);
+
+const password = ref()
+const confirmPassword = ref()
+const showPassword = ref(false)
 
 const showToast = ref(false);
 const toastType = ref()
@@ -75,6 +79,18 @@ function formatRole(role) {
     return (role === "citizen") ? "Cittadino" : "Operatore";
 }
 
+function togglePasswordView() {
+    const passwordInput = document.getElementById("passwordInput");
+
+    if (showPassword.value) {
+        passwordInput.type = "password";
+    } else {
+        passwordInput.type = "text";
+    }
+
+    showPassword.value = !showPassword.value;
+}
+
 function createToast(type, title, msg) {
     showToast.value = true;
 
@@ -121,22 +137,22 @@ function createToast(type, title, msg) {
                                 <p class="text-slate-200">{{ formatRole(loggedUser.role) }}</p>
                             </div>
                         </div>
-                        <div class="flex justify-between mt-5">
-                            <div>
+                        <div class="flex flex-col md:flex-row justify-between mt-5">
+                            <div class="flex flex-col md:flex-row justify-start w-full md:w-4/5">
                                 <router-link to="/invia_segnalazione">
-                                    <button class="btn btn-sm btn-ghost btn-outline me-2">
+                                    <button class="btn btn-sm w-full btn-ghost btn-outline me-2 mb-2">
                                         <PaperAirplaneIcon class="w-5 h-5 opacity-80" />
                                         Invia segnalazione
                                     </button>
                                 </router-link>
                                 <button onclick="modalPassword.showModal()"
-                                    class="btn btn-sm btn-ghost btn-outline me-2">
+                                    class="btn btn-sm w-full md:w-2/5 lg:w-1/4 btn-ghost btn-outline mx-0 md:mx-2 mb-2">
                                     <ArrowPathIcon class="w-5 h-5 opacity-80" />
                                     Cambia password
                                 </button>
                             </div>
                             <div>
-                                <button @click="logout()" class="btn btn-sm btn-error">
+                                <button @click="logout()" class="btn btn-sm w-full btn-error mb-2">
                                     <ArrowLeftEndOnRectangleIcon class="w-5 h-5 opacity-80" />
                                     Logout
                                 </button>
@@ -156,8 +172,28 @@ function createToast(type, title, msg) {
                 <form method="dialog">
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
-                <h3 class="text-lg font-bold">Cambia password:</h3>
-                <p class="text-gray-300 text-center italic my-8">Coming soon...</p>
+                <h3 class="text-lg font-bold mb-4">Cambia password:</h3>
+                <form>
+                    <div class="join w-full">
+                        <label class="input input-bordered join-item flex items-center gap-2 mb-4 full-width">
+                            <KeyIcon class="size-5 opacity-70" />
+                            <input id="passwordInput" v-model="password" type="password" class="grow"
+                                placeholder="Nuova password" required />
+                        </label>
+                        <button @click="togglePasswordView()" type="button"
+                            :class="showPassword ? 'btn btn-primary join-item' : 'btn btn-error join-item'">
+                            <EyeIcon v-if="showPassword" class="size-5 opacity-70" />
+                            <EyeSlashIcon v-else class="size-5 opacity-70" />
+                        </button>
+                    </div>
+                    <label class="input input-bordered flex items-center gap-2">
+                        <KeyIcon class="size-5 opacity-70"></KeyIcon>
+                        <input v-model="confirmPassword" type="password" class="grow" placeholder="Conferma nuova password"
+                            required />
+                    </label>
+                    <input @click="changePassowrd()" type="button" value="Conferma"
+                        class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
+                </form>
             </div>
             <form method="dialog" class="modal-backdrop">
                 <button>close</button>
@@ -186,5 +222,9 @@ function createToast(type, title, msg) {
 
 .modal-box {
     background-color: var(--background);
+}
+
+.full-width {
+    width: 100%;
 }
 </style>
