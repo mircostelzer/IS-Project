@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { loggedUser, clearLoggedUser } from '../../states/loggedUser.js';
 import { LMap, LTileLayer, LMarker, LPolygon } from "@vue-leaflet/vue-leaflet";
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/solid';
 
 // Proprietà varie della mappa Leaflet
 const url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -31,13 +33,31 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w-full h-full m-0 p-0 z-40">
+    <div class="map-div w-full h-full m-0 p-0 z-40">
         <l-map :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker :lat-lng="markerDiProva"></l-marker>
-            <l-polygon v-if="bordiTrento.length" :lat-lngs="bordiTrento" :color="coloreBordi" :fill-color="coloreFill" :fill-opacity="opacitaFill"></l-polygon>
+            <l-polygon v-if="bordiTrento.length" :lat-lngs="bordiTrento" :color="coloreBordi" :fill-color="coloreFill"
+                :fill-opacity="opacitaFill"></l-polygon>
         </l-map>
+        <router-link v-if="loggedUser.token && loggedUser.role === 'citizen'" to="/invia_segnalazione">
+            <button class="btn-segnalazione btn btn-warning btn-md">
+                <ExclamationTriangleIcon class="size-8" />
+                Segnala!
+            </button>
+        </router-link>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.map-div {
+    position: relative;
+}
+
+.btn-segnalazione {
+    position: absolute;
+    bottom: 27px;
+    right: 10px;
+    z-index: 500;
+}
+</style>

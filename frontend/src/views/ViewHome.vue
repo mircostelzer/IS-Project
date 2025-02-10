@@ -89,6 +89,7 @@ onMounted(() => {
                 </div>
             </transition-group>
         </div>
+        
         <Mappa />
     </div>
 </template>

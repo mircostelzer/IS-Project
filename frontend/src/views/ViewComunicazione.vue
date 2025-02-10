@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { loggedUser } from '../states/loggedUser.js';
 import AccessLimited from "@/components/Error/AccessLimited.vue";
 
-import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
+import { MegaphoneIcon } from "@heroicons/vue/24/solid";
 import AccessDenied from '@/components/Error/AccessDenied.vue';
 
 const apiEmergencies = import.meta.env.VITE_API_BASE_URL + '/emergencies'
@@ -69,7 +69,7 @@ function createToast(type, title, msg) {
         <div class="div-principale w-full flex justify-center">
             <div class="bg-secondary w-full max-w-6xl rounded-3xl p-8">
                 <div class="flex flex-row items-center ms mt-4 md:mt-0 mb-8">
-                    <PaperAirplaneIcon class="w-6 h-6 me-3" />
+                    <MegaphoneIcon class="w-6 h-6 me-3" />
                     <p class="text-2xl font-bold">Pubblica comunicazione</p>
                 </div>
                 <form class="flex flex-col justify-center items-center">

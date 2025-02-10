@@ -108,7 +108,7 @@ function createToast(type, title, msg) {
         <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
 
         <div class="div-principale w-full flex justify-center">
-            <div class="max-w-7xl h-full">
+            <div class="w-full max-w-6xl h-full">
                 <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                     <UserCircleIcon class="size-8 md:size-12 me-3" />
                     <h1 class="text-2xl md:text-4xl text-white font-bold">Il tuo profilo</h1>
@@ -121,41 +121,31 @@ function createToast(type, title, msg) {
                         <div class="columns-1 sm:columns-2 lg:columns-4">
                             <div>
                                 <p class="text-white text-lg">Indirizzo email</p>
-                                <p class="text-slate-200">{{ loggedUser.email }}</p>
+                                <p class="text-slate-200 user-value">{{ loggedUser.email }}</p>
                             </div>
                             <div>
                                 <p class="text-white text-lg mt-4">Password (nascosta)</p>
-                                <p class="text-slate-200">{{ loggedUser.hiddenPassword }}</p>
+                                <p class="text-slate-200 user-value">{{ loggedUser.hiddenPassword }}</p>
                             </div>
                             <div>
                                 <p class="text-white text-lg">Registrato il</p>
-                                <p class="text-slate-200">{{ formatTime(loggedUser.createdAt) }}</p>
+                                <p class="text-slate-200 user-value">{{ formatTime(loggedUser.createdAt) }}</p>
                             </div>
                             <div>
                                 <p class="text-white text-lg mt-4">Ruolo</p>
-                                <p class="text-slate-200">{{ formatRole(loggedUser.role) }}</p>
+                                <p class="text-slate-200 user-value">{{ formatRole(loggedUser.role) }}</p>
                             </div>
                         </div>
-                        <div class="flex flex-col md:flex-row justify-between mt-5">
-                            <div class="flex flex-col md:flex-row justify-start w-full md:w-4/5">
-                                <router-link to="/invia_segnalazione">
-                                    <button class="btn btn-sm w-full btn-ghost btn-outline me-2 mb-2">
-                                        <PaperAirplaneIcon class="w-5 h-5 opacity-80" />
-                                        Invia segnalazione
-                                    </button>
-                                </router-link>
-                                <button onclick="modalPassword.showModal()"
-                                    class="btn btn-sm w-full md:w-2/5 lg:w-1/4 btn-ghost btn-outline mx-0 md:mx-2 mb-2">
-                                    <ArrowPathIcon class="w-5 h-5 opacity-80" />
-                                    Cambia password
-                                </button>
-                            </div>
-                            <div>
-                                <button @click="logout()" class="btn btn-sm w-full btn-error mb-2">
-                                    <ArrowLeftEndOnRectangleIcon class="w-5 h-5 opacity-80" />
-                                    Logout
-                                </button>
-                            </div>
+                        <div class="flex flex-row justify-between sm:justify-end mt-5">
+                            <button onclick="modalPassword.showModal()"
+                                class="btn btn-sm btn-ghost btn-outline mb-2 me-0 sm:me-2">
+                                <ArrowPathIcon class="w-5 h-5 opacity-80" />
+                                Cambia password
+                            </button>
+                            <button @click="logout()" class="btn btn-sm btn-error mb-2">
+                                <ArrowLeftEndOnRectangleIcon class="w-5 h-5 opacity-80" />
+                                Logout
+                            </button>
                         </div>
                     </div>
                     <div class="div-opaco w-full p-4 rounded-md">
@@ -187,8 +177,8 @@ function createToast(type, title, msg) {
                     </div>
                     <label class="input input-bordered flex items-center gap-2">
                         <KeyIcon class="size-5 opacity-70"></KeyIcon>
-                        <input v-model="confirmPassword" type="password" class="grow" placeholder="Conferma nuova password"
-                            required />
+                        <input v-model="confirmPassword" type="password" class="grow"
+                            placeholder="Conferma nuova password" required />
                     </label>
                     <input @click="changePassowrd()" type="button" value="Conferma"
                         class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
@@ -217,6 +207,12 @@ function createToast(type, title, msg) {
 
 .div-opaco {
     background-color: #415d3b;
+}
+
+.user-value {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .modal-box {

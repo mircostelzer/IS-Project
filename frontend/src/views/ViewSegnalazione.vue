@@ -4,12 +4,13 @@ import { loggedUser } from '../states/loggedUser.js';
 import AccessLimited from "@/components/Error/AccessLimited.vue";
 
 import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
+import AccessDenied from '@/components/Error/AccessDenied.vue';
 
 
 </script>
 
 <template>
-    <div v-if="loggedUser.token">
+    <div v-if="loggedUser.token && loggedUser.role === 'citizen'">
         <div class="div-principale w-full flex justify-center">
             <div class="bg-secondary w-full max-w-4xl rounded-3xl p-8">
                 <div class="flex flex-row items-center ms mt-4 md:mt-0 mb-8">
@@ -20,8 +21,8 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
                     <label class="form-control w-full">
                         <p class="text-slate-100 font-bold text-lg mb-2">Inserisci la descrizione:</p>
                         <textarea class="textarea h-32"
-                            placeholder="Che succede? Spiegaci bene nel dettaglio cosa stai segnalando"
-                            maxlength="1000" required ></textarea>
+                            placeholder="Che succede? Spiegaci bene nel dettaglio cosa stai segnalando" maxlength="1000"
+                            required></textarea>
                         <div class="label">
                             <span class="label-text-alt"><b>Campo obbligatorio</b> - Max 1000 caratteri</span>
                         </div>
@@ -37,8 +38,10 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
                     <label class="form-control w-full mt-6">
                         <p class="text-slate-100 font-bold text-lg mb-2">Coordinate del luogo:</p>
                         <div class="join w-full join-vertical md:join-horizontal">
-                            <input type="number" class="input input-md join-item grow" placeholder="Latitudine" required />
-                            <input type="number" class="input input-md join-item grow" placeholder="Longitudine" required />
+                            <input type="number" class="input input-md join-item grow" placeholder="Latitudine"
+                                required />
+                            <input type="number" class="input input-md join-item grow" placeholder="Longitudine"
+                                required />
                         </div>
                         <div class="label">
                             <span class="label-text-alt">Campi facoltativi</span>
@@ -49,6 +52,10 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
                 </form>
             </div>
         </div>
+    </div>
+
+    <div v-else-if="loggedUser.token">
+        <AccessDenied />
     </div>
 
     <div v-else>
