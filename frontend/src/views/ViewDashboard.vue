@@ -23,7 +23,6 @@ const toastMsg = ref()
 onMounted(async () => {
     getEmergencies()
     getUsers()
-    console.log(users)
 
     countCitizens.value = users.value.filter(user => user.role === 'citizen').length;
     countOperators.value = users.value.filter(user => user.role === 'operator').length;
@@ -74,7 +73,7 @@ function createToast(type, title, msg) {
                         <div class="stat-desc">{{ calcolaPercentuale(countOperators, users.length ) }}</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-figure text-accent">
+                        <div class="stat-figure text-ghost">
                             <ShieldExclamationIcon class="inline-block size-12" />
                         </div>
                         <div class="stat-title">Segnalazioni in attesa</div>
@@ -82,7 +81,7 @@ function createToast(type, title, msg) {
                         <div class="stat-desc">{{ calcolaPercentuale(countReports, emergencies.length ) }}</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-figure text-success">
+                        <div class="stat-figure text-ghost">
                             <ShieldCheckIcon class="inline-block size-12" />
                         </div>
                         <div class="stat-title">Emergenze pubblicate</div>
@@ -134,6 +133,16 @@ function createToast(type, title, msg) {
 
 .stats {
     background-color: var(--background);
+    overflow: hidden;
+}
+
+.stat {
+    transition: color 0.5s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.stat:hover {
+    color: var(--primary);
+    transform: scale(1.05);
 }
 
 .tab {

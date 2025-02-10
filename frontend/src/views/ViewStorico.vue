@@ -43,7 +43,8 @@ function toggleFilters() {
                 <h1 class="text-3xl md:text-4xl text-white font-bold">Storico emergenze</h1>
             </div>
 
-            <ais-instant-search :search-client="searchEmergencies" index-name="emergencies_index">
+            <ais-instant-search :search-client="searchEmergencies" index-name="emergencies_index"
+                :future="{ preserveSharedStateOnUnmount: true }">
                 <div class="w-full mb-8">
                     <div class="flex flex-row items-center w-full mb-2">
                         <ais-search-box placeholder="Ricerca qui..." submit-title="Invia" reset-title="Reset" />
@@ -100,7 +101,7 @@ function toggleFilters() {
                         <template v-slot:item="{ item }">
                             <div class="div-risultato w-full p-4 rounded-md">
                                 <BadgeStato :state="item.state" />
-                                <p class="text-white text-2xl font-bold mt-1 mb-4">{{ item.title }}</p>
+                                <p class="text-white text-2xl font-bold mt-2 mb-4">{{ item.title }}</p>
                                 <div class="columns-1 md:columns-2">
                                     <div class="pe-6">
                                         <p class="text-slate-100">Categoria: </p>

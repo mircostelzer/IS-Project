@@ -1,9 +1,11 @@
 <script setup>
+import { formatDate } from "@/data/validation"
+import { deleteUserById } from "@/data/users"
+
 import {
     TrashIcon
-} from "@heroicons/vue/24/solid";
-import BadgeRuolo from "../Badge/BadgeRuolo.vue";
-import { formatDate } from "@/data/validation";
+} from "@heroicons/vue/24/solid"
+import BadgeRuolo from "../Badge/BadgeRuolo.vue"
 
 const props = defineProps({
     users: {
@@ -17,6 +19,10 @@ function showModalElimina(id) {
     if (modal) modal.showModal();
 }
 
+function eliminaUtente(id) {
+    deleteUserById(id);
+    location.reload();
+}
 </script>
 
 <template>

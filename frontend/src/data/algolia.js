@@ -1,7 +1,7 @@
-const apiEmergencies = import.meta.env.VITE_API_BASE_URL + "/emergencies/"
+import { algoliasearch } from "algoliasearch";
 
 // Aggiorna emergencies_index con i dati presi da apiEmergencies
-function updateAlgoliaRecords() {
+export async function updateAlgoliaRecords() {
     // Mi collego all'API di Algolia
     const algolia = algoliasearch(import.meta.env.VITE_ALGOLIA_APP_ID, import.meta.env.VITE_ALGOLIA_WRITE_KEY);
 
@@ -10,6 +10,7 @@ function updateAlgoliaRecords() {
         const response = await algolia.clearObjects({ indexName: 'emergencies_index' });
 
         // Recupero poi le emergenze aggiornata dalla chiamata API
+        const apiEmergencies = import.meta.env.VITE_API_BASE_URL + "/emergencies/"
         const datasetRequest = await fetch(apiEmergencies);
         const emergenciesRecord = await datasetRequest.json();
 

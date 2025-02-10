@@ -22,23 +22,6 @@ function formattaData(date) {
     });
 }
 
-export function getUserById(id) {
-    fetch(apiUsers + id)
-        .then((response) => response.json())
-        .then((data) => {
-            user.value = {
-                ...data,
-                createdAt: formattaData(data.createdAt),
-                updatedAt: formattaData(data.updatedAt),
-                id: recuperaId(data.self),
-            };
-        })
-        .catch((error) => {
-            console.error("Errore da getUserById(" + id + "): ", error);
-            user.value = null;
-        });
-}
-
 export function getUsers() {
     fetch(apiUsers, {
         method: "GET",
@@ -61,5 +44,49 @@ export function getUsers() {
         .catch((error) => {
             console.error("Errore da getUsers(): ", error);
             users.value = null;
+        });
+}
+
+export function getUserById(id) {
+    fetch(apiUsers + id)
+        .then((response) => response.json())
+        .then((data) => {
+            user.value = {
+                ...data,
+                createdAt: formattaData(data.createdAt),
+                updatedAt: formattaData(data.updatedAt),
+                id: recuperaId(data.self),
+            };
+        })
+        .catch((error) => {
+            console.error("Errore da getUserById(" + id + "): ", error);
+            user.value = null;
+        });
+}
+
+export function deleteUserById(id) {
+    fetch(apiUsers + id, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${loggedUser.token}`,
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                    "Errore generico da deleteUserById(" + id + ")"
+                );
+            }
+            if (response.status === 204) {
+                return null;
+            }
+            return response.json();
+        })
+        .then(() => {
+            users.value = users.value.filter((user) => user.id !== id);
+        })
+        .catch((error) => {
+            console.error("Errore da deleteUserById(" + id + "): ", error);
         });
 }

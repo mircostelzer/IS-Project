@@ -1,12 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { loggedUser } from '../states/loggedUser.js';
-import AccessLimited from "@/components/Error/AccessLimited.vue";
+import { createEmergency } from '@/data/emergencies.js';
+import { updateAlgoliaRecords } from '@/data/algolia.js';
 
 import { MegaphoneIcon } from "@heroicons/vue/24/solid";
 import AccessDenied from '@/components/Error/AccessDenied.vue';
+import AccessLimited from "@/components/Error/AccessLimited.vue";
 
-const apiEmergencies = import.meta.env.VITE_API_BASE_URL + '/emergencies'
 const title = ref()
 const description = ref()
 const category = ref()
@@ -36,19 +37,8 @@ function inviaComunicazione() {
         }
     };
 
-    fetch(apiEmergencies, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyData),
-    }).then((resp) => {
-        if (resp.ok) {
-            createToast("success", "Successo!", "Segnalazione inviata correttamente");
-        } else {
-            resp.json().then((errorData) => {
-                createToast("error", "Errore!", errorData.message);
-            });
-        }
-    });
+    createEmergency(bodyData)
+    updateAlgoliaRecords()
 };
 
 function createToast(type, title, msg) {

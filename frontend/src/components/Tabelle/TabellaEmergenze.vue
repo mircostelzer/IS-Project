@@ -1,4 +1,7 @@
 <script setup>
+import { deleteEmergencyById } from "@/data/emergencies"
+import { updateAlgoliaRecords } from '@/data/algolia.js';
+
 import {
     EyeIcon,
     Cog6ToothIcon,
@@ -22,6 +25,13 @@ const props = defineProps({
 function showModalElimina(id) {
     const modal = document.getElementById('modalElimina' + id);
     if (modal) modal.showModal();
+}
+
+function eliminaEmergenza(id) {
+    deleteEmergencyById(id);
+    updateAlgoliaRecords().then(() => {
+        location.reload();
+    });
 }
 </script>
 
