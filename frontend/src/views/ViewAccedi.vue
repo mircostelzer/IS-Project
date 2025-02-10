@@ -5,7 +5,7 @@ import { validateEmail } from "@/data/validation";
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { setLoggedUser } from '../states/loggedUser.js'
-import { EnvelopeIcon, KeyIcon } from "@heroicons/vue/24/solid";
+import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/solid";
 
 const route = useRoute();
 const router = useRouter();
@@ -15,7 +15,9 @@ const email = ref()
 const password = ref()
 const googleToken = ref()
 
-const showToast = ref(false);
+const showPassword = ref(false)
+
+const showToast = ref(false)
 const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
@@ -112,6 +114,18 @@ function createToast(type, title, msg) {
         showToast.value = false;
     }, 5000);
 }
+
+function togglePasswordView() {
+    const passwordInput = document.getElementById("passwordInput");
+
+    if (showPassword.value) {
+        passwordInput.type = "password";
+    } else {
+        passwordInput.type = "text";
+    }
+
+    showPassword.value = !showPassword.value;
+}
 </script>
 
 <template>
@@ -122,13 +136,21 @@ function createToast(type, title, msg) {
             <form class="flex flex-col justify-center">
                 <p class="text-2xl font-bold mb-6 text-center">Accedi</p>
                 <label class="input input-bordered flex items-center gap-2 mb-4">
-                    <EnvelopeIcon class="h-5 w-5 opacity-70"></EnvelopeIcon>
+                    <EnvelopeIcon class="size-5 opacity-70" />
                     <input v-model="email" type="email" class="grow" placeholder="Indirizzo email" required />
                 </label>
-                <label class="input input-bordered flex items-center gap-2 mb-6">
-                    <KeyIcon class="h-5 w-5 opacity-70"></KeyIcon>
-                    <input v-model="password" type="password" class="grow" placeholder="Password" required />
-                </label>
+                <div class="join">
+                    <label class="input input-bordered join-item flex items-center gap-2 mb-6">
+                        <KeyIcon class="size-5 opacity-70" />
+                        <input id="passwordInput" v-model="password" type="password" class="grow" placeholder="Password"
+                            required />
+                    </label>
+                    <button @click="togglePasswordView()" type="button"
+                        :class="showPassword ? 'btn btn-primary join-item' : 'btn btn-error join-item'">
+                        <EyeIcon v-if="showPassword" class="size-5 opacity-70" />
+                        <EyeSlashIcon v-else class="size-5 opacity-70" />
+                    </button>
+                </div>
                 <input @click="login(false)" type="button" value="Accedi"
                     class="btn btn-primary btn-outline btn-block rounded-lg" />
             </form>
