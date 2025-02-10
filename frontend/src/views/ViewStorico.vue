@@ -20,11 +20,11 @@ onMounted(() => {
     getEmergencies()
 
     // Per nascondere i filtri al caricamento della pagina
-    showFilters()
-    showFilters()
+    toggleFilters()
+    toggleFilters()
 });
 
-function showFilters() {
+function toggleFilters() {
     const filters = document.getElementById('filters');
 
     if (filters.style.display === 'none' || !filters.style.display) {
@@ -47,7 +47,7 @@ function showFilters() {
                 <div class="w-full mb-8">
                     <div class="flex flex-row items-center w-full mb-2">
                         <ais-search-box placeholder="Ricerca qui..." submit-title="Invia" reset-title="Reset" />
-                        <button @click="showFilters()" class="btn btn-filter ms-2">
+                        <button @click="toggleFilters()" class="btn btn-filter ms-2">
                             <AdjustmentsHorizontalIcon class="w-5 h-5" />
                         </button>
                     </div>

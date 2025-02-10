@@ -3,6 +3,7 @@ import {
     TrashIcon
 } from "@heroicons/vue/24/solid";
 import BadgeRuolo from "../Badge/BadgeRuolo.vue";
+import { formatDate } from "@/data/validation";
 
 const props = defineProps({
     users: {
@@ -15,6 +16,7 @@ function showModalElimina(id) {
     const modal = document.getElementById('modalElimina' + id);
     if (modal) modal.showModal();
 }
+
 </script>
 
 <template>
@@ -25,8 +27,8 @@ function showModalElimina(id) {
                     <th>#</th>
                     <th>Indirizzo mail</th>
                     <th class="hidden sm:table-cell">Ruolo</th>
-                    <th class="hidden md:table-cell">Creato il</th>
-                    <th class="hidden md:table-cell">Modificato il</th>
+                    <th class="hidden lg:table-cell">Creato il</th>
+                    <th class="hidden xl:table-cell">Modificato il</th>
                     <th></th>
                 </tr>
             </thead>
@@ -43,11 +45,11 @@ function showModalElimina(id) {
                         <td class="hidden sm:table-cell">
                             <BadgeRuolo :role="user.role" />
                         </td>
-                        <td class="hidden md:table-cell">
-                            {{ user.createdAt }}
+                        <td class="hidden lg:table-cell">
+                            {{ formatDate(user.createdAt) }}
                         </td>
-                        <td class="hidden md:table-cell pe-12">
-                            {{ user.updatedAt }}
+                        <td class="hidden xl:table-cell pe-12">
+                            {{ formatDate(user.updatedAt) }}
                         </td>
                         <th class="px-1 size-0 pe-4">
                             <button @click="showModalElimina(user.id)"

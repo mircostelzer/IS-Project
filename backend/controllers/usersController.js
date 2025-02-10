@@ -9,6 +9,8 @@ export const getUsers = async (req, res) => {
                 self: pathApiUsers + user._id,
                 email: user.email,
                 role: user.role,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
             };
         });
         res.status(200).json(users);
@@ -25,6 +27,8 @@ export const getUserById = async (req, res) => {
             self: pathApiUsers + user._id,
             email: user.email,
             role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
         };
         res.status(200).json(user);
     } catch (error) {

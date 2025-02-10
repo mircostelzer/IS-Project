@@ -19,11 +19,6 @@ const props = defineProps({
     },
 });
 
-// Funzione per recuperare l'id delle emergenze
-const getEmergencyId = (self) => {
-    return self.substring(self.lastIndexOf('/') + 1);
-};
-
 function showModalElimina(id) {
     const modal = document.getElementById('modalElimina' + id);
     if (modal) modal.showModal();
@@ -63,21 +58,21 @@ function showModalElimina(id) {
                         </td>
                         <td class="hidden sm:table-cell pe-12">{{ emergency.location }}</td>
                         <th :class="{ 'px-1 size-0': true, 'pe-4': !props.isOperator }">
-                            <router-link :to="`/dettagli?id=${getEmergencyId(emergency.self)}`">
+                            <router-link :to="`/dettagli?id=${emergency.id}`">
                                 <button class="btn btn-xs btn-info btn-square btn-outline">
                                     <EyeIcon class="size-4 text-white opacity-80" />
                                 </button>
                             </router-link>
                         </th>
                         <th v-if="props.isOperator" class="px-1 size-0">
-                            <router-link :to="`/modifica_comunicazione?id=${getEmergencyId(emergency.self)}`">
+                            <router-link :to="`/modifica_comunicazione?id=${emergency.id}`">
                                 <button class="btn btn-xs btn-info btn-square btn-outline">
                                     <Cog6ToothIcon class="size-4 text-white opacity-80" />
                                 </button>
                             </router-link>
                         </th>
                         <th v-if="props.isOperator" class="px-1 size-0 pe-4">
-                            <button @click="showModalElimina(getEmergencyId(emergency.self))"
+                            <button @click="showModalElimina(emergency.id)"
                                 class="btn btn-xs btn-error btn-square btn-outline">
                                 <TrashIcon class="size-4 text-white opacity-80" />
                             </button>
@@ -88,15 +83,15 @@ function showModalElimina(id) {
         </table>
 
         <div v-for="(emergency, index) in emergencies" :key="index">
-            <dialog :id="`modalElimina${getEmergencyId(emergency.self)}`" class="modal modal-bottom sm:modal-middle">
+            <dialog :id="`modalElimina${emergency.id}`" class="modal modal-bottom sm:modal-middle">
                 <div class="modal-box">
                     <form method="dialog">
                         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
                     <h3 class="text-lg font-bold mb-2">Eliminare questa emergenza?</h3>
-                    <p class="text-sm text-gray-200"><b>ID:</b> {{ getEmergencyId(emergency.self) }}</p>
+                    <p class="text-sm text-gray-200"><b>ID:</b> {{ emergency.id }}</p>
                     <p class="text-sm text-gray-200 mb-4"><b>Titolo:</b> {{ emergency.title }}</p>
-                    <button @click="eliminaEmergenza(getEmergencyId(emergency.self))" type="button"
+                    <button @click="eliminaEmergenza(emergency.id)" type="button"
                         class="btn btn-error float-end">
                         <TrashIcon class="size-5 opacity-70" />
                         Conferma ed elimina
