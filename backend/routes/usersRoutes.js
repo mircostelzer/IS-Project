@@ -6,7 +6,7 @@ import { tokenChecker, verifyRole } from '../authentication/verification.js';
 router.get('/', tokenChecker, verifyRole('operator'), getUsers);
 router.get('/:id', tokenChecker, verifyRole('operator'), getUserById);
 router.post('/', createUser);
-router.put('/:id/password', tokenChecker, updatePassword);
+router.put('/:userId/password', tokenChecker, updatePassword);
 router.delete('/:id', tokenChecker, verifyRole('operator'), deleteUser);
 
 export default router;
