@@ -45,6 +45,35 @@ export const createUser = async (req, res) => {
     }
 };
 
+export const updatePassword = async (req, res) => {
+    try {
+        const userIdFromToken = req.user.id;
+        const { userId } = req.params;
+        const { oldPassword, newPassword } = req.body;
+
+        if (userIdFromToken !== userId) {
+            return res.status(403).json({ success: false, message: "You cannot change another user's password" });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        if (user.password !== oldPassword) {
+            return res.status(400).json({ success: false, message: "Incorrect old password" });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+
+}
+
 export const deleteUser = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
