@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('../views/ViewSegnalazione.vue'),
     },
     {
+      path: '/pubblica_comunicazione',
+      name: 'pubblica_comunicazione',
+      component: () => import('../views/ViewComunicazione.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'error404',
       component: () => import('../views/ViewError404.vue'),

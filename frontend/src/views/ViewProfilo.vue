@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, EyeIcon, EyeSlashIcon, KeyIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
 import { loggedUser, clearLoggedUser } from '../states/loggedUser.js';
+
+import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, EyeIcon, EyeSlashIcon, KeyIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
 
 import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue';
 import Toast from '@/components/Toast/Toast.vue';
-import AccessDenied from '@/components/Error/AccessDenied.vue';
+import AccessLimited from '@/components/Error/AccessLimited.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -24,10 +25,8 @@ const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
 
-// Se l'utente non è loggato, reindirizzo alla pagina di login
-if (!loggedUser.token) {
-    router.push({ path: '/accedi', query: { fromProfile: 'true' } });
-} else {
+// Se l'utente non è loggato
+if (loggedUser.token) {
     onMounted(() => {
         // Toast di conferma registrazione
         if (route.query.fromLogin === 'true') {
@@ -60,7 +59,7 @@ if (!loggedUser.token) {
 
 function logout() {
     clearLoggedUser();
-    router.push({ path: '/' });
+    router.push({ path: '/accedi', query: { limited: 'true' } });
 }
 
 // Funzione per formattare la data di registrazione dell'utente
@@ -202,7 +201,7 @@ function createToast(type, title, msg) {
     </div>
 
     <div v-else>
-        <AccessDenied />
+        <AccessLimited />
     </div>
 
 </template>

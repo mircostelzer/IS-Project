@@ -1,57 +1,47 @@
 <script setup>
+import { ref } from 'vue'
+import { loggedUser } from '../states/loggedUser.js';
+import AccessLimited from "@/components/Error/AccessLimited.vue";
+
 import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
+
+
 </script>
 
 <template>
-    <div class="div-principale w-full flex justify-center">
-        <div class="max-w-7xl h-full">
-            <div class="bg-secondary rounded-3xl p-8">
+    <div v-if="loggedUser.token">
+        <div class="div-principale w-full flex justify-center">
+            <div class="bg-secondary w-full max-w-4xl rounded-3xl p-8">
                 <div class="flex flex-row items-center ms mt-4 md:mt-0 mb-8">
                     <PaperAirplaneIcon class="w-6 h-6 me-3" />
                     <p class="text-2xl font-bold">Invia segnalazione</p>
                 </div>
                 <form class="flex flex-col justify-center items-center">
                     <label class="form-control w-full">
-                        <p class="text-slate-100 text-lg mb-2">Titolo segnalazione:</p>
-                        <input type="text" placeholder="Cosa stai segnalando?" class="input input-md w-full"
-                            maxlength="50" required />
+                        <p class="text-slate-100 font-bold text-lg mb-2">Inserisci la descrizione:</p>
+                        <textarea class="textarea h-32"
+                            placeholder="Che succede? Spiegaci bene nel dettaglio cosa stai segnalando"
+                            maxlength="1000" required ></textarea>
                         <div class="label">
-                            <span class="label-text-alt"><b>Campo obbligatorio</b> - Max 50 caratteri</span>
+                            <span class="label-text-alt"><b>Campo obbligatorio</b> - Max 1000 caratteri</span>
                         </div>
                     </label>
-                    <div class="columns-1 md:columns-2 gap-8 mt-6">
-                        <label class="form-control w-full">
-                            <p class="text-slate-100 text-lg mb-2">Categoria emergenza:</p>
-                            <select class="select" required>
-                                <option disabled selected>Di che tipo è l'emergenza?</option>
-                                <option>Frana</option>
-                                <option>Alluvione</option>
-                                <option>Ghiaccio</option>
-                                <option>Crollo strutturale</option>
-                                <option>Incendio</option>
-                                <option>Neve</option>
-                                <option>Tempesta</option>
-                                <option>Caduta albero</option>
-                            </select>
-                            <div class="label">
-                                <span class="label-text-alt"><b>Campo obbligatorio</b></span>
-                            </div>
-                        </label>
-                        <label class="form-control w-full">
-                            <p class="text-slate-100 text-lg mb-2">Posizione emergenza:</p>
-                            <input type="" placeholder="Che area coinvolge?" class="input input-md w-full"
-                                required />
-                            <div class="label">
-                                <span class="label-text-alt"><b>Campo obbligatorio</b></span>
-                            </div>
-                        </label>
-                    </div>
                     <label class="form-control w-full mt-6">
-                        <p class="text-slate-100 text-lg mb-2">Descrizione segnalazione:</p>
-                        <textarea class="textarea h-24" placeholder="Che informazioni puoi aggiungere?"
-                            maxlength="250"></textarea>
+                        <p class="text-slate-100 font-bold text-lg mb-2">Inserisci il luogo:</p>
+                        <input type="" placeholder="Che area coinvolge?" class="input input-md" maxlength="200"
+                            required />
                         <div class="label">
-                            <span class="label-text-alt"><b>Campo obbligatorio</b> - Max 250 caratteri</span>
+                            <span class="label-text-alt"><b>Campo obbligatorio</b> - Max 200 caratteri</span>
+                        </div>
+                    </label>
+                    <label class="form-control w-full mt-6">
+                        <p class="text-slate-100 font-bold text-lg mb-2">Coordinate del luogo:</p>
+                        <div class="join w-full join-vertical md:join-horizontal">
+                            <input type="number" class="input input-md join-item grow" placeholder="Latitudine" required />
+                            <input type="number" class="input input-md join-item grow" placeholder="Longitudine" required />
+                        </div>
+                        <div class="label">
+                            <span class="label-text-alt">Campi facoltativi</span>
                         </div>
                     </label>
                     <input type="submit" value="Invia segnalazione"
@@ -59,6 +49,10 @@ import { PaperAirplaneIcon } from "@heroicons/vue/24/solid";
                 </form>
             </div>
         </div>
+    </div>
+
+    <div v-else>
+        <AccessLimited />
     </div>
 </template>
 

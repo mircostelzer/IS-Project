@@ -54,7 +54,7 @@ function login(withGoogle) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyData),
     }).then((resp) => {
-        // Se la'accesso va a buon fine, recupero i dati dell'utente e lo reindirizzo alla pagina del profilo
+        // Se l'accesso va a buon fine, recupero i dati dell'utente e lo reindirizzo alla pagina del profilo
         if (resp.ok) {
             return resp.json().then(function (userData) {
                 setLoggedUser(userData);
@@ -74,9 +74,9 @@ onMounted(() => {
         createToast("success", "Successo!", "Account creato con successo");
     }
 
-    // Toast di reindirizzamento da accesso
-    if (route.query.fromProfile === 'true') {
-        createToast("info", "Accedi!", "Per visualizzare il tuo profilo, devi prima effettuare l'accesso");
+    // Toast di reindirizzamento da AccessLimited
+    if (route.query.limited === 'true') {
+        createToast("info", "Accedi!", "Per visualizzare la pagina, devi prima effettuare l'accesso");
     }
 
     google.accounts.id.initialize({
