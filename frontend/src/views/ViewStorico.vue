@@ -94,7 +94,7 @@ function updateAlgoliaRecords() {
 
 <template>
     <div class="div-principale w-full my-6 sm:my-12 px-4 flex justify-center">
-        <div class="max-w-5xl h-full">
+        <div class="div-storico h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <ClockIcon class="w-10 h-10 md:w-12 md:h-12 me-2" />
                 <h1 class="text-3xl md:text-4xl text-white font-bold">Storico emergenze</h1>
@@ -158,14 +158,10 @@ function updateAlgoliaRecords() {
                             <div class="div-risultato w-full p-4 rounded-md">
                                 <BadgeStato :state="item.state" />
                                 <p class="text-white text-2xl font-bold mt-1 mb-4">{{ item.title }}</p>
-                                <div class="columns-1 md:columns-3">
+                                <div class="columns-1 md:columns-2">
                                     <div class="pe-6">
                                         <p class="text-slate-100">Categoria: </p>
                                         <BadgeCategoria :category="item.category" />
-                                    </div>
-                                    <div class="pe-6 mt-4">
-                                        <p class="text-slate-100">Data segnalazione: </p>
-                                        <p class="text-gray-300">{{ formatTime(item.startDate) }}</p>
                                     </div>
                                     <div class="pe-6 mt-4">
                                         <p class="text-slate-100">Area interessata: </p>
@@ -192,7 +188,7 @@ function updateAlgoliaRecords() {
 
 <style scoped>
 .div-storico {
-    padding: min(50px, 3vw);
+    width: min(100%, 1100px);
 }
 
 .div-risultati {

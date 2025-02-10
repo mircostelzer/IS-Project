@@ -138,7 +138,7 @@ function createToast(type, title, msg) {
                         </div>
                         <div class="flex flex-row justify-between sm:justify-end mt-5">
                             <button onclick="modalPassword.showModal()"
-                                class="btn btn-sm btn-ghost btn-outline mb-2 me-0 sm:me-2">
+                                class="btn btn-sm btn-warning btn-outline mb-2 me-0 sm:me-2">
                                 <ArrowPathIcon class="w-5 h-5 opacity-80" />
                                 Cambia password
                             </button>
@@ -216,7 +216,7 @@ function createToast(type, title, msg) {
 }
 
 .modal-box {
-    background-color: var(--background);
+    background-color: var(--foreground);
 }
 
 .full-width {

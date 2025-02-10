@@ -57,7 +57,7 @@ function chiudiMenuNavbar() {
                         </li>
                         <div v-if="loggedUser.token">
                             <div class="divider"></div>
-                            <p class="text-lg text-primary mb-2">Sezione privata:</p>
+                            <p class="text-lg text-primary font-bold mb-2">Sezione privata:</p>
                             <li class="menu-title px-0">
                                 <router-link to="/profilo" class="px-0 flex" @click="chiudiMenuNavbar()">
                                     <UserIcon class="size-6 mx-2" />

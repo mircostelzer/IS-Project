@@ -51,13 +51,13 @@ const props = defineProps({
                             {{ emergency.title }}
                         </td>
                         <td class="hidden sm:table-cell">
-                            <BadgeCategoria :category="emergency.category" class="badge-sm" />
+                            <BadgeCategoria :category="emergency.category" />
                         </td>
                         <td class="hidden sm:table-cell">
-                            <BadgeStato :state="emergency.state" class="badge-sm" />
+                            <BadgeStato :state="emergency.state" />
                         </td>
                         <td class="hidden sm:table-cell pe-12">{{ emergency.location }}</td>
-                        <th class="px-1 size-0 pe-4">
+                        <th :class="{'px-1 size-0': true, 'pe-4': !props.isAdmin}">
                             <router-link :to="`/dettagli?id=${getEmergencyId(emergency.self)}`">
                                 <button class="btn btn-xs btn-info btn-square btn-outline">
                                     <EyeIcon class="size-4 text-white opacity-80" />

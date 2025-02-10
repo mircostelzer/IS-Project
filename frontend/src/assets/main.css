@@ -124,7 +124,20 @@ body {
     color: var(--text);
 }
 
+.ais-InfiniteHits-list {
+    margin: 0 !important;
+    display: grid !important; 
+    grid-template-columns: repeat(2, 1fr) !important; 
+
+    @media (max-width: 1000px) {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+
+    grid-gap: 1em !important;
+}
+
 .ais-InfiniteHits-item {
+    margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
     border: 0 !important;
