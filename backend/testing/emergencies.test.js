@@ -85,11 +85,13 @@ describe('Emergency API', () => {
             description: 'Test Description',
             location: 'Test Location'
         })
-        .expect(201).then( (res) => {
+        .expect(201).then( async (res) => {
             expect(res.headers.location).toBeDefined();
-
             const locationHeader = res.headers.location;
             emergencyId = locationHeader.split('/').pop();
+            const checkState = await request(app).get(`/api/emergencies/${emergencyId}`);
+            expect(checkState.body.state).toEqual('in_progress');
+
         });
     });
     

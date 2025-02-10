@@ -114,6 +114,12 @@ describe('User API', () => {
         });
     });
 
+    test('GET /api/users/:id without a token should return 401', async () => {
+        return request(app)
+        .get(`/api/users/${userId}`)
+        .expect(401, { success: false, message: "Token not found" });
+    });
+
     test('DELETE /api/users/:id with valid ID should correctly delete the user', async () => {
         return request(app)
         .delete(`/api/users/${userId}`)
@@ -129,5 +135,14 @@ describe('User API', () => {
         .expect(404, { message: "User not found" });
     });
 
+    test('POST /api/users with invalid email should return 400', async () => {
+        return request(app)
+        .post('/api/users')
+        .send({
+            email: 'invalid_email',
+            password: 'test_password'
+        })
+        .expect(400, { message: "Invalid email" });
+    });
         
 });
