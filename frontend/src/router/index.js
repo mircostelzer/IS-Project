@@ -49,6 +49,11 @@ const router = createRouter({
       component: () => import('../views/ViewComunicazione.vue'),
     },
     {
+      path: '/modifica_comunicazione',
+      name: 'modifica_comunicazione',
+      component: () => import('../views/ViewEditComunicazione.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'error404',
       component: () => import('../views/ViewError404.vue'),

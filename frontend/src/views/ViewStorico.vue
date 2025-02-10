@@ -1,62 +1,27 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import 'instantsearch.css/themes/algolia-min.css';
+import { onMounted } from 'vue'
+import { emergencies, getEmergencies } from '../data/emergencies'
+import { liteClient as algoliasearch } from 'algoliasearch/lite'
+import 'instantsearch.css/themes/algolia-min.css'
 
-import { ClockIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon, InformationCircleIcon } from "@heroicons/vue/24/solid";
-import BadgeStato from '@/components/Badge/BadgeStato.vue';
-import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue';
+import { ClockIcon, AdjustmentsHorizontalIcon, InformationCircleIcon } from "@heroicons/vue/24/solid"
+import BadgeStato from '@/components/Badge/BadgeStato.vue'
+import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue'
 
-const host = import.meta.env.VITE_API_BASE_URL;
-const apiEmergencies = host + '/emergencies';
-
-const searchResults = ref([]);
+// Configurazione Algolia per la ricerca delle emergenze
+const searchEmergencies = algoliasearch(import.meta.env.VITE_ALGOLIA_APP_ID, import.meta.env.VITE_ALGOLIA_SEARCH_KEY);
 
 // Funzione per recuperare l'id delle emergenze
-const recuperaId = (self) => {
-    return self ? self.substring(self.lastIndexOf('/') + 1) : '';
-};
-
-// Funzione per gestire la descrizione delle emergenze
-const conDescrizione = (descrizione) => {
-    return descrizione ? descrizione : '<i>Nessuna descrizione disponibile</i>';
-};
-
-// Funzione per formattare la data di segnalazione delle emergenze
-function formatTime(time) {
-    return new Date(time).toLocaleString('it-IT', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
+function recuperaId(self) {
+    return self.substring(self.lastIndexOf('/') + 1)
 }
 
 onMounted(() => {
-    // Recupero i dati delle emergenze con una chiamata fetch
-    fetch(apiEmergencies)
-        .then(response => response.json())
-        .then(data => {
-            // Modifico l'array di emergenze per formattare startDate
-            searchResults.value = data.map(emergency => {
-                return {
-                    ...emergency,
-                    startDate: new Date(emergency.startDate).toLocaleString('it-IT', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })
-                };
-            });
-        })
-        .catch(error => {
-            console.error('Errore:', error);
-        });
+    getEmergencies()
 
-    showFilters();
+    // Per nascondere i filtri al caricamento della pagina
+    showFilters()
+    showFilters()
 });
 
 function showFilters() {
@@ -68,28 +33,6 @@ function showFilters() {
         filters.style.display = 'none';
     }
 }
-
-// Configurazione Algolia per la ricerca delle emergenze
-const searchClient = algoliasearch(import.meta.env.VITE_ALGOLIA_APP_ID, import.meta.env.VITE_ALGOLIA_SEARCH_KEY);
-
-// Aggiorna i dati ottenuti da emergencies e gli invia ad Algolia
-function updateAlgoliaRecords() {
-    const algolia = algoliasearch(import.meta.env.VITE_ALGOLIA_APP_ID, import.meta.env.VITE_ALGOLIA_WRITE_KEY);
-
-    const processRecords = async () => {
-        // Svuoto prima il vecchio indice di Algolia
-        const response = await algolia.clearObjects({ indexName: 'emergencies_index' });
-
-        // Inserisco i dati aggiornati dalla chiamata API
-        const datasetRequest = await fetch(apiEmergencies);
-        const emergenciesRecord = await datasetRequest.json();
-        return await algolia.saveObjects({ indexName: 'emergencies_index', objects: emergenciesRecord });
-    };
-
-    processRecords()
-        .then(() => console.log('Algolia: emergencies successfully updated and indexed'))
-        .catch((err) => console.error(err));
-}
 </script>
 
 <template>
@@ -100,7 +43,7 @@ function updateAlgoliaRecords() {
                 <h1 class="text-3xl md:text-4xl text-white font-bold">Storico emergenze</h1>
             </div>
 
-            <ais-instant-search :search-client="searchClient" index-name="emergencies_index">
+            <ais-instant-search :search-client="searchEmergencies" index-name="emergencies_index">
                 <div class="w-full mb-8">
                     <div class="flex flex-row items-center w-full mb-2">
                         <ais-search-box placeholder="Ricerca qui..." submit-title="Invia" reset-title="Reset" />
@@ -114,7 +57,7 @@ function updateAlgoliaRecords() {
                                 <div>
                                     <p class="mb-1">Ordina per:</p>
                                     <ais-sort-by :items="[
-                                        { value: 'emergencies_index_title_asc', label: 'Titolo (A-Z)' },
+                                        { value: 'emergencies_index', label: 'Titolo (A-Z)' },
                                         { value: 'emergencies_index_title_desc', label: 'Titolo (Z-A)' },
                                         { value: 'emergencies_index_location_asc', label: 'Area (A-Z)' },
                                         { value: 'emergencies_index_location_desc', label: 'Area (Z-A)' },
@@ -149,7 +92,7 @@ function updateAlgoliaRecords() {
                     <ais-stats />
                 </div>
 
-                <div v-if="searchResults.length === 0" class="div-risultati w-full h-auto rounded-lg p-4">
+                <div v-if="emergencies.length === 0" class="div-risultati w-full h-auto rounded-lg p-4">
                     <p class="text-gray-300"><i>Nessun risultato trovato...</i></p>
                 </div>
                 <div v-else class="div-risultati w-full h-auto rounded-lg p-1 sm:p-2 md:p-4">

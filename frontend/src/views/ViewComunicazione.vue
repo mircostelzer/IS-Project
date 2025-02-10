@@ -65,7 +65,7 @@ function createToast(type, title, msg) {
 </script>
 
 <template>
-    <div v-if="loggedUser.token && loggedUser.role === 'admin'">
+    <div v-if="loggedUser.token && loggedUser.role === 'operator'">
         <div class="div-principale w-full flex justify-center">
             <div class="bg-secondary w-full max-w-6xl rounded-3xl p-8">
                 <div class="flex flex-row items-center ms mt-4 md:mt-0 mb-8">
@@ -134,13 +134,13 @@ function createToast(type, title, msg) {
                     <label class="form-control w-full mt-6">
                         <p class="text-slate-100 font-bold text-lg mb-2">Coordinate del luogo:</p>
                         <div class="join w-full join-vertical md:join-horizontal">
-                            <input v-model="coordinates.lat" type="number" class="input input-md join-item grow"
-                                placeholder="Latitudine" required />
-                            <input v-model="coordinates.lon" type="number" class="input input-md join-item grow"
-                                placeholder="Longitudine" required />
+                            <input v-model="coordinates.lat" type="number" class="input no-arrows input-md join-item grow"
+                                placeholder="Latitudine" />
+                            <input v-model="coordinates.lon" type="number" class="input no-arrows input-md join-item grow"
+                                placeholder="Longitudine" />
                         </div>
                         <div class="label">
-                            <span class="label-text-alt"><b>Campi obbligatori</b></span>
+                            <span class="label-text-alt">Campi facoltativi</span>
                         </div>
                     </label>
                     <input @click="inviaComunicazione()" type="button" value="Pubblica comunicazione"

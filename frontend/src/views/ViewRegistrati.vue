@@ -1,12 +1,12 @@
 <script setup>
-import Toast from "../components/Toast/Toast.vue";
-import { validateEmail } from "@/data/validation";
-
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
-import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/solid";
+import { useRouter } from 'vue-router'
+import { validateEmail } from "@/data/validation"
 
-const router = useRouter();
+import Toast from "../components/Toast/Toast.vue"
+import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/solid"
+
+const router = useRouter()
 
 const apiRegister = import.meta.env.VITE_API_BASE_URL
 const email = ref()

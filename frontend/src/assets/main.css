@@ -166,6 +166,16 @@ html:has(body.content-overflow-y) {
 
 
 
+/* Per nascondere le frecce di input="number" */
+.no-arrows {
+    margin: 0 !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: textfield !important;
+}
+
+
+
 /* Animazioni per rendere un elemento "shiny" */
 @keyframes shine {
     0% {

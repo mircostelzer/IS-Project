@@ -1,26 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { loggedUser, clearLoggedUser } from '../states/loggedUser.js';
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { emergencies, getEmergencies } from '../data/emergencies'
+import { loggedUser, clearLoggedUser } from '../states/loggedUser.js'
 
-import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, EyeIcon, EyeSlashIcon, KeyIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid";
+import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue'
+import Toast from '@/components/Toast/Toast.vue'
+import AccessLimited from '@/components/Error/AccessLimited.vue'
+import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, EyeIcon, EyeSlashIcon, KeyIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid"
 
-import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue';
-import Toast from '@/components/Toast/Toast.vue';
-import AccessLimited from '@/components/Error/AccessLimited.vue';
-
-const route = useRoute();
-const router = useRouter();
-
-const host = import.meta.env.VITE_API_BASE_URL;
-const apiEmergencies = host + '/emergencies';
-const emergencies = ref([]);
+const route = useRoute()
+const router = useRouter()
 
 const password = ref()
 const confirmPassword = ref()
 const showPassword = ref(false)
 
-const showToast = ref(false);
+const showToast = ref(false)
 const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
@@ -34,29 +30,12 @@ if (loggedUser.token) {
         }
 
         // Recupero le emergenze dell'utente con una chiamata fetch
-        fetch(apiEmergencies)
-            .then(response => response.json())
-            .then(data => {
-                // Modifico l'array di emergenze per formattare startDate
-                emergencies.value = data.map(emergency => {
-                    return {
-                        ...emergency,
-                        startDate: new Date(emergency.startDate).toLocaleString('it-IT', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })
-                    };
-                });
-            })
-            .catch(error => {
-                console.error('Errore:', error);
-            });
+        // DA CREARE UN METODO DEDICATO getEmergenciesByUserId(userId)
+        getEmergencies()
     });
 }
 
+// Funzione per effettuare il logout dell'utente
 function logout() {
     clearLoggedUser();
     router.push({ path: '/accedi', query: { limited: 'true' } });

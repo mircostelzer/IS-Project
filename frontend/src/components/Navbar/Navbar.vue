@@ -1,7 +1,7 @@
 <script setup>
-import { RouterLink } from "vue-router";
+import { RouterLink } from "vue-router"
 import { loggedUser } from '../../states/loggedUser.js'
-import OcioDinamicoLetsgoski from "./OcioDinamicoLetsgoski.vue";
+import OcioDinamicoLetsgoski from "./OcioDinamicoLetsgoski.vue"
 
 import {
     Bars3BottomLeftIcon,
@@ -15,7 +15,7 @@ import {
     MegaphoneIcon,
     KeyIcon,
     UserCircleIcon
-} from "@heroicons/vue/24/solid";
+} from "@heroicons/vue/24/solid"
 
 // Per chiudere il menu della navbar dopo il click ad un'altra pagina
 function chiudiMenuNavbar() {
@@ -64,22 +64,22 @@ function chiudiMenuNavbar() {
                                     <p class="ms-1 mt-0.5">Il tuo profilo</p>
                                 </router-link>
                             </li>
-                            <li v-if="loggedUser.role !== 'admin'" class="menu-title px-0">
+                            <li v-if="loggedUser.role !== 'operator'" class="menu-title px-0">
                                 <router-link to="/invia_segnalazione" class="px-0 flex" @click="chiudiMenuNavbar()">
                                     <ExclamationCircleIcon class="size-6 mx-2" />
                                     <p class="ms-1 mt-0.5">Invia segnalazione</p>
                                 </router-link>
                             </li>
-                            <li v-if="loggedUser.role === 'admin'" class="menu-title px-0">
+                            <li v-if="loggedUser.role === 'operator'" class="menu-title px-0">
                                 <router-link to="/pubblica_comunicazione" class="px-0 flex" @click="chiudiMenuNavbar()">
                                     <MegaphoneIcon class="size-6 mx-2" />
                                     <p class="ms-1 mt-0.5">Pubblica comunicazione</p>
                                 </router-link>
                             </li>
-                            <li v-if="loggedUser.role === 'admin'" class="menu-title px-0">
+                            <li v-if="loggedUser.role === 'operator'" class="menu-title px-0">
                                 <router-link to="/dashboard" class="px-0 flex" @click="chiudiMenuNavbar()">
                                     <LockClosedIcon class="size-6 mx-2" />
-                                    <p class="ms-1 mt-0.5">Dashboard admin</p>
+                                    <p class="ms-1 mt-0.5">Dashboard operatore</p>
                                 </router-link>
                             </li>
                         </div>

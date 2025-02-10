@@ -22,7 +22,7 @@ import { HomeIcon } from "@heroicons/vue/24/solid";
     height: min(300px, 100%);
     margin: 10px;
     border-radius: 10px;
-    
+
     background-color: #23351f80;
 }
 </style>
