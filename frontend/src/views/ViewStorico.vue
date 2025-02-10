@@ -110,7 +110,7 @@ function updateAlgoliaRecords() {
                     </div>
                     <div id="filters" class="div-risultati w-full rounded-lg p-1 sm:p-2 md:p-4 mb-2">
                         <div class="div-risultato w-full p-4 rounded-md">
-                            <div class="flex flex-row flex-wrap gap-3">
+                            <div class="flex flex-row flex-wrap gap-3 text-white">
                                 <div>
                                     <p class="mb-1">Ordina per:</p>
                                     <ais-sort-by :items="[
@@ -134,6 +134,8 @@ function updateAlgoliaRecords() {
                                     <p class="mb-1">Stato:</p>
                                     <ais-refinement-list attribute="state" />
                                 </div>
+                            </div>
+                            <div class="flex flex-row flex-wrap gap-3 text-white mt-4">
                                 <div>
                                     <p class="mb-1">Categoria:</p>
                                     <ais-refinement-list attribute="category" />
@@ -154,12 +156,8 @@ function updateAlgoliaRecords() {
                     <ais-infinite-hits class="flex flex-col align-middle">
                         <template v-slot:item="{ item }">
                             <div class="div-risultato w-full p-4 rounded-md">
-                                <div class="flex flex-row items-center">
-                                    <p class="text-medium text-2xl text-white">{{ item.title }}</p>
-                                    <BadgeStato :state="item.state" class="ms-2" />
-                                </div>
-                                <p class="text-sm text-gray-300 mb-6" v-html="conDescrizione(item.description)">
-                                </p>
+                                <BadgeStato :state="item.state" />
+                                <p class="text-white text-2xl font-bold mt-1 mb-4">{{ item.title }}</p>
                                 <div class="columns-1 md:columns-3">
                                     <div class="pe-6">
                                         <p class="text-slate-100">Categoria: </p>

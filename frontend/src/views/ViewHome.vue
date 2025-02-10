@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import Mappa from "../components/Mappa/Mappa.vue";
 import { ArrowsPointingOutIcon } from "@heroicons/vue/24/solid";
+
+import Mappa from "../components/Mappa/Mappa.vue";
 import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue';
-import BadgeStato from '@/components/Badge/BadgeStato.vue';
 
 const host = import.meta.env.VITE_API_BASE_URL;
-const apiEmergencies = host + '/emergencies';
+const apiEmergenciesInCorso = host + '/emergencies/?state=in_progress';
 
 const emergencies = ref([]);
 
@@ -28,7 +28,7 @@ const requestTime = new Date().toLocaleString('it-IT', {
 
 onMounted(() => {
     // Recupero i dati delle emergenze con una chiamata fetch
-    fetch(apiEmergencies)
+    fetch(apiEmergenciesInCorso)
         .then(response => response.json())
         .then(data => {
             // Modifico l'array di emergenze per formattare startDate
@@ -69,15 +69,15 @@ onMounted(() => {
                     <input type="radio" name="lista-emergenze" />
                     <div class="collapse-title text-xl font-medium text-white">{{ emergency.title }}</div>
                     <div class="collapse-content">
-                        <p class="text-sm text-gray-300 mb-4" v-html="conDescrizione(emergency.description)"></p>
+                        <p class="text-sm text-gray-300 -mt-4 mb-4" v-html="conDescrizione(emergency.location)"></p>
                         <div class="columns-2">
                             <div>
                                 <p class="text-slate-100">Categoria: </p>
-                                <BadgeCategoria :category="emergency.category" class="badge-warning" />
+                                <BadgeCategoria :category="emergency.category" class="badge-warning badge-sm" />
                             </div>
                             <div>
-                                <p class="text-slate-100">Data segnalazione: </p>
-                                <BadgeStato :state="emergency.state" />
+                                <p class="text-slate-100">Data pubblicazione: </p>
+                                <p class="text-gray-300 text-sm">{{ emergency.startDate }}</p>
                             </div>
                         </div>
                         <router-link :to="`/dettagli?id=${recuperaId(emergency.self)}`">

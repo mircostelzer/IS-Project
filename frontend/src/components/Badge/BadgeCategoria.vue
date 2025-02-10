@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="badge text-sm">{{ props.category }}</div>
+    <div class="badge">{{ props.category }}</div>
 </template>
 
 <style scoped>

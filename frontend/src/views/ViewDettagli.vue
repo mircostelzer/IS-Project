@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { MagnifyingGlassIcon, HomeIcon } from "@heroicons/vue/24/solid";
+import { useRoute, useRouter } from 'vue-router';
+import { MagnifyingGlassIcon, ArrowUturnLeftIcon } from "@heroicons/vue/24/solid";
 import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue';
 import BadgeStato from '@/components/Badge/BadgeStato.vue';
 
 const route = useRoute();
+const router = useRouter();
 
 const host = import.meta.env.VITE_API_BASE_URL;
 const apiEmergency = host + '/emergencies/';
@@ -62,8 +63,7 @@ onMounted(() => {
             <div v-if="emergency === null" class="div-risultati w-full h-auto rounded-lg p-4">
                 <p class="text-gray-300"><i>Nessun risultato trovato...</i></p>
             </div>
-            <div v-else class="div-risultato w-full px-8 py-4 mb-2 md:mb-4 rounded-2xl">
-                <p class="text-sm text-gray-400 my-2">ID: {{ recuperaId(emergency.self) }}</p>
+            <div v-else class="div-risultato w-full px-8 py-8 mb-2 md:mb-4 rounded-2xl">
                 <p class="font-bold text-3xl text-white mb-2">{{ emergency.title }}</p>
                 <p class="text-gray-300 mb-6" v-html="conDescrizione(emergency.description)"></p>
                 <div class="columns-1 md:columns-2">
@@ -84,11 +84,9 @@ onMounted(() => {
                         <p class="text-gray-300">{{ emergency.startDate }}</p>
                     </div>
                 </div>
-                <router-link to="/">
-                    <button class="btn btn-secondary btn-block mt-6">
-                        <HomeIcon class="w-5 h-5" />Ritorna alla home
-                    </button>
-                </router-link>
+                <button @click="router.go(-1)" class="btn btn-secondary btn-block mt-6">
+                    <ArrowUturnLeftIcon class="w-5 h-5" />Torna indietro
+                </button>
             </div>
         </div>
     </div>
