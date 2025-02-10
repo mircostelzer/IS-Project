@@ -18,9 +18,8 @@ let token = jsonwebtoken.sign(
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri(), { dbName: "testDB" });
-    emergencySpy = jest.spyOn(Emergency, 'find').mockImplementation((criteria) => {
-        return [
-            {
+    emergencySpy = jest.spyOn(Emergency, 'find').mockImplementation(() => {
+        return [{
                 _id: 111,
                 title: 'Test Emergency',
                 category: 'Test Category',
@@ -29,20 +28,20 @@ beforeAll(async () => {
                 location: 'Test Location'
             }];
         });
-    emergencySpyFindByID = jest.spyOn(Emergency, 'findById').mockImplementation((id) => {
-        if (id === 111) {
-            return {
-                _id: 111,
-                title: 'Test Emergency',
-                category: 'Test Category',
-                startDate: '2021-09-01',
-                description: 'Test Description',
-                location: 'Test Location'
-            };
-        } else {
-            return null;
-        }
-    });
+    // emergencySpyFindByID = jest.spyOn(Emergency, 'findById').mockImplementation((id) => {
+    //     if (id === 111) {
+    //         return {
+    //             _id: 111,
+    //             title: 'Test Emergency',
+    //             category: 'Test Category',
+    //             startDate: '2021-09-01',
+    //             description: 'Test Description',
+    //             location: 'Test Location'
+    //         };
+    //     } else {
+    //         return null;
+    //     }
+    // });
 });
 
 afterAll(async () => {
@@ -50,16 +49,19 @@ afterAll(async () => {
     await mongoose.connection.close();
     await mongoServer.stop();
     emergencySpy.mockRestore();
-    emergencySpyFindByID.mockRestore();
+    // emergencySpyFindByID.mockRestore();
 });
 
-describe('GET /api/emergencies', () => {
+describe('Emergency API', () => {
+
     test('GET /api/emergencies should return a list of emergencies', async () => {
         return request(app)
         .get('/api/emergencies')
-        .expect('Content-Type', /json/).then((response) => {
-            if (response.body && response.body[0]) {
-                expect(response.body[0]).toEqual({
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((res) => {
+            if (res.body && res.body[0]) {
+                expect(res.body[0]).toEqual({
                     self: '/api/emergencies/111',
                     title: 'Test Emergency',
                     category: 'Test Category',
@@ -71,6 +73,7 @@ describe('GET /api/emergencies', () => {
         });
     });
 
+    let emergencyId;
     test('POST /api/emergencies correctly creates an emergency', async () => {
         return request(app)
         .post('/api/emergencies')
@@ -82,21 +85,23 @@ describe('GET /api/emergencies', () => {
             description: 'Test Description',
             location: 'Test Location'
         })
-        .expect(201);
-    });
+        .expect(201).then( (res) => {
+            expect(res.headers.location).toBeDefined();
 
-    test('DELETE /api/emergencies/:id correctly deletes an emergency', async () => {
-        const emergency = await Emergency.create({
-            title: 'Test Emergency 3',
-            category: 'Test Category',
-            startDate: '2021-09-01',
-            description: 'Test Description',
-            location: 'Test Location'
+            const locationHeader = res.headers.location;
+            emergencyId = locationHeader.split('/').pop();
         });
+    });
+    
+    test('DELETE /api/emergencies/:id correctly deletes an emergency', async () => {
         return request(app)
-        .delete('/api/emergencies/' + emergency._id)
-        .set('Authorization', `Bearer ${token}`)
-        .expect(204);
+        .delete(`/api/emergencies/${emergencyId}`) // using the emergencyId from the previous test
+        .set('Authorization', `Bearer ${token}`) 
+        .expect(204).then( () => {
+            return request(app)
+            .get(`/api/emergencies/${emergencyId}`)
+            .expect(404);
+        });
     });
 
     test('POST /api/emergencies with incomplete data should return 400', async () => {

@@ -11,7 +11,7 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 async function verify(token) {
   const ticket = await client.verifyIdToken({
       idToken: token,
-      //audience: WEB_CLIENT_ID,  // Specify the WEB_CLIENT_ID of the app that accesses the backend
+      audience: GOOGLE_CLIENT_ID,  // Specify the WEB_CLIENT_ID of the app that accesses the backend
       // Or, if multiple clients access the backend:
       //[WEB_CLIENT_ID_1, WEB_CLIENT_ID_2, WEB_CLIENT_ID_3]
   });
@@ -22,7 +22,7 @@ async function verify(token) {
 }
 
 router.post("", async function (req, res) {
-    var user = {};
+    let user = {};
     try {
         if (req.body.googleToken) {
             const payload = await verify(req.body.googleToken).catch(console.error);
@@ -50,7 +50,7 @@ router.post("", async function (req, res) {
             }
         }
 
-            const payload = {
+            var payload = {
                 email: user.email,
                 id: user.id,
                 role: user.role
