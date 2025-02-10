@@ -6,8 +6,8 @@ import User from "../models/user.js";
 import { OAuth2Client } from "google-auth-library";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
 async function verify(token) {
     const ticket = await client.verifyIdToken({
         idToken: token,
@@ -25,9 +25,11 @@ router.post("", async function (req, res) {
     var user = {};
     try {
         if (req.body.googleToken) {
-            // res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
-            // res.setHeader("Cross-Origin-Embedder-Policy", "require-corp"); // Optional, improves security
-            // next();
+            res.setHeader(
+                "Cross-Origin-Opener-Policy",
+                "same-origin-allow-popups"
+            );
+            res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
 
             const payload = await verify(req.body.googleToken).catch(
                 console.error
@@ -59,34 +61,35 @@ router.post("", async function (req, res) {
                     message: "Authentication failed: incorrect password",
                 });
             }
-
-            const payload = {
-                id: user.id,
-                email: user.email,
-                hiddenPassword: hidePassword(user.password),
-                role: user.role,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-            };
-            const options = {
-                expiresIn: 86400,
-            };
-            const token = sign(payload, process.env.SUPER_SECRET, options);
-
-            return res.status(201).json({
-                success: true,
-                message: "JWT generated successfully",
-                token: token,
-                self: "api/users/" + user._id,
-                id: user.id,
-                email: user.email,
-                hiddenPassword: hidePassword(user.password),
-                role: user.role,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-            });
         }
+
+        const payload = {
+            id: user.id,
+            email: user.email,
+            hiddenPassword: hidePassword(user.password),
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        };
+        const options = {
+            expiresIn: 86400,
+        };
+        const token = sign(payload, process.env.SUPER_SECRET, options);
+
+        return res.status(201).json({
+            success: true,
+            message: "JWT generated successfully",
+            token: token,
+            self: "api/users/" + user._id,
+            id: user.id,
+            email: user.email,
+            hiddenPassword: hidePassword(user.password),
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        });
     } catch (error) {
+        console.log(error.message);
         res.status(500).json({ message: "Error in token creation" });
     }
 });
