@@ -12,6 +12,7 @@ export const getReports = async (req, res) => {
 				coordinates: report.coordinates,
                 state: report.state,
                 description: report.description,
+                createdBy: report.createdBy
             };
         });
         res.status(200).json(reports);
@@ -32,6 +33,7 @@ export const getReportById = async (req, res) => {
 			coordinates: report.coordinates,
             state: report.state,
             description: report.description,
+            createdBy: report.createdBy
         };
         res.status(200).json(report);
     } catch (error) {
@@ -39,9 +41,33 @@ export const getReportById = async (req, res) => {
     }
 };
 
+export const getReportsByUser = async (req, res) => {
+    try {
+        let reports = await Report.find({ createdBy: req.user.id });
+        reports = reports.map((report) => {
+            return {
+                self: pathApiReports + report._id,
+                startDate: report.startDate,
+                location: report.location,
+                coordinates: report.coordinates,
+                state: report.state,
+                description: report.description,
+                createdBy: report.createdBy
+            };
+        });
+        res.status(200).json(reports);
+    } catch (error) {
+        res.status(500).json({ message: "Error in reports recovery" });
+    }
+};
+
 export const createReport = async (req, res) => {
     try {
-        let report = new Report(req.body);
+        const userId = req.user.id;
+        let report = new Report({
+            ...req.body,
+            createdBy: userId
+        });
         report = await report.save();
         let reportId = report._id;
         res.location(pathApiReports + reportId)

@@ -4,7 +4,7 @@ const emergencySchema = new Schema(
     {
         title: { type: String, required: true },
         category: { type: String, required: true },
-        startDate: { type: Date, required: true },
+        startDate: { type: Date, default: Date.now, required: true },
         endDate: { type: Date },
         location: { type: String, required: true },
         coordinates: { 

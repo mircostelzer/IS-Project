@@ -17,7 +17,12 @@ const reportSchema = new Schema(
             default: "pending",
             required: true
         },
-        description: { type: String, required: true }
+        description: { type: String, required: true },
+        createdBy: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        }
     },
     { timestamps: true }
 );
