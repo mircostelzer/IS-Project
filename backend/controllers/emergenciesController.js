@@ -77,7 +77,7 @@ export const updateEmergency = async (req, res) => {
         );
         if (!emergency)
             return res.status(404).json({ message: "Emergency not found" });
-        res.json(emergency);
+        res.status(200).json(emergency);
     } catch (error) {
         res.status(400).json({ message: "Error in emergency update" });
     }

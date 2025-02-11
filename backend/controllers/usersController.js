@@ -39,6 +39,9 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
     try {
         let user = new User(req.body);
+        if (!user.email || typeof user.email !== 'string' || !checkIfEmailInString(user.email)) {
+            return res.status(400).json({ message: "Invalid email" });
+        }
         user = await user.save();
         let userId = user._id;
         res.location(pathApiUsers + userId)
@@ -49,6 +52,35 @@ export const createUser = async (req, res) => {
     }
 };
 
+export const updatePassword = async (req, res) => {
+    try {
+        const userIdFromToken = req.user.id;
+        const { userId } = req.params;
+        const { oldPassword, newPassword } = req.body;
+
+        if (userIdFromToken !== userId) {
+            return res.status(403).json({ success: false, message: "You cannot change another user's password" });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        if (user.password !== oldPassword) {
+            return res.status(400).json({ success: false, message: "Incorrect old password" });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+
+}
+
 export const deleteUser = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
@@ -58,3 +90,8 @@ export const deleteUser = async (req, res) => {
         res.status(500).json({ message: "Error in user deletion" });
     }
 };
+
+function checkIfEmailInString(text) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(text);
+}
