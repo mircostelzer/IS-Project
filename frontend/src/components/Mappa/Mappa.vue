@@ -69,7 +69,7 @@ onMounted(() => {
         </l-map>
 
         <router-link v-if="loggedUser.token && loggedUser.role === 'citizen'" to="/invia_segnalazione">
-            <button class="btn-segnalazione btn btn-warning btn-md">
+            <button class="btn-segnalazione btn btn-warning btn-lg">
                 <ExclamationTriangleIcon class="size-8" />
                 Segnala!
             </button>
@@ -94,8 +94,12 @@ onMounted(() => {
 
 .btn-segnalazione {
     position: absolute;
-    bottom: 27px;
-    right: 10px;
     z-index: 500;
+    border: 2px #808080 solid;
+    
+    width: 200px;
+    height: 50px;
+    bottom: 35px;
+    right: 15px;
 }
 </style>

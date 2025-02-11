@@ -9,6 +9,7 @@ import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/
 const router = useRouter()
 
 const apiRegister = import.meta.env.VITE_API_BASE_URL
+
 const email = ref()
 const password = ref()
 const confirmPassword = ref()
