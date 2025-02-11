@@ -19,42 +19,39 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18  # Cambia la versione se necessario
+          node-version: 18
 
-      # Installazione dipendenze backend
       - name: Install backend dependencies
         run: |
           cd backend
           npm install
 
-      # Esegui i test
       - name: Run backend tests
+        env:
+          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
         run: |
           cd backend
           npm test
 
-      # Se i test passano, installiamo dipendenze frontend
       - name: Install frontend dependencies
         run: |
           cd frontend
           npm install
 
-      # Build del frontend
       - name: Build frontend
         run: |
           cd frontend
           npm run build
 
-      # Deploy frontend su Render
       - name: Deploy frontend to Render
-        if: success()  # Esegue il deploy solo se i test passano
+        if: success()
         run: curl -X POST "$RENDER_DEPLOY_HOOK_FRONTEND"
         env:
           RENDER_DEPLOY_HOOK_FRONTEND: ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}
 
-      # Deploy backend su Render
       - name: Deploy backend to Render
-        if: success()  # Esegue il deploy solo se i test passano
+        if: success()
         run: curl -X POST "$RENDER_DEPLOY_HOOK_BACKEND"
         env:
           RENDER_DEPLOY_HOOK_BACKEND: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}
+
