@@ -22,6 +22,8 @@ const props = defineProps({
     },
 });
 
+const filteredEmergencies = ref([])
+
 onMounted(() => {
     // Recupero i bordi del comune di Trento da OpenStreetMap
     fetch('https://nominatim.openstreetmap.org/search.php?city=Trento&polygon_geojson=1&format=json')
@@ -34,6 +36,12 @@ onMounted(() => {
         .catch(error => {
             console.error('Errore caricamento mappa:', error);
         });
+
+    filteredEmergencies.value = props.emergencies?.filter(emergency => {
+        return emergency.coordinates.lat !== null &&
+            emergency.coordinates.lon !== null;
+    })
+    console.log(filteredEmergencies)
 });
 </script>
 
@@ -41,7 +49,7 @@ onMounted(() => {
     <div class="map-div w-full h-full m-0 p-0 z-40">
         <l-map :zoom="zoom" :center="center">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-            <l-marker v-for="marker in emergencies" :key="marker.id"
+            <l-marker v-for="marker in filteredEmergencies" :key="marker.id"
                 :lat-lng="[marker.coordinates.lat, marker.coordinates.lon]">
                 <l-popup>
                     <div class="flex justify-start">

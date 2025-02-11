@@ -49,7 +49,7 @@ function chiudiMenuNavbar() {
                                 <p class="ms-1 mt-0.5">Storico emergenze</p>
                             </router-link>
                         </li>
-                        <li class="menu-title px-0">
+                        <li v-if="!loggedUser.role" class="menu-title px-0">
                             <router-link to="/accedi" class="px-0 flex" @click="chiudiMenuNavbar()">
                                 <KeyIcon class="size-6 mx-2" />
                                 <p class="ms-1 mt-0.5">Accedi</p>

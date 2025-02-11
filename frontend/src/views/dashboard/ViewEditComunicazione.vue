@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { loggedUser } from '../../states/loggedUser.js';
 import { updateEmergency } from '@/data/emergencies.js';
 
@@ -11,11 +11,13 @@ import WrongURL from '@/components/Error/WrongURL.vue';
 import Toast from '@/components/Toast/Toast.vue';
 
 const route = useRoute();
+const router = useRouter();
+
 const apiEmergencies = import.meta.env.VITE_API_BASE_URL + "/emergencies/";
 
 const self = ref()
 const title = ref()
-const category = ref("Di che tipo è l'emergenza?")
+const category = ref()
 const startDate = ref()
 const startTime = ref()
 const location = ref()
@@ -23,7 +25,7 @@ const coordinates = ref({
     lat: null,
     lon: null
 });
-const state = ref("In che stato è l'emergenza?")
+const state = ref()
 const description = ref()
 
 onMounted(() => {
@@ -93,7 +95,7 @@ function modificaComunicazione() {
 
     console.log('Values: ', updatedEmergency)
     updateEmergency(updatedEmergency)
-    createToast("success", "Successo!", "Comunicazione modificata correttamente")
+    router.push({ path: '/dashboard', query: { edited: 'true' } })
 }
 
 const showToast = ref(false)
@@ -116,7 +118,7 @@ function createToast(type, title, msg) {
 
 <template>
     <div v-if="loggedUser.token && loggedUser.role === 'operator'">
-        <div v-if="self === null">
+        <div v-if="!self">
             <WrongURL />
         </div>
 
@@ -215,7 +217,7 @@ function createToast(type, title, msg) {
                     <div class="w-full">
                         <input @click="modificaComunicazione()" type="button" value="Modifica comunicazione"
                             class="btn btn-primary float-end rounded-lg mt-6" />
-                        <input @click="$router.go(-1)" type="button" value="Annulla"
+                        <input @click="$router.go(-1)" type="button" value="Torna alla dashboard"
                             class="btn btn-ghost btn-outline float-end rounded-lg mt-6 me-2" />
                     </div>
                 </form>

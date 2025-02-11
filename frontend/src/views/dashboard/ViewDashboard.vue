@@ -30,6 +30,10 @@ onMounted(async () => {
     if (route.query.published === 'true') {
         createToast("success", "Successo!", "Comunicazione pubblicata correttamente")
     }
+    
+    if (route.query.published === 'true') {
+        createToast("success", "Successo!", "Comunicazione modificata correttamente")
+    }
 
     if (route.query.approved === 'true') {
         createToast("info", "Successo!", "Segnalazione approvata correttamente")
@@ -98,7 +102,7 @@ function createToast(type, title, msg) {
                         </div>
                     </div>
                     <div class="stat">
-                        <div class="stat-figure text-ghost">
+                        <div class="stat-figure text-warning">
                             <ShieldExclamationIcon class="inline-block size-12" />
                         </div>
                         <div class="stat-title">Segnalazioni inviate</div>
@@ -108,7 +112,7 @@ function createToast(type, title, msg) {
                         </div>
                     </div>
                     <div class="stat">
-                        <div class="stat-figure text-ghost">
+                        <div class="stat-figure text-primary">
                             <ShieldCheckIcon class="inline-block size-12" />
                         </div>
                         <div class="stat-title">Emergenze pubblicate</div>
@@ -177,7 +181,7 @@ function createToast(type, title, msg) {
 }
 
 .stat:hover {
-    color: var(--primary);
+    color: var(--primary) !important;
     transform: scale(1.05);
 }
 
