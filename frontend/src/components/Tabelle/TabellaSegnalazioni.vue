@@ -68,7 +68,7 @@ const filteredReports = computed(() => {
                             {{ index + 1 }}
                         </td>
                         <td v-if="props.isOperator">
-                            {{ report.email }}
+                            <span v-html="report.email ? report.email : '<i>Utente rimosso</i>'"></span>
                         </td>
                         <td v-else>
                             {{ report.createdAt }}

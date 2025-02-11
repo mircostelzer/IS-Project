@@ -44,6 +44,11 @@ const router = createRouter({
       component: () => import('../views/user/ViewSegnalazione.vue'),
     },
     {
+      path: '/conferma_segnalazione',
+      name: 'conferma_segnalazione',
+      component: () => import('../views/dashboard/ViewEditSegnalazione.vue'),
+    },
+    {
       path: '/pubblica_comunicazione',
       name: 'pubblica_comunicazione',
       component: () => import('../views/dashboard/ViewComunicazione.vue'),

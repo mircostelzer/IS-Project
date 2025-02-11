@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from 'vue';
-
 import {
     CheckCircleIcon,
     ExclamationTriangleIcon,

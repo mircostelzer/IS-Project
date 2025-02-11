@@ -168,3 +168,25 @@ export async function createReport(data) {
         return null;
     }
 }
+
+export async function updateReport(data) {
+    try {
+        const response = await fetch(apiReports + data.id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${loggedUser.token}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error("Errore nell'aggiornamento del report");
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error("Errore da updateReport(): ", error);
+        return null;
+    }
+}
