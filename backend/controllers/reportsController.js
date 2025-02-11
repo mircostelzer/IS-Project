@@ -41,6 +41,26 @@ export const getReportById = async (req, res) => {
     }
 };
 
+export const getReportsByUser = async (req, res) => {
+    try {
+        let reports = await Report.find({ createdBy: req.user.id });
+        reports = reports.map((report) => {
+            return {
+                self: pathApiReports + report._id,
+                startDate: report.startDate,
+                location: report.location,
+                coordinates: report.coordinates,
+                state: report.state,
+                description: report.description,
+                createdBy: report.createdBy
+            };
+        });
+        res.status(200).json(reports);
+    } catch (error) {
+        res.status(500).json({ message: "Error in reports recovery" });
+    }
+};
+
 export const createReport = async (req, res) => {
     try {
         const userId = req.user.id;
