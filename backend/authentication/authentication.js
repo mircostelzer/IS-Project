@@ -39,7 +39,7 @@ router.post("", async function (req, res) {
             if (!user) {
                 user = new User({
                     email: payload["email"],
-                    password: "default-google-password-to-be-changed",
+                    password: "google-pass-to-be-changed",
                 });
                 await user.save();
             }
