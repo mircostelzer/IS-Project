@@ -51,7 +51,7 @@ export const createUser = async (req, res) => {
 export const updatePassword = async (req, res) => {
     try {
         const userIdFromToken = req.user.id;
-        const { userId } = req.params;
+        const userId = req.params.id;
         const { oldPassword, newPassword } = req.body;
 
         if (userIdFromToken !== userId) {
