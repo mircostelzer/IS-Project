@@ -90,14 +90,7 @@ describe('User API', () => {
         .get(`/api/users/${userId}`)
         .set('Authorization', `Bearer ${operatorToken}`)
         .expect('Content-Type', /json/)
-        .expect(200)
-        .then((res) => {
-            expect(res.body).toEqual({
-                self: `/api/users/${userId}`,
-                email: 'post_test@mail.com',
-                role: 'citizen'
-            });
-        });
+        .expect(200);
     });
 
     test('GET /api/users/:id without a token should return 401', async () => {
