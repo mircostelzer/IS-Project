@@ -16,8 +16,8 @@ const emergencySchema = new Schema(
         },
         state: {
             type: String,
-            enum: ["in_progress", "ended"],
-            default: "in_progress",
+            enum: ["In corso", "Terminato"],
+            default: "In corso",
         },
         description: { type: String },
     },

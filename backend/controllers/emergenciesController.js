@@ -3,14 +3,10 @@ const pathApiEmergencies = "/api/emergencies/";
 
 export const getEmergencies = async (req, res) => {
     try {
-        const { state, category} = req.query;
+        const state = req.query;
         let filter = {};
-        if (state && (state === "in_progress" || state === "ended")) {
+        if (state && (state === "In corso" || state === "Terminato")) {
             filter.state = state;
-        }
-
-        if (category) {
-            filter.category = category;
         }
 
         let emergencies = await Emergency.find(filter);
@@ -70,9 +66,13 @@ export const createEmergency = async (req, res) => {
 
 export const updateEmergency = async (req, res) => {
     try {
+        let updateData = req.body;
+        if (req.body.state === "Terminato") {
+            updateData.endDate = new Date();
+        }
         const emergency = await Emergency.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            updateData,
             { new: true }
         );
         if (!emergency)

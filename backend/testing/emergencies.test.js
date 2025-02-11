@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { expect, jest } from "@jest/globals";
 import request from "supertest";
 import mongoose from "mongoose";
 import jsonwebtoken from "jsonwebtoken";
@@ -74,8 +74,22 @@ describe('Emergency API', () => {
             const locationHeader = res.headers.location;
             emergencyId = locationHeader.split('/').pop();
             const checkState = await request(app).get(`/api/emergencies/${emergencyId}`);
-            expect(checkState.body.state).toEqual('in_progress');
+            expect(checkState.body.state).toEqual('In corso');
 
+        });
+    });
+
+    test('PUT /api/emergencies/:id correctly updates an emergency', async () => {
+        return request(app)
+        .put(`/api/emergencies/${emergencyId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            state: 'Terminato'
+        })
+        .expect(200).then( async () => {
+            const checkState = await request(app).get(`/api/emergencies/${emergencyId}`);
+            expect(checkState.body.state).toEqual('Terminato');
+            expect(checkState.body.endDate).toBeDefined();
         });
     });
     

@@ -5,6 +5,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../app.js';
 import Report from '../models/report.js';
+import User from '../models/user.js';
 
 let mongoServer;
 let reportSpy;
@@ -12,10 +13,8 @@ let operatorToken = jsonwebtoken.sign(
     { email: 'admin@mail.com', role: 'operator' },
     process.env.SUPER_SECRET,
     { expiresIn: 86400 });
-let citizenToken = jsonwebtoken.sign(
-    { email: 'user@mail.com', role: 'citizen' },
-    process.env.SUPER_SECRET,
-    { expiresIn: 86400 });
+let user;
+let citizenToken;
 
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
@@ -27,6 +26,12 @@ beforeAll(async () => {
             description: 'Test Description'
         }];
     });
+    user = await User.create(
+        { email: 'user@mail.com', password: 'test_password' });
+    citizenToken = jsonwebtoken.sign(
+        { email: user.email, role: user.role, id: user.id },
+        process.env.SUPER_SECRET,
+        { expiresIn: 86400 });
 });
 
 afterAll(async () => {
@@ -70,8 +75,7 @@ describe('Report API', () => {
             const location = res.headers.location;
             reportId = location.split('/').pop();
             expect(location).toBeDefined();
-            const checkState = await 
-            request(app)
+            const checkState = await request(app)
             .get(`/api/reports/${reportId}`)
             .set('Authorization', `Bearer ${operatorToken}`);
             expect(checkState.body.state).toEqual('pending');
