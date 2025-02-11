@@ -41,7 +41,6 @@ onMounted(() => {
         return emergency.coordinates.lat !== null &&
             emergency.coordinates.lon !== null;
     })
-    console.log(filteredEmergencies)
 });
 </script>
 
