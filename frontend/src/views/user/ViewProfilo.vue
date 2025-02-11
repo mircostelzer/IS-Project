@@ -12,8 +12,9 @@ import { reports, getMyReports } from '@/data/reports'
 const route = useRoute()
 const router = useRouter()
 
-const password = ref()
-const confirmPassword = ref()
+const oldPassword = ref("")
+const newPassword = ref("")
+const confirmNewPassword = ref("")
 const showPassword = ref(false)
 
 const showToast = ref(false)
@@ -61,6 +62,51 @@ function formatTime(time) {
 // Funzione per formattare il ruolo dell'utente
 function formatRole(role) {
     return (role === "citizen") ? "Cittadino" : "Operatore";
+}
+
+// Funzione per cambiare la password dell'utente
+async function changePassword() {
+    if (newPassword.value.length < 8) {
+        createToast("warning", "Attenzione!", "Inserisci una password di almeno 8 caratteri");
+        return;
+    }
+
+    if (newPassword.value === "" || confirmNewPassword.value === "") {
+        createToast("warning", "Attenzione!", "I campi non possono essere vuoti");
+        return;
+    }
+
+    if (newPassword.value !== confirmNewPassword.value) {
+        createToast("warning", "Attenzione!", "Le password non corrispondono");
+        return;
+    }
+
+    try {
+        const apiPassword = import.meta.env.VITE_API_BASE_URL + "/users/"
+
+        const resp = await fetch(apiPassword + loggedUser.id + "/password", {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${loggedUser.token}`,
+            },
+            body: JSON.stringify({
+                oldPassword: oldPassword.value,
+                newPassword: newPassword.value
+            }),
+        });
+
+        // Se il cambio password va a buon fine, effettuo il logout e reindirizzo alla pagina di login
+        if (resp.ok) {
+            clearLoggedUser();
+            router.push({ path: '/accedi', query: { passwordChange: 'true' } });
+        } else {
+            const errorData = await resp.json();
+            createToast("error", "Errore!", errorData.message);
+        }
+    } catch (error) {
+        createToast("error", "Errore!", error.message);
+    }
 }
 
 function togglePasswordView() {
@@ -148,10 +194,15 @@ function createToast(type, title, msg) {
                 </form>
                 <h3 class="text-lg font-bold mb-4">Cambia password:</h3>
                 <form>
-                    <div class="join w-full">
-                        <label class="input input-bordered join-item flex items-center gap-2 mb-4 full-width">
+                    <label class="input input-bordered flex items-center gap-2 mb-3">
+                        <KeyIcon class="size-5 opacity-70"></KeyIcon>
+                        <input v-model="oldPassword" type="password" class="grow" placeholder="Vecchia password"
+                            required />
+                    </label>
+                    <div class="join w-full mb-3">
+                        <label class="input input-bordered join-item flex items-center gap-2 full-width">
                             <KeyIcon class="size-5 opacity-70" />
-                            <input id="passwordInput" v-model="password" type="password" class="grow"
+                            <input v-model="newPassword" id="passwordInput" type="password" class="grow"
                                 placeholder="Nuova password" required />
                         </label>
                         <button @click="togglePasswordView()" type="button"
@@ -162,10 +213,10 @@ function createToast(type, title, msg) {
                     </div>
                     <label class="input input-bordered flex items-center gap-2">
                         <KeyIcon class="size-5 opacity-70"></KeyIcon>
-                        <input v-model="confirmPassword" type="password" class="grow"
+                        <input v-model="confirmNewPassword" type="password" class="grow"
                             placeholder="Conferma nuova password" required />
                     </label>
-                    <input @click="changePassowrd()" type="button" value="Cambia password"
+                    <input @click="changePassword()" type="button" value="Cambia password"
                         class="btn btn-primary btn-outline float-end rounded-lg mt-6" />
                     <div class="modal-action">
                         <form method="dialog">

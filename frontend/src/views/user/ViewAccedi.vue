@@ -79,6 +79,11 @@ onMounted(() => {
         createToast("info", "Accedi!", "Per visualizzare la pagina, devi prima effettuare l'accesso");
     }
 
+    // Toast di reindirizzamento dopo cambio password
+    if (route.query.passwordChange === 'true') {
+        createToast("info", "Accedi!", "Dopo il cambio della password devi rieffettuare l'accesso");
+    }
+
     google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse
