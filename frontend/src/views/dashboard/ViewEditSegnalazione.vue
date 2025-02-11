@@ -121,6 +121,7 @@ function aggiornaSegnalazione(approved) {
         router.push({ path: '/dashboard', query: { approved: 'true' } })
     } else {
         const updatedReport = {
+            id: id.value,
             state: "rejected",
             description: description.value,
             location: location.value,
