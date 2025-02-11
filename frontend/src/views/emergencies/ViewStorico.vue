@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import { emergencies, getEmergencies } from '../data/emergencies'
+import { emergencies, getEmergencies } from '../../data/emergencies'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
 import 'instantsearch.css/themes/algolia-min.css'
 
@@ -109,7 +109,7 @@ function toggleFilters() {
                                     </div>
                                     <div class="pe-6 mt-4">
                                         <p class="text-slate-100">Area interessata: </p>
-                                        <p class="text-gray-300">{{ item.location }}</p>
+                                        <p class="text-gray-300 location-value max-w-52">{{ item.location }}</p>
                                     </div>
                                 </div>
                                 <div class="flex justify-end">
@@ -141,6 +141,12 @@ function toggleFilters() {
 
 .div-risultato {
     background-color: #415d3b;
+}
+
+.location-value {
+    overflow: hidden auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .btn-filter {

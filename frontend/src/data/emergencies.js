@@ -23,6 +23,12 @@ function formattaData(date) {
     });
 }
 
+export function resetEmergencies() {
+    emergency.value = [];
+    emergencies.value = [];
+    emergenciesInProgress.value = [];
+}
+
 export async function nEmergencies() {
     try {
         const response = await fetch(apiEmergencies);
@@ -70,7 +76,7 @@ export async function getEmergencyById(id) {
 }
 
 export function getEmergenciesInProgress() {
-    fetch(apiEmergencies + "/?state=in_progress")
+    fetch(apiEmergencies + "?state=in_corso")
         .then((response) => response.json())
         .then((data) => {
             emergenciesInProgress.value = data.map((data) => {

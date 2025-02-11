@@ -1,11 +1,10 @@
 <script setup>
 import { onMounted } from 'vue'
-import { emergencies, emergenciesInProgress, getEmergenciesInProgress } from '../data/emergencies'
-import { ArrowsPointingOutIcon } from "@heroicons/vue/24/solid"
+import { emergenciesInProgress, getEmergenciesInProgress } from '../data/emergencies'
+import { ChevronDoubleRightIcon } from "@heroicons/vue/24/solid"
 
 import Mappa from "../components/Mappa/Mappa.vue"
 import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue'
-import { loadUserFromCookies } from '@/states/loggedUser'
 
 // Ottengo l'ora attuale
 const oraUltimoAggiornamento = new Date().toLocaleString('it-IT', {
@@ -49,7 +48,7 @@ onMounted(() => {
                         </div>
                         <router-link :to="`/dettagli?id=${emergency.id}`">
                             <button class="btn btn-secondary btn-sm float-end mt-3">
-                                <ArrowsPointingOutIcon class="w-4 h-4 opacity-80 -mx-0.5 mb-0.5" />
+                                <ChevronDoubleRightIcon class="w-4 h-4 opacity-80 -mx-0.5 mb-0.5" />
                                 Espandi
                             </button>
                         </router-link>

@@ -57,7 +57,10 @@ function createToast(type, title, msg) {
     <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
 
     <div class="overflow-x-auto md:overflow-y-auto">
-        <table class="table table-sm table-zebra table-pin-rows">
+        <div v-if="emergencies.length === 0" class="text-center w-full my-4 italic">
+            Nessun risultato disponibile
+        </div>
+        <table v-else class="table table-sm table-zebra table-pin-rows">
             <thead>
                 <tr class="text-white">
                     <th>#</th>

@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { emergencies, getEmergencies } from '../data/emergencies'
-import { loggedUser, clearLoggedUser } from '../states/loggedUser.js'
+import { loggedUser, clearLoggedUser } from '../../states/loggedUser.js'
 
-import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue'
 import Toast from '@/components/Toast/Toast.vue'
 import AccessLimited from '@/components/Error/AccessLimited.vue'
 import { ArrowLeftEndOnRectangleIcon, ArrowPathIcon, EyeIcon, EyeSlashIcon, KeyIcon, PaperAirplaneIcon, UserCircleIcon } from "@heroicons/vue/24/solid"
+import TabellaSegnalazioni from '@/components/Tabelle/TabellaSegnalazioni.vue'
+import { reports, getMyReports } from '@/data/reports'
 
 const route = useRoute()
 const router = useRouter()
@@ -29,9 +29,15 @@ if (loggedUser.token) {
             createToast("success", "Successo!", "Accesso effettuato correttamente");
         }
 
-        // Recupero le emergenze dell'utente con una chiamata fetch
-        // DA CREARE UN METODO DEDICATO getEmergenciesByUserId(userId)
-        getEmergencies()
+        // Toast di conferma invio segnalazione
+        if (route.query.sent === 'true') {
+            createToast("success", "Successo!", "Segnalazione inviata correttamente");
+        }
+
+        // Recupero le segnalazioni inviate dall'utente
+        if (loggedUser.role === "citizen") {
+            getMyReports()
+        }
     });
 }
 
@@ -95,7 +101,7 @@ function createToast(type, title, msg) {
 
 
                 <div class="div-sfondo w-full h-auto rounded-lg p-1 sm:p-2 md:p-4">
-                    <div class="div-opaco w-full p-4 mb-2 md:mb-4 rounded-md">
+                    <div class="div-opaco w-full p-4 rounded-md">
                         <p class="text-2xl font-bold text-slate-100 mb-3">Dati personali:</p>
                         <div class="columns-1 sm:columns-2 lg:columns-4">
                             <div>
@@ -127,9 +133,9 @@ function createToast(type, title, msg) {
                             </button>
                         </div>
                     </div>
-                    <div class="div-opaco w-full p-4 rounded-md">
+                    <div v-if="loggedUser.role === 'citizen'" class="div-opaco w-full p-4 mt-2 md:mt-4 rounded-md">
                         <p class="text-2xl font-bold text-slate-100 mt-2 mb-6">Le tue segnalazioni:</p>
-                        <TabellaEmergenze :emergencies="emergencies" />
+                        <TabellaSegnalazioni :reports="reports" :is-operator="false" />
                     </div>
                 </div>
             </div>

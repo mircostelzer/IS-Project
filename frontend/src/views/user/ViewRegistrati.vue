@@ -1,18 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { validateEmail } from "@/data/validation"
-import { setLoggedUser } from '../states/loggedUser.js'
 
-import Toast from "../components/Toast/Toast.vue"
+import Toast from "../../components/Toast/Toast.vue"
 import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/solid"
 
-const route = useRoute()
 const router = useRouter()
 
-const apiLogin = import.meta.env.VITE_API_BASE_URL + '/login'
+const apiRegister = import.meta.env.VITE_API_BASE_URL
 const email = ref()
 const password = ref()
+const confirmPassword = ref()
 const googleToken = ref()
 
 const showPassword = ref(false)
@@ -22,7 +21,7 @@ const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
 
-function login(withGoogle) {
+async function register(withGoogle) {
     // Controllo degli input
     if (!withGoogle) {
         if (!email.value) {
@@ -44,50 +43,46 @@ function login(withGoogle) {
             createToast("warning", "Attenzione!", "La password non può essere vuota");
             return;
         }
+
+        if (password.value !== confirmPassword.value) {
+            createToast("warning", "Attenzione!", "Le password non corrispondono");
+            return;
+        }
     }
 
-    // In base al tipo di accesso, modifico il corpo della richiesta POST
+    // In base al tipo di accesso, modifico la rotta e il corpo della richiesta POST
+    const apiUrl = withGoogle ? apiRegister + "/login" : apiRegister + "/users";
     const bodyData = withGoogle ? { googleToken: googleToken.value } : { email: email.value, password: password.value };
 
-    fetch(apiLogin, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyData),
-    }).then((resp) => {
-        // Se l'accesso va a buon fine, recupero i dati dell'utente e lo reindirizzo alla pagina del profilo
+    try {
+        const resp = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyData),
+        });
+
+        // Se la registrazione va a buon fine, reindirizzo alla pagina di login
         if (resp.ok) {
-            return resp.json().then(function (userData) {
-                setLoggedUser(userData);
-                router.push({ path: '/profilo', query: { fromLogin: 'true' } });
-            });
+            router.push({ path: '/accedi', query: { fromRegister: 'true' } });
         } else {
-            resp.json().then((errorData) => {
-                createToast("error", "Errore!", errorData.message);
-            });
+            const errorData = await resp.json();
+            createToast("error", "Errore!", errorData.message);
         }
-    });
+    } catch (error) {
+        createToast("error", "Errore!", error.message);
+    }
 };
 
 onMounted(() => {
-    // Toast di conferma registrazione
-    if (route.query.fromRegister === 'true') {
-        createToast("success", "Successo!", "Account creato con successo");
-    }
-
-    // Toast di reindirizzamento da AccessLimited.vue
-    if (route.query.limited === 'true') {
-        createToast("info", "Accedi!", "Per visualizzare la pagina, devi prima effettuare l'accesso");
-    }
-
     google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse
     });
 
     google.accounts.id.renderButton(
-        document.getElementById("accediConGoogle"),
+        document.getElementById("registratiConGoogle"),
         {
-            text: 'signin_with',
+            text: 'signup_with',
             size: 'large',
             theme: 'outline',
             logo_alignment: 'center'
@@ -100,7 +95,7 @@ onMounted(() => {
 function handleCredentialResponse(response) {
     if (response.credential) {
         googleToken.value = response.credential;
-        login(true);
+        register(true);
     }
 }
 
@@ -132,16 +127,16 @@ function togglePasswordView() {
 <template>
     <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
 
-    <div class="div-principale flex justify-center items-center">
+    <div class="div-principale flex justify-center items-center text-center">
         <div class="bg-secondary rounded-3xl p-8">
-            <form class="flex flex-col justify-center">
-                <p class="text-2xl font-bold mb-6 text-center">Accedi</p>
+            <form>
+                <p class="text-2xl font-bold mb-6">Registrati</p>
                 <label class="input input-bordered flex items-center gap-2 mb-4">
-                    <EnvelopeIcon class="size-5 opacity-70" />
+                    <EnvelopeIcon class="size-5 opacity-70"></EnvelopeIcon>
                     <input v-model="email" type="email" class="grow" placeholder="Indirizzo email" required />
                 </label>
                 <div class="join">
-                    <label class="input input-bordered join-item flex items-center gap-2 mb-6">
+                    <label class="input input-bordered join-item flex items-center gap-2 mb-4">
                         <KeyIcon class="size-5 opacity-70" />
                         <input id="passwordInput" v-model="password" type="password" class="grow" placeholder="Password"
                             required />
@@ -152,14 +147,19 @@ function togglePasswordView() {
                         <EyeSlashIcon v-else class="size-5 opacity-70" />
                     </button>
                 </div>
-                <input @click="login(false)" type="button" value="Accedi"
-                    class="btn btn-primary btn-outline btn-block rounded-lg" />
+                <label class="input input-bordered flex items-center gap-2">
+                    <KeyIcon class="size-5 opacity-70"></KeyIcon>
+                    <input v-model="confirmPassword" type="password" class="grow" placeholder="Conferma password"
+                        required />
+                </label>
+                <input @click="register()" type="button" value="Registrati"
+                    class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
             </form>
-            <p class="text-gray-400 text-sm text-center mt-2 mb-3">oppure</p>
-            <div class="flex justify-center" id="accediConGoogle"></div>
-            <router-link to="/registrati">
-                <p class="text-center text-sm mt-12">
-                    Non sei registrato? <a class="link link-primary" href="/registrati.vue">Registrati!</a>
+            <p class="text-gray-400 text-sm mt-2 mb-3">oppure</p>
+            <div class="flex justify-center" id="registratiConGoogle"></div>
+            <router-link to="/accedi">
+                <p class="text-sm mt-12">
+                    Già registrato? <a class="link link-primary" href="/accedi.vue">Accedi!</a>
                 </p>
             </router-link>
         </div>

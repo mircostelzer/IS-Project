@@ -1,5 +1,8 @@
 import { reactive, watch } from 'vue';
 import Cookies from 'js-cookie';
+import { resetUser } from '@/data/users';
+import { resetEmergencies } from '@/data/emergencies';
+import { resetReports } from '@/data/reports';
 
 const loggedUser = reactive({
     self: undefined,
@@ -47,6 +50,11 @@ function clearLoggedUser() {
 
     // Remove from cookies
     Cookies.remove('loggedUser');
+
+    // Reset all data states
+    resetUser()
+    resetEmergencies()
+    resetReports()
 }
 
 export { loggedUser, setLoggedUser, clearLoggedUser, loadUserFromCookies };

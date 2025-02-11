@@ -3,10 +3,12 @@ const pathApiEmergencies = "/api/emergencies/";
 
 export const getEmergencies = async (req, res) => {
     try {
-        const state = req.query;
         let filter = {};
-        if (state && (state === "In corso" || state === "Terminato")) {
-            filter.state = state;
+        const state = req.query.state;
+
+        if (state && (state === "in_corso" || state === "terminato")) {
+            // Riformatto prima il parametro dello stato
+            filter.state = formatState(state);
         }
 
         let emergencies = await Emergency.find(filter);
@@ -26,6 +28,7 @@ export const getEmergencies = async (req, res) => {
         res.status(200).json(emergencies);
     } catch (error) {
         res.status(500).json({ message: "Error in emergencies recovery" });
+        console.log(error.message);
     }
 };
 
@@ -93,3 +96,8 @@ export const deleteEmergency = async (req, res) => {
         res.status(500).json({ message: "Error in emergency deletion" });
     }
 };
+
+function formatState(state) {
+    const words = state.split("_").join(" ");
+    return words.charAt(0).toUpperCase() + words.slice(1);
+}

@@ -11,47 +11,47 @@ const router = createRouter({
     {
       path: '/storico',
       name: 'storico',
-      component: () => import('../views/ViewStorico.vue'),
+      component: () => import('../views/emergencies/ViewStorico.vue'),
     },
     {
       path: '/dettagli',
       name: 'dettagli',
-      component: () => import('../views/ViewDettagli.vue'),
+      component: () => import('../views/emergencies/ViewDettagli.vue'),
     },
     {
       path: '/accedi',
       name: 'accedi',
-      component: () => import('../views/ViewAccedi.vue'),
+      component: () => import('../views/user/ViewAccedi.vue'),
     },
     {
       path: '/registrati',
       name: 'registrati',
-      component: () => import('../views/ViewRegistrati.vue'),
+      component: () => import('../views/user/ViewRegistrati.vue'),
     },
     {
       path: '/profilo',
       name: 'profilo',
-      component: () => import('../views/ViewProfilo.vue'),
+      component: () => import('../views/user/ViewProfilo.vue'),
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/ViewDashboard.vue'),
+      component: () => import('../views/dashboard/ViewDashboard.vue'),
     },
     {
       path: '/invia_segnalazione',
       name: 'invia_segnalazione',
-      component: () => import('../views/ViewSegnalazione.vue'),
+      component: () => import('../views/user/ViewSegnalazione.vue'),
     },
     {
       path: '/pubblica_comunicazione',
       name: 'pubblica_comunicazione',
-      component: () => import('../views/ViewComunicazione.vue'),
+      component: () => import('../views/dashboard/ViewComunicazione.vue'),
     },
     {
       path: '/modifica_comunicazione',
       name: 'modifica_comunicazione',
-      component: () => import('../views/ViewEditComunicazione.vue'),
+      component: () => import('../views/dashboard/ViewEditComunicazione.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
