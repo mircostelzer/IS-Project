@@ -159,8 +159,13 @@ function createToast(type, title, msg) {
                         <input v-model="confirmPassword" type="password" class="grow"
                             placeholder="Conferma nuova password" required />
                     </label>
-                    <input @click="changePassowrd()" type="button" value="Conferma"
-                        class="btn btn-primary btn-outline btn-block rounded-lg mt-6" />
+                    <input @click="changePassowrd()" type="button" value="Cambia password"
+                        class="btn btn-primary btn-outline float-end rounded-lg mt-6" />
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <button class="btn btn-ghost me-2">Annulla</button>
+                        </form>
+                    </div>
                 </form>
             </div>
             <form method="dialog" class="modal-backdrop">

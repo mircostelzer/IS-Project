@@ -1,5 +1,4 @@
 import { loggedUser } from "@/states/loggedUser";
-import { updateAlgoliaRecords } from "./algolia";
 import { ref } from "vue";
 
 const apiEmergencies = import.meta.env.VITE_API_BASE_URL + "/emergencies/";
@@ -24,6 +23,18 @@ function formattaData(date) {
     });
 }
 
+export async function nEmergencies() {
+    try {
+        const response = await fetch(apiEmergencies);
+        const data = await response.json();
+        return data.length;
+    } catch (error) {
+        console.error("Errore da nEmergencies(): ", error);
+        return 0;
+    }
+}
+
+
 export function getEmergencies() {
     fetch(apiEmergencies)
         .then((response) => response.json())
@@ -42,7 +53,7 @@ export function getEmergencies() {
         });
 }
 
-export function getEmergencyById(id) {
+export async function getEmergencyById(id) {
     fetch(apiEmergencies + id)
         .then((response) => response.json())
         .then((data) => {
@@ -89,7 +100,7 @@ export function createEmergency(data) {
             if (!response.ok) {
                 throw new Error("Errore generico da createEmergency()");
             }
-            if (response.status === 204) {
+            if (response.status === 204 || response.headers.get("content-length") === "0") {
                 return null;
             }
             return response.json();
@@ -102,7 +113,37 @@ export function createEmergency(data) {
         });
 }
 
-// export function updateEmergency(data) {}
+export function updateEmergency(data) {
+    fetch(apiEmergencies + recuperaId(data.self), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${loggedUser.token}`,
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Errore generico da updateEmergency()");
+            }
+            return response.json();
+        })
+        .then((updatedEmergency) => {
+            const index = emergencies.value.findIndex(
+                (emergency) => emergency.id === updatedEmergency.id
+            );
+            if (index !== -1) {
+                emergencies.value[index] = {
+                    ...updatedEmergency,
+                    startDate: formattaData(updatedEmergency.startDate),
+                    id: recuperaId(updatedEmergency.self),
+                };
+            }
+        })
+        .catch((error) => {
+            console.error("Errore da updateEmergency(): ", error);
+        });
+}
 
 export function deleteEmergencyById(id) {
     fetch(apiEmergencies + id, {

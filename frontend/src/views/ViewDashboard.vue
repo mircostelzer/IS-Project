@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { loggedUser } from '../states/loggedUser.js'
-import { users, getUsers } from '../data/users'
-import { emergencies, getEmergencies } from '../data/emergencies'
+import { users, getUsers, nUsers } from '../data/users'
+import { emergencies, getEmergencies, nEmergencies } from '../data/emergencies'
 
 import { LockClosedIcon, ShieldCheckIcon, ShieldExclamationIcon, UserIcon, UserPlusIcon } from "@heroicons/vue/24/solid"
 import AccessDenied from '@/components/Error/AccessDenied.vue'
@@ -10,40 +10,23 @@ import AccessLimited from "@/components/Error/AccessLimited.vue"
 import TabellaEmergenze from '@/components/Tabelle/TabellaEmergenze.vue'
 import TabellaUtenti from '@/components/Tabelle/TabellaUtenti.vue'
 
-const countCitizens = ref("N/A")
-const countOperators = ref("N/A")
-const countReports = ref("N/A")
-const countEmergencies = ref("N/A")
-
-const showToast = ref(false)
-const toastType = ref()
-const toastTitle = ref()
-const toastMsg = ref()
+const countCitizens = ref(0)
+const countOperators = ref(0)
+const countReports = ref(0)
+const countEmergencies = ref(0)
 
 onMounted(async () => {
     getEmergencies()
     getUsers()
 
-    countCitizens.value = users.value.filter(user => user.role === 'citizen').length;
-    countOperators.value = users.value.filter(user => user.role === 'operator').length;
-    countReports.value = emergencies.value.filter(emergency => emergency.status === 'pending').length;
-    countEmergencies.value = emergencies.value.filter(emergency => emergency.status === 'approved').length;
+    countCitizens.value = await nUsers("citizen")
+    countOperators.value = await nUsers("operator")
+    countReports.value = await nEmergencies()
+    countEmergencies.value = await nEmergencies()
 });
 
 function calcolaPercentuale(value, total) {
     return total > 0 ? ((value / total) * 100).toFixed(2) + '%' : 'N/A';
-}
-
-function createToast(type, title, msg) {
-    showToast.value = true;
-
-    toastType.value = type;
-    toastTitle.value = title;
-    toastMsg.value = msg;
-
-    setTimeout(() => {
-        showToast.value = false;
-    }, 5000);
 }
 </script>
 
@@ -62,7 +45,9 @@ function createToast(type, title, msg) {
                         </div>
                         <div class="stat-title">Cittadini</div>
                         <div class="stat-value">{{ countCitizens }}</div>
-                        <div class="stat-desc">{{ calcolaPercentuale(countCitizens, users.length ) }}</div>
+                        <div class="stat-desc">
+                            {{ calcolaPercentuale(countCitizens, users.length) }}
+                        </div>
                     </div>
                     <div class="stat">
                         <div class="stat-figure text-ghost">
@@ -70,7 +55,9 @@ function createToast(type, title, msg) {
                         </div>
                         <div class="stat-title">Operatori comunali</div>
                         <div class="stat-value">{{ countOperators }}</div>
-                        <div class="stat-desc">{{ calcolaPercentuale(countOperators, users.length ) }}</div>
+                        <div class="stat-desc">
+                            {{ calcolaPercentuale(countOperators, users.length) }}
+                        </div>
                     </div>
                     <div class="stat">
                         <div class="stat-figure text-ghost">
@@ -78,7 +65,9 @@ function createToast(type, title, msg) {
                         </div>
                         <div class="stat-title">Segnalazioni in attesa</div>
                         <div class="stat-value">{{ countReports }}</div>
-                        <div class="stat-desc">{{ calcolaPercentuale(countReports, emergencies.length ) }}</div>
+                        <div class="stat-desc">
+                            {{ calcolaPercentuale(countReports, emergencies.length) }}
+                        </div>
                     </div>
                     <div class="stat">
                         <div class="stat-figure text-ghost">
@@ -86,7 +75,9 @@ function createToast(type, title, msg) {
                         </div>
                         <div class="stat-title">Emergenze pubblicate</div>
                         <div class="stat-value">{{ countEmergencies }}</div>
-                        <div class="stat-desc">{{ calcolaPercentuale(countEmergencies, emergencies.length ) }}</div>
+                        <div class="stat-desc">
+                            {{ calcolaPercentuale(countEmergencies, emergencies.length) }}
+                        </div>
                     </div>
                 </div>
 
@@ -96,7 +87,10 @@ function createToast(type, title, msg) {
                     <input type="radio" name="tab-admin" role="tab" class="tab me-2" aria-label="Utenti"
                         checked="checked" />
                     <div role="tabpanel" class="tab-content border-green-950 rounded-box p-6">
+                        <h4 class="text-white font-bold text-2xl mb-4">Operatori comunali:</h4>
                         <TabellaUtenti :users="users" />
+                        <h4 class="text-white font-bold text-2xl mt-8 mb-4">Cittadini:</h4>
+                        <TabellaUtenti :users="users" :deletable="true" />
                     </div>
 
                     <input type="radio" name="tab-admin" role="tab" class="tab me-2" aria-label="Segnalazioni" />
@@ -149,7 +143,7 @@ function createToast(type, title, msg) {
     background-color: var(--background);
 }
 
-.tabs-lifted > .tab:is(input:checked) {
+.tabs-lifted>.tab:is(input:checked) {
     background-color: var(--secondary);
 }
 

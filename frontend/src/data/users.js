@@ -22,6 +22,23 @@ function formattaData(date) {
     });
 }
 
+export async function nUsers(role) {
+    try {
+        const response = await fetch(apiUsers, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${loggedUser.token}`,
+            },
+        });
+        const data = await response.json();
+        return data.filter((user) => user.role === role).length;
+    } catch (error) {
+        console.error("Errore da nUsers(): ", error);
+        return 0;
+    }
+}
+
 export function getUsers() {
     fetch(apiUsers, {
         method: "GET",

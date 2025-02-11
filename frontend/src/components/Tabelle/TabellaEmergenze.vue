@@ -1,6 +1,6 @@
 <script setup>
+import { ref } from "vue";
 import { deleteEmergencyById } from "@/data/emergencies"
-import { updateAlgoliaRecords } from '@/data/algolia.js';
 
 import {
     EyeIcon,
@@ -9,6 +9,7 @@ import {
 } from "@heroicons/vue/24/solid";
 import BadgeCategoria from "../Badge/BadgeCategoria.vue";
 import BadgeStato from "../Badge/BadgeStato.vue";
+import Toast from "../Toast/Toast.vue";
 
 const props = defineProps({
     emergencies: {
@@ -29,22 +30,41 @@ function showModalElimina(id) {
 
 function eliminaEmergenza(id) {
     deleteEmergencyById(id);
-    updateAlgoliaRecords().then(() => {
-        location.reload();
-    });
+    const modal = document.getElementById('modalElimina' + id);
+    if (modal) modal.close();
+    createToast("info", "Successo", "Emergenza eliminata correttamente");
+}
+
+const showToast = ref(false)
+const toastType = ref()
+const toastTitle = ref()
+const toastMsg = ref()
+
+function createToast(type, title, msg) {
+    showToast.value = true;
+
+    toastType.value = type;
+    toastTitle.value = title;
+    toastMsg.value = msg;
+
+    setTimeout(() => {
+        showToast.value = false;
+    }, 5000);
 }
 </script>
 
 <template>
+    <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
+
     <div class="overflow-x-auto md:overflow-y-auto">
         <table class="table table-sm table-zebra table-pin-rows">
             <thead>
                 <tr class="text-white">
                     <th>#</th>
                     <th>Titolo</th>
-                    <th class="hidden sm:table-cell">Categoria</th>
+                    <th class="hidden lg:table-cell">Categoria</th>
                     <th class="hidden sm:table-cell">Stato</th>
-                    <th class="hidden sm:table-cell">Luogo</th>
+                    <th class="hidden lg:table-cell">Luogo</th>
                     <th></th>
                     <th v-if="props.isOperator"></th>
                     <th v-if="props.isOperator"></th>
@@ -60,13 +80,13 @@ function eliminaEmergenza(id) {
                         <td>
                             {{ emergency.title }}
                         </td>
-                        <td class="hidden sm:table-cell">
+                        <td class="hidden lg:table-cell">
                             <BadgeCategoria :category="emergency.category" />
                         </td>
                         <td class="hidden sm:table-cell">
                             <BadgeStato :state="emergency.state" />
                         </td>
-                        <td class="hidden sm:table-cell pe-12">{{ emergency.location }}</td>
+                        <td class="hidden lg:table-cell pe-12">{{ emergency.location }}</td>
                         <th :class="{ 'px-1 size-0': true, 'pe-4': !props.isOperator }">
                             <router-link :to="`/dettagli?id=${emergency.id}`">
                                 <button class="btn btn-xs btn-info btn-square btn-outline">
@@ -101,11 +121,16 @@ function eliminaEmergenza(id) {
                     <h3 class="text-lg font-bold mb-2">Eliminare questa emergenza?</h3>
                     <p class="text-sm text-gray-200"><b>ID:</b> {{ emergency.id }}</p>
                     <p class="text-sm text-gray-200 mb-4"><b>Titolo:</b> {{ emergency.title }}</p>
-                    <button @click="eliminaEmergenza(emergency.id)" type="button"
-                        class="btn btn-error float-end">
-                        <TrashIcon class="size-5 opacity-70" />
-                        Conferma ed elimina
-                    </button>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <button @click="eliminaEmergenza(emergency.id)" type="button"
+                                class="btn btn-error float-end">
+                                <TrashIcon class="size-5 opacity-70" />
+                                Conferma ed elimina
+                            </button>
+                            <button class="btn btn-ghost btn-outline me-2">Annulla</button>
+                        </form>
+                    </div>
                 </div>
                 <form method="dialog" class="modal-backdrop">
                     <button>close</button>
