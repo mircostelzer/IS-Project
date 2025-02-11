@@ -57,6 +57,10 @@ body {
     background-color: var(--input);
 }
 
+.modal-box {
+    background-color: var(--background);
+}
+
 .table-zebra :where(.table-pin-rows thead tr) {
     background-color: var(--foreground);
 }
@@ -124,7 +128,20 @@ body {
     color: var(--text);
 }
 
+.ais-InfiniteHits-list {
+    margin: 0 !important;
+    display: grid !important; 
+    grid-template-columns: repeat(2, 1fr) !important; 
+
+    @media (max-width: 1000px) {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+
+    grid-gap: 1em !important;
+}
+
 .ais-InfiniteHits-item {
+    margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
     border: 0 !important;
@@ -149,6 +166,16 @@ html {
 
 html:has(body.content-overflow-y) {
     scrollbar-gutter: stable !important;
+}
+
+
+
+/* Per nascondere le frecce di input="number" */
+.no-arrows {
+    margin: 0 !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: textfield !important;
 }
 
 

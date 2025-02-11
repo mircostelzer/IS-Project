@@ -28,10 +28,10 @@ const props = defineProps({
 <template>
     <div v-if="props.type === 'success'" class="toast">
         <div role="alert" class="alert alert-success rounded-xl shadow-lg">
-            <CheckCircleIcon class="text-black size-8" />
+            <CheckCircleIcon class="text-white size-8" />
             <div class="pe-2">
-                <h3 class="font-bold text-black">{{ props.title }}</h3>
-                <div class="text-xs text-gray-900">{{ props.msg }}</div>
+                <h3 class="font-bold text-white">{{ props.title }}</h3>
+                <div class="text-xs text-gray-200">{{ props.msg }}</div>
             </div>
         </div>
     </div>

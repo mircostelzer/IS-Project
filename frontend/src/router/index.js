@@ -34,6 +34,11 @@ const router = createRouter({
       component: () => import('../views/ViewProfilo.vue'),
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/ViewDashboard.vue'),
+    },
+    {
       path: '/invia_segnalazione',
       name: 'invia_segnalazione',
       component: () => import('../views/ViewSegnalazione.vue'),
@@ -42,6 +47,11 @@ const router = createRouter({
       path: '/pubblica_comunicazione',
       name: 'pubblica_comunicazione',
       component: () => import('../views/ViewComunicazione.vue'),
+    },
+    {
+      path: '/modifica_comunicazione',
+      name: 'modifica_comunicazione',
+      component: () => import('../views/ViewEditComunicazione.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

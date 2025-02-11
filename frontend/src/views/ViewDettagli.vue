@@ -1,69 +1,39 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { MagnifyingGlassIcon, HomeIcon } from "@heroicons/vue/24/solid";
-import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue';
-import BadgeStato from '@/components/Badge/BadgeStato.vue';
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { emergency, getEmergencyById } from '../data/emergencies'
 
-const route = useRoute();
+import { MagnifyingGlassIcon, ArrowUturnLeftIcon } from "@heroicons/vue/24/solid"
+import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue'
+import BadgeStato from '@/components/Badge/BadgeStato.vue'
+import WrongURL from '@/components/Error/WrongURL.vue'
 
-const host = import.meta.env.VITE_API_BASE_URL;
-const apiEmergency = host + '/emergencies/';
+const route = useRoute()
+const router = useRouter()
 
-const emergency = ref(null);
-
-// Funzione per recuperare l'id delle emergenze
-const recuperaId = (self) => {
-    return self.substring(self.lastIndexOf('/') + 1);
-};
-
-// Funzione per gestire la descrizione dell'emergenza'
+// Funzione per gestire la descrizione dell'emergenza
 const conDescrizione = (descrizione) => {
     return descrizione ? descrizione : '<i>Nessuna descrizione disponibile</i>';
 };
 
 onMounted(() => {
-    // Recupero i dati dell'emergenza, se esistente, con una chiamata fetch
-    fetch(apiEmergency + route.query.id)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Errore HTTP con stato " + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Modifico l'oggetto emergenza per formattare startDate
-            emergency.value = {
-                ...data,
-                startDate: new Date(data.startDate).toLocaleString('it-IT', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-            };
-        })
-        .catch(error => {
-            console.error('Errore:', error);
-            emergency.value = null; // Set emergency to null if there's an error
-        });
+    getEmergencyById(route.query.id)
 });
 </script>
 
 <template>
-    <div class="div-principale w-full flex justify-center">
+    <div v-if="emergency === null">
+        <WrongURL />
+    </div>
+
+    <div v-else class="div-principale w-full flex justify-center">
         <div class="max-w-7xl h-full">
             <div class="flex flex-row items-center mt-4 md:mt-0 mb-8">
                 <MagnifyingGlassIcon class="w-6 h-6 md:w-8 md:h-8 me-3" />
                 <h1 class="text-xl md:text-2xl text-white font-bold">Dettagli emergenza</h1>
             </div>
-
-            <div v-if="emergency === null" class="div-risultati w-full h-auto rounded-lg p-4">
-                <p class="text-gray-300"><i>Nessun risultato trovato...</i></p>
-            </div>
-            <div v-else class="div-risultato w-full px-8 py-4 mb-2 md:mb-4 rounded-2xl">
-                <p class="text-sm text-gray-400 my-2">ID: {{ recuperaId(emergency.self) }}</p>
+            
+            <div class="div-risultato w-full px-8 py-8 mb-2 md:mb-4 rounded-2xl">
                 <p class="font-bold text-3xl text-white mb-2">{{ emergency.title }}</p>
                 <p class="text-gray-300 mb-6" v-html="conDescrizione(emergency.description)"></p>
                 <div class="columns-1 md:columns-2">
@@ -84,11 +54,9 @@ onMounted(() => {
                         <p class="text-gray-300">{{ emergency.startDate }}</p>
                     </div>
                 </div>
-                <router-link to="/">
-                    <button class="btn btn-secondary btn-block mt-6">
-                        <HomeIcon class="w-5 h-5" />Ritorna alla home
-                    </button>
-                </router-link>
+                <button @click="router.go(-1)" class="btn btn-secondary btn-block mt-6">
+                    <ArrowUturnLeftIcon class="w-5 h-5" />Torna indietro
+                </button>
             </div>
         </div>
     </div>

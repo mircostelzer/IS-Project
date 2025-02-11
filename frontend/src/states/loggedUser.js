@@ -1,4 +1,5 @@
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue';
+import Cookies from 'js-cookie';
 
 const loggedUser = reactive({
     self: undefined,
@@ -9,9 +10,18 @@ const loggedUser = reactive({
     role: undefined,
     createdAt: undefined,
     updatedAt: undefined
-})
+});
 
-function setLoggedUser (data) {
+// Load user data from cookies when the app initializes
+function loadUserFromCookies() {
+    const userData = Cookies.get('loggedUser');
+
+    if (userData) {
+        Object.assign(loggedUser, JSON.parse(userData))
+    }
+};
+
+function setLoggedUser(data) {
     loggedUser.self = data.self;
     loggedUser.token = data.token;
     loggedUser.id = data.id;
@@ -20,9 +30,12 @@ function setLoggedUser (data) {
     loggedUser.role = data.role;
     loggedUser.createdAt = data.createdAt;
     loggedUser.updatedAt = data.updatedAt;
+
+    // Save to cookies
+    Cookies.set('loggedUser', JSON.stringify(loggedUser), { expires: 7 }); // expires in 7 days
 }
 
-function clearLoggedUser () {
+function clearLoggedUser() {
     loggedUser.self = undefined;
     loggedUser.token = undefined;
     loggedUser.id = undefined;
@@ -31,6 +44,9 @@ function clearLoggedUser () {
     loggedUser.role = undefined;
     loggedUser.createdAt = undefined;
     loggedUser.updatedAt = undefined;
+
+    // Remove from cookies
+    Cookies.remove('loggedUser');
 }
 
-export { loggedUser, setLoggedUser, clearLoggedUser }
+export { loggedUser, setLoggedUser, clearLoggedUser, loadUserFromCookies };

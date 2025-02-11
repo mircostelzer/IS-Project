@@ -8,8 +8,14 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="badge text-sm">{{ props.category }}</div>
+    <div v-if="category" class="badge">{{ props.category }}</div>
+    <div v-else class="badge badge-ghost">Categoria sconosciuta</div>
 </template>
 
 <style scoped>
+.badge {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 </style>

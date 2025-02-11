@@ -7,7 +7,7 @@ import { KeyIcon } from "@heroicons/vue/24/solid";
         <div class="div-404 flex flex-col justify-center text-center p-8">
             <p class="text-6xl">401</p>
             <p class="text-lg font-bold mb-4">Contenuto limitato!</p>
-            <p class="text-md text-gray-300 mb-8">Per visualizzare questo contenuto, devi prima <b>effettuare l'accesso</b></p>
+            <p class="text-md text-gray-300 mb-8">Per visualizzare questo contenuto, <b>devi prima effettuare l'accesso</b></p>
             <RouterLink to="/accedi?limited=true">
                 <button class="btn btn-primary">
                     <KeyIcon class="w-5 h-5 p-0 mb-0.5" />Effettua l'accesso

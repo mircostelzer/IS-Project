@@ -1,38 +1,26 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import OcioDinamicoLetsgoski from "./OcioDinamicoLetsgoski.vue";
-
-import { linkPagine } from "../../data/pagineNavbar.js";
+import { RouterLink } from "vue-router"
+import { loggedUser } from '../../states/loggedUser.js'
+import OcioDinamicoLetsgoski from "./OcioDinamicoLetsgoski.vue"
 
 import {
     Bars3BottomLeftIcon,
     MagnifyingGlassIcon,
     BellIcon,
-    HomeIcon,
     CalendarIcon,
     UserIcon,
+    MapIcon,
+    ExclamationCircleIcon,
     LockClosedIcon,
-    XMarkIcon,
-    EllipsisHorizontalCircleIcon
-} from "@heroicons/vue/24/solid";
+    MegaphoneIcon,
+    KeyIcon,
+    UserCircleIcon
+} from "@heroicons/vue/24/solid"
 
 // Per chiudere il menu della navbar dopo il click ad un'altra pagina
 function chiudiMenuNavbar() {
     document.getElementById("navbarDrawer").checked = false;
 }
-
-// Per caricare le icone del menu laterale in maniera dinamica
-function caricaIcona(nomeIcona) {
-    return listaIcone[nomeIcona];
-}
-
-const listaIcone = {
-    HomeIcon: HomeIcon,
-    CalendarIcon: CalendarIcon,
-    UserIcon: UserIcon,
-    LockClosedIcon: LockClosedIcon,
-    XMarkIcon: XMarkIcon,
-};
 </script>
 
 <template>
@@ -48,33 +36,53 @@ const listaIcone = {
                         <OcioDinamicoLetsgoski :imgWidth="150" />
                     </div>
                     <div class="divider"></div>
-                    <ul class="p-0">
-                        <li v-for="(item, index) in linkPagine" :key="index" class="menu-title px-0">
-                            <router-link :to="item.link" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <component :is="caricaIcona(item.icona)" class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">{{ item.titolo }}</p>
-                            </router-link>
-                        </li>
-                        <div class="divider"></div>
-                        <p class="text-lg text-primary">Link temporanei:</p>
+                    <ul class="p-0 -mt-0.5">
                         <li class="menu-title px-0">
-                            <router-link to="/pubblica_comunicazione" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Pubblica comunicazione</p>
+                            <router-link to="/" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <MapIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Homepage - Mappa</p>
                             </router-link>
                         </li>
                         <li class="menu-title px-0">
-                            <router-link to="/invia_segnalazione" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <EllipsisHorizontalCircleIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Invia segnalazione</p>
+                            <router-link to="/storico" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <CalendarIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Storico emergenze</p>
                             </router-link>
                         </li>
                         <li class="menu-title px-0">
-                            <router-link to="/linknonfunzionante" class="px-0 flex" @click="chiudiMenuNavbar()">
-                                <XMarkIcon class="size-6 mx-2" />
-                                <p class="ms-1 mt-0.5">Link non funzionante!</p>
+                            <router-link to="/accedi" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                <KeyIcon class="size-6 mx-2" />
+                                <p class="ms-1 mt-0.5">Accedi</p>
                             </router-link>
                         </li>
+                        <div v-if="loggedUser.token">
+                            <div class="divider"></div>
+                            <p class="text-lg text-primary font-bold mb-2">Sezione privata:</p>
+                            <li class="menu-title px-0">
+                                <router-link to="/profilo" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                    <UserIcon class="size-6 mx-2" />
+                                    <p class="ms-1 mt-0.5">Il tuo profilo</p>
+                                </router-link>
+                            </li>
+                            <li v-if="loggedUser.role !== 'operator'" class="menu-title px-0">
+                                <router-link to="/invia_segnalazione" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                    <ExclamationCircleIcon class="size-6 mx-2" />
+                                    <p class="ms-1 mt-0.5">Invia segnalazione</p>
+                                </router-link>
+                            </li>
+                            <li v-if="loggedUser.role === 'operator'" class="menu-title px-0">
+                                <router-link to="/pubblica_comunicazione" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                    <MegaphoneIcon class="size-6 mx-2" />
+                                    <p class="ms-1 mt-0.5">Pubblica comunicazione</p>
+                                </router-link>
+                            </li>
+                            <li v-if="loggedUser.role === 'operator'" class="menu-title px-0">
+                                <router-link to="/dashboard" class="px-0 flex" @click="chiudiMenuNavbar()">
+                                    <LockClosedIcon class="size-6 mx-2" />
+                                    <p class="ms-1 mt-0.5">Dashboard operatore</p>
+                                </router-link>
+                            </li>
+                        </div>
                     </ul>
                 </div>
                 <div class="absolute bottom-0 p-4">
@@ -97,15 +105,20 @@ const listaIcone = {
                 <OcioDinamicoLetsgoski :imgWidth="100" />
             </RouterLink>
         </div>
-        <div class="navbar-end">
+        <div class="navbar-end gap-1">
             <router-link to="/storico">
                 <button class="btn btn-ghost btn-circle">
-                    <MagnifyingGlassIcon class="size-5" />
+                    <MagnifyingGlassIcon class="size-6" />
                 </button>
             </router-link>
             <button class="btn btn-ghost btn-circle" onclick="modalNotifiche.showModal()">
-                <BellIcon class="size-5" />
+                <BellIcon class="size-6" />
             </button>
+            <router-link to="/profilo">
+                <button class="btn btn-ghost btn-circle">
+                    <UserCircleIcon class="size-6" />
+                </button>
+            </router-link>
         </div>
     </div>
 

@@ -1,14 +1,14 @@
 <script setup>
-import Toast from "../components/Toast/Toast.vue";
-import { validateEmail } from "@/data/validation";
-
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
+import { validateEmail } from "@/data/validation"
 import { setLoggedUser } from '../states/loggedUser.js'
-import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/solid";
 
-const route = useRoute();
-const router = useRouter();
+import Toast from "../components/Toast/Toast.vue"
+import { EnvelopeIcon, EyeIcon, EyeSlashIcon, KeyIcon } from "@heroicons/vue/24/solid"
+
+const route = useRoute()
+const router = useRouter()
 
 const apiLogin = import.meta.env.VITE_API_BASE_URL + '/login'
 const email = ref()
@@ -74,7 +74,7 @@ onMounted(() => {
         createToast("success", "Successo!", "Account creato con successo");
     }
 
-    // Toast di reindirizzamento da AccessLimited
+    // Toast di reindirizzamento da AccessLimited.vue
     if (route.query.limited === 'true') {
         createToast("info", "Accedi!", "Per visualizzare la pagina, devi prima effettuare l'accesso");
     }
