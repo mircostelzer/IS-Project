@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { expect, jest } from "@jest/globals";
 import request from "supertest";
 import mongoose from "mongoose";
 import jsonwebtoken from "jsonwebtoken";
@@ -8,7 +8,6 @@ import Emergency from "../models/emergency.js";
 
 let mongoServer;
 let emergencySpy;
-let emergencySpyFindByID;
 
 let token = jsonwebtoken.sign(
     { email: 'test@mail.com', role: 'operator' },
@@ -28,20 +27,6 @@ beforeAll(async () => {
                 location: 'Test Location'
             }];
         });
-    // emergencySpyFindByID = jest.spyOn(Emergency, 'findById').mockImplementation((id) => {
-    //     if (id === 111) {
-    //         return {
-    //             _id: 111,
-    //             title: 'Test Emergency',
-    //             category: 'Test Category',
-    //             startDate: '2021-09-01',
-    //             description: 'Test Description',
-    //             location: 'Test Location'
-    //         };
-    //     } else {
-    //         return null;
-    //     }
-    // });
 });
 
 afterAll(async () => {
@@ -49,7 +34,6 @@ afterAll(async () => {
     await mongoose.connection.close();
     await mongoServer.stop();
     emergencySpy.mockRestore();
-    // emergencySpyFindByID.mockRestore();
 });
 
 describe('Emergency API', () => {
@@ -90,14 +74,28 @@ describe('Emergency API', () => {
             const locationHeader = res.headers.location;
             emergencyId = locationHeader.split('/').pop();
             const checkState = await request(app).get(`/api/emergencies/${emergencyId}`);
-            expect(checkState.body.state).toEqual('in_progress');
+            expect(checkState.body.state).toEqual('In corso');
 
+        });
+    });
+
+    test('PUT /api/emergencies/:id correctly updates an emergency', async () => {
+        return request(app)
+        .put(`/api/emergencies/${emergencyId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            state: 'Terminato'
+        })
+        .expect(200).then( async () => {
+            const checkState = await request(app).get(`/api/emergencies/${emergencyId}`);
+            expect(checkState.body.state).toEqual('Terminato');
+            expect(checkState.body.endDate).toBeDefined();
         });
     });
     
     test('DELETE /api/emergencies/:id correctly deletes an emergency', async () => {
         return request(app)
-        .delete(`/api/emergencies/${emergencyId}`) // using the emergencyId from the previous test
+        .delete(`/api/emergencies/${emergencyId}`)
         .set('Authorization', `Bearer ${token}`) 
         .expect(204).then( () => {
             return request(app)

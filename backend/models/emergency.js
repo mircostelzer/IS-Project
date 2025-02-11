@@ -4,7 +4,7 @@ const emergencySchema = new Schema(
     {
         title: { type: String, required: true },
         category: { type: String, required: true },
-        startDate: { type: Date, required: true },
+        startDate: { type: Date, default: Date.now, required: true },
         endDate: { type: Date },
         location: { type: String, required: true },
         coordinates: { 
@@ -16,8 +16,8 @@ const emergencySchema = new Schema(
         },
         state: {
             type: String,
-            enum: ["in_progress", "ended"],
-            default: "in_progress",
+            enum: ["In corso", "Terminato"],
+            default: "In corso",
         },
         description: { type: String },
     },

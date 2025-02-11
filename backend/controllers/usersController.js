@@ -39,7 +39,7 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
     try {
         let user = new User(req.body);
-        if (!user.email || typeof user.email !== 'string' || !checkIfEmailInString(user.email)) {
+        if (!user.email || typeof user.email !== 'string' || !validateEmail(user.email)) {
             return res.status(400).json({ message: "Invalid email" });
         }
         user = await user.save();
@@ -55,7 +55,7 @@ export const createUser = async (req, res) => {
 export const updatePassword = async (req, res) => {
     try {
         const userIdFromToken = req.user.id;
-        const { userId } = req.params;
+        const userId = req.params.id;
         const { oldPassword, newPassword } = req.body;
 
         if (userIdFromToken !== userId) {
@@ -74,7 +74,7 @@ export const updatePassword = async (req, res) => {
         user.password = newPassword;
         await user.save();
 
-        res.json({ success: true, message: "Password updated successfully" });
+        res.status(200).json({ success: true, message: "Password updated successfully" });
     } catch (error) {
         res.status(500).json({ success: false, message: "Server error" });
     }
@@ -83,15 +83,22 @@ export const updatePassword = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: "User not found" });
-        res.status(204).end();
+        if (user.role === "operator") {
+            return res.status(403).json({ message: "You cannot delete an operator" });
+        }
+        await User.deleteOne({ _id: req.params.id });
+        res.status(204).send();
     } catch (error) {
         res.status(500).json({ message: "Error in user deletion" });
     }
 };
 
-function checkIfEmailInString(text) {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(text);
+function validateEmail(email) {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
 }

@@ -69,7 +69,7 @@ describe('User API', () => {
             const locationHeader = res.headers.location;
             userId = locationHeader.split('/').pop();
             userToken = jsonwebtoken.sign(
-                { email: 'post_test@mail.com' },
+                { email: 'post_test@mail.com', id: userId },
                 process.env.SUPER_SECRET,
                 { expiresIn: 86400 });
         });
@@ -84,20 +84,6 @@ describe('User API', () => {
         })
         .expect(400, { message: "Error in user creation" });
     });
-
-    // test('POST /api/login with newly created account should return a valid token', async () => {
-    //     return request(app)
-    //     .post('/api/login')
-    //     .send({
-    //         email: 'post_test@mail.com',
-    //         password: 'test_password'
-    //     })
-    //     .expect(201).then((res) => {
-    //             expect(res.body.token).toBeDefined();
-    //             userToken = res.body.token;
-    //         });
-    // });
-
 
     test('GET /api/users/:id with valid token should return user information', async () => {
         return request(app)
@@ -118,6 +104,17 @@ describe('User API', () => {
         return request(app)
         .get(`/api/users/${userId}`)
         .expect(401, { success: false, message: "Token not found" });
+    });
+
+    test('PUT /api/users/:id/password with valid token should update the user password', async () => {
+        return request(app)
+        .put(`/api/users/${userId}/password`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+            oldPassword: 'test_password',
+            newPassword: 'new_password'
+        })
+        .expect(200, { success: true, message: "Password updated successfully" });
     });
 
     test('DELETE /api/users/:id with valid ID should correctly delete the user', async () => {
