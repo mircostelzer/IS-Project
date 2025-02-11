@@ -2,12 +2,14 @@ openapi: 3.0.0
 info:
   title: Ocio API
   description: API for emergencies communication and users management. 
-  version: 1.2.0
+  version: 1.2.1
 servers:
   - url: https://localhost:5000/api
     description: Localhost
   - url: https://ocio-backend.onrender.com/api
     description: Main backend deployment
+  - url: https://ocio-frontend.onrender.com
+    description: Main frontend deployment
 
 paths:
   /login:
@@ -55,32 +57,7 @@ paths:
           required: false
           schema:
             type: string
-            enum: [in_progress, ended]
-        - name: category
-          in: query
-          description: Filter for the category of the emergencies
-          required: false
-          schema:
-            type: string
-            enum: [frana, alluvione, ghiaccio, crollo_strutturale, incendio, neve, tempesta, caduta_albero]
-        - name: startDate
-          in: query
-          description: Filter based on the start date of the emergency (and forth) 
-          required: false
-          schema:
-            type: string
-            format: date-time
-            example: "2024-10-25T00:00:00Z"
-        - name: keyword
-          in: query
-          description: Filter using one or more keywords
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          explode: true
-          example: ["frana", "alluvione"]
+            enum: [In corso, Terminato]
       responses:
         '200':
           description: (Filtered) list of the emergencies
@@ -192,6 +169,8 @@ paths:
   /users:
     get:
       summary: Get a list of all the users
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: List of the users
@@ -232,6 +211,8 @@ paths:
   /users/{id}:
     get:
       summary: Gets a single user
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -269,6 +250,42 @@ paths:
           description: User not found
         '500':
           description: Error in user deletion
+      tags:
+        - Users
+
+  /users/{id}/password:
+    put:
+      summary: Updates the password of a user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password updated successfully
+        '404':
+          description: User not found
+        '400':
+          description: Incorrect old password
+        '403':
+          description: You cannot change another user's password
+        '500':
+          description: Server error
       tags:
         - Users
   
@@ -387,6 +404,25 @@ paths:
       tags:
         - Reports
 
+  /reports/myReports:
+    get:
+      summary: Retrieve all reports created by the user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of the reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+        '500':
+          description: Error in reports recovery
+      tags:
+        - Reports
+
 components:
   schemas:
     User:
@@ -446,10 +482,21 @@ components:
           type: string
           description: Location of the emergency
           example: "Via Sommarive 9"
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              description: Latitude of the emergency location
+              example: 46.066422
+            lon:
+              type: number
+              description: Longitude of the emergency location
+              example: 11.149765
         state:
           type: string
-          enum: [in_progress, ended]
-          default: "in_progress"
+          enum: [In corso, Terminato]
+          default: "In corso"
         description:
           type: string
           description: Description of the emergency
@@ -496,6 +543,11 @@ components:
           type: string
           description: Description of the report
           example: "A landslide has partially blocked the road, making it dangerous to drive."
+        createdBy:
+          type: string
+          format: uuid
+          description: "ID of the reporting user"
+          example: "65b23f18d4f1c3e58a9a7c12"
   
   securitySchemes:
     bearerAuth:
