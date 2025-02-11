@@ -3,9 +3,7 @@ import { ref, onMounted } from 'vue'
 import { loggedUser } from '../../states/loggedUser.js'
 
 import { LMap, LTileLayer, LMarker, LPopup, LPolygon } from "@vue-leaflet/vue-leaflet"
-import { ArrowsPointingOutIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
-import BadgeCategoria from '../Badge/BadgeCategoria.vue'
-import BadgeStato from '../Badge/BadgeStato.vue'
+import { ChevronDoubleRightIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
 
 // Proprietà varie della mappa Leaflet
 const url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -46,14 +44,14 @@ onMounted(() => {
             <l-marker v-for="marker in emergencies" :key="marker.id"
                 :lat-lng="[marker.coordinates.lat, marker.coordinates.lon]">
                 <l-popup>
-                    <div class="flex justify-end">
-                        <span class="indicator-item badge badge-success badge-sm mt-1 me-2"></span>
+                    <div class="flex justify-start">
+                        <span class="indicator-item badge badge-success badge-sm mt-0.5 me-2"></span>
                         <h3 class="marker-title text-lg font-bold">{{ marker.title }}</h3>
                     </div>
                     <p class="marker-location">{{ marker.location }}</p>
                     <router-link :to="`/dettagli?id=${marker.id}`">
                         <button class="btn btn-block btn-sm btn-info text-white">
-                            <ArrowsPointingOutIcon class="size-4 opacity-80 -mx-0.5" />
+                            <ChevronDoubleRightIcon class="size-4 opacity-80 -mx-0.5" />
                             Espandi
                         </button>
                     </router-link>
@@ -80,10 +78,11 @@ onMounted(() => {
 .marker-title {
     font-family: "Inter", sans-serif;
     margin-top: -3px;
+    line-height: 1.4;
 }
 
 .marker-location {
-    margin-top: 2px;
+    margin-top: 3px;
 }
 
 .btn-segnalazione {

@@ -22,6 +22,11 @@ function formattaData(date) {
     });
 }
 
+export function resetUser() {
+    user.value = [];
+    users.value = [];
+}
+
 export async function nUsers(role) {
     try {
         const response = await fetch(apiUsers, {

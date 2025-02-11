@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { emergency, getEmergencyById } from '../data/emergencies'
+import { emergency, getEmergencyById } from '../../data/emergencies'
 
 import { MagnifyingGlassIcon, ArrowUturnLeftIcon } from "@heroicons/vue/24/solid"
 import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue'

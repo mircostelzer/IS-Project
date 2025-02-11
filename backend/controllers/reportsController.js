@@ -52,7 +52,8 @@ export const getReportsByUser = async (req, res) => {
                 coordinates: report.coordinates,
                 state: report.state,
                 description: report.description,
-                createdBy: report.createdBy
+                createdBy: report.createdBy,
+                createdAt: report.createdAt
             };
         });
         res.status(200).json(reports);

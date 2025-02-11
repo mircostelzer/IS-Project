@@ -1,17 +1,21 @@
 <script setup>
-import { ref } from 'vue'
-import { loggedUser } from '../states/loggedUser.js';
-import { createEmergency } from '@/data/emergencies.js';
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
+import { loggedUser } from '../../states/loggedUser.js';
+import { updateEmergency } from '@/data/emergencies.js';
 
 import { MegaphoneIcon } from "@heroicons/vue/24/solid";
 import AccessDenied from '@/components/Error/AccessDenied.vue';
 import AccessLimited from "@/components/Error/AccessLimited.vue";
+import WrongURL from '@/components/Error/WrongURL.vue';
 import Toast from '@/components/Toast/Toast.vue';
 
+const route = useRoute();
+const apiEmergencies = import.meta.env.VITE_API_BASE_URL + "/emergencies/";
+
+const self = ref()
 const title = ref()
-const description = ref()
 const category = ref("Di che tipo è l'emergenza?")
-const state = ref("In che stato è l'emergenza?")
 const startDate = ref()
 const startTime = ref()
 const location = ref()
@@ -19,13 +23,34 @@ const coordinates = ref({
     lat: null,
     lon: null
 });
+const state = ref("In che stato è l'emergenza?")
+const description = ref()
 
-const showToast = ref(false)
-const toastType = ref()
-const toastTitle = ref()
-const toastMsg = ref()
+onMounted(() => {
+    fetch(apiEmergencies + route.query.id)
+        .then((response) => response.json())
+        .then((data) => {
+            self.value = data.self;
+            title.value = data.title;
+            category.value = data.category;
+            const [date, time] = data.startDate.split('T');
+            startDate.value = date;
+            startTime.value = time.slice(0, 5);
+            location.value = data.location;
+            coordinates.value = {
+                lat: data.coordinates.lat,
+                lon: data.coordinates.lon,
+            };
+            state.value = data.state;
+            description.value = data.description;
+        })
+        .catch((error) => {
+            console.error("Errore: ", error);
+            createToast("error", "Errore!", "Errore nel recupero dei dati")
+        });
+});
 
-function pubblicaComunicazione() {
+function modificaComunicazione() {
     if (!title.value) {
         createToast("error", "Errore!", "Il titolo è un campo obbligatorio");
         return;
@@ -51,23 +76,30 @@ function pubblicaComunicazione() {
         return;
     }
 
-    const bodyData = {
+    const updatedEmergency = {
+        self: self.value,
         title: title.value,
-        description: description.value,
         category: category.value,
-        state: state.value,
         startDate: `${startDate.value}T${startTime.value}:00.000Z`,
         endDate: null,
         location: location.value,
-        coordinates: {
+        coordinates: { 
             lat: coordinates.value.lat,
             lon: coordinates.value.lon
-        }
+        },
+        state: state.value,
+        description: description.value,
     };
 
-    createEmergency(bodyData)
-    createToast("success", "Successo!", "Comunicazione pubblicata correttamente")
-};
+    console.log('Values: ', updatedEmergency)
+    updateEmergency(updatedEmergency)
+    createToast("success", "Successo!", "Comunicazione modificata correttamente")
+}
+
+const showToast = ref(false)
+const toastType = ref()
+const toastTitle = ref()
+const toastMsg = ref()
 
 function createToast(type, title, msg) {
     showToast.value = true;
@@ -84,14 +116,17 @@ function createToast(type, title, msg) {
 
 <template>
     <div v-if="loggedUser.token && loggedUser.role === 'operator'">
+        <div v-if="self === null">
+            <WrongURL />
+        </div>
 
-        <div class="div-principale w-full flex justify-center">
+        <div v-else class="div-principale w-full flex justify-center">
             <Toast v-if="showToast" :type="toastType" :title="toastTitle" :msg="toastMsg" />
-
+            
             <div class="bg-secondary w-full max-w-6xl rounded-3xl p-8">
                 <div class="flex flex-row items-center ms mt-4 md:mt-0 mb-8">
                     <MegaphoneIcon class="w-6 h-6 me-3" />
-                    <p class="text-2xl font-bold">Pubblica comunicazione</p>
+                    <p class="text-2xl font-bold">Modifica comunicazione</p>
                 </div>
                 <form class="flex flex-col justify-center items-center">
                     <label class="form-control w-full">
@@ -132,9 +167,9 @@ function createToast(type, title, msg) {
                         <label class="form-control w-full mt-6">
                             <p class="text-slate-100 font-bold text-lg mb-2">Stato:</p>
                             <select v-model="state" class="select" required>
-                                <option disabled selected>In che stato è l'emergenza?</option>
-                                <option>in_progress</option>
-                                <option>ended</option>
+                                <option class="text-gray-400" disabled selected>In che stato è l'emergenza?</option>
+                                <option>In corso</option>
+                                <option>Terminato</option>
                             </select>
                             <div class="label">
                                 <span class="label-text-alt"><b>Campo obbligatorio</b></span>
@@ -158,8 +193,8 @@ function createToast(type, title, msg) {
                     <div class="columns-1 sm:columns-2 w-full gap-6 mt-6">
                         <label class="form-control w-full">
                             <p class="text-slate-100 font-bold text-lg mb-2">Luogo coinvolto:</p>
-                            <input v-model="location" type="text" placeholder="Che area coinvolge?"
-                                class="input input-md" maxlength="100" required />
+                            <input v-model="location" type="text" placeholder="Che area coinvolge?" class="input input-md"
+                                maxlength="100" required />
                             <div class="label">
                                 <span class="label-text-alt"><b>Campo obbligatorio</b> - Max 100 caratteri</span>
                             </div>
@@ -178,7 +213,7 @@ function createToast(type, title, msg) {
                         </label>
                     </div>
                     <div class="w-full">
-                        <input @click="pubblicaComunicazione()" type="button" value="Pubblica comunicazione"
+                        <input @click="modificaComunicazione()" type="button" value="Modifica comunicazione"
                             class="btn btn-primary float-end rounded-lg mt-6" />
                         <input @click="$router.go(-1)" type="button" value="Annulla"
                             class="btn btn-ghost btn-outline float-end rounded-lg mt-6 me-2" />
