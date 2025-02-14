@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { loggedUser } from '../../states/loggedUser.js'
+import { loggedUser, loadUserFromCookies } from '../../states/loggedUser.js'
 import { users, getUsers, nUsers } from '../../data/users'
 import { reports, getReports, nReports } from '../../data/reports'
 import { emergencies, getEmergencies, nEmergencies } from '../../data/emergencies'
@@ -30,7 +30,7 @@ onMounted(async () => {
     if (route.query.published === 'true') {
         createToast("success", "Successo!", "Comunicazione pubblicata correttamente")
     }
-    
+
     if (route.query.published === 'true') {
         createToast("success", "Successo!", "Comunicazione modificata correttamente")
     }
@@ -43,14 +43,18 @@ onMounted(async () => {
         createToast("info", "Successo!", "Segnalazione rifiutata correttamente")
     }
 
-    getUsers()
-    getReports()
-    getEmergencies()
+    if (loggedUser.token && loggedUser.role === 'operator') {
+        loadUserFromCookies()
 
-    countCitizens.value = await nUsers("citizen")
-    countOperators.value = await nUsers("operator")
-    countReports.value = await nReports()
-    countEmergencies.value = await nEmergencies()
+        getUsers()
+        getReports()
+        getEmergencies()
+
+        countCitizens.value = await nUsers("citizen")
+        countOperators.value = await nUsers("operator")
+        countReports.value = await nReports()
+        countEmergencies.value = await nEmergencies()
+    }
 });
 
 function calcolaPercentuale(value, total) {
@@ -138,9 +142,11 @@ function createToast(type, title, msg) {
                     <input type="radio" name="tab-admin" role="tab" class="tab me-2" aria-label="Segnalazioni" />
                     <div role="tabpanel" class="tab-content border-green-950 rounded-box p-6">
                         <h4 class="text-white font-bold text-2xl mb-4">Segnalazioni in attesa:</h4>
-                        <TabellaSegnalazioni :reports="reports" :is-operator="true" :reviewable="true" :pending-only="true" />
+                        <TabellaSegnalazioni :reports="reports" :is-operator="true" :reviewable="true"
+                            :pending-only="true" />
                         <h4 class="text-white font-bold text-2xl mt-8 mb-4">Segnalazioni approvate/rifiutate:</h4>
-                        <TabellaSegnalazioni :reports="reports" :is-operator="true" :reviewable="false" :non-pending-only="true"  />
+                        <TabellaSegnalazioni :reports="reports" :is-operator="true" :reviewable="false"
+                            :non-pending-only="true" />
                     </div>
 
                     <input type="radio" name="tab-admin" role="tab" class="tab me-2" aria-label="Comunicazioni" />

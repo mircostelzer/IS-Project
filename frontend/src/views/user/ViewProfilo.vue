@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { loggedUser, clearLoggedUser } from '../../states/loggedUser.js'
+import { loggedUser, loadUserFromCookies, clearLoggedUser } from '../../states/loggedUser.js'
 
 import Toast from '@/components/Toast/Toast.vue'
 import AccessLimited from '@/components/Error/AccessLimited.vue'
@@ -22,8 +22,10 @@ const toastType = ref()
 const toastTitle = ref()
 const toastMsg = ref()
 
-// Se l'utente non è loggato
+// Se l'utente si è loggato
 if (loggedUser.token) {
+    loadUserFromCookies()
+
     onMounted(() => {
         // Toast di conferma registrazione
         if (route.query.fromLogin === 'true') {

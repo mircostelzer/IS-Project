@@ -135,10 +135,19 @@ export async function getEmailByUserId(id) {
             },
         });
 
-        const data = await response.json();
-        return data.email;
+        if (response.ok) {
+            const data = await response.json();
+            return data.email;
+        } else {
+            return null;
+        }
     } catch (error) {
-        console.error("Errore da getEmailByUserId(" + id + "): ", error);
+        if (response.status === 404) {
+            console.error("Utente rimosso!");
+        } else {
+            console.error("Errore da getEmailByUserId(" + id + "): ", error);
+        }
+        
         return null;
     }
 }
