@@ -35,7 +35,7 @@ function setLoggedUser(data) {
     loggedUser.updatedAt = data.updatedAt;
 
     // Save to cookies
-    Cookies.set('loggedUser', JSON.stringify(loggedUser), { expires: 7 }); // expires in 7 days
+    Cookies.set('loggedUser', JSON.stringify(loggedUser), { expires: 90 }); // expires in 3 months
 }
 
 function clearLoggedUser() {
