@@ -2,13 +2,14 @@
 const props = defineProps({
     category: {
         type: String,
-        required: true
+        required: false,
+        default: "unknown"
     }
 });
 </script>
 
 <template>
-    <div v-if="category" class="badge">{{ props.category }}</div>
+    <div v-if="props.category !== 'unknown'" class="badge">{{ props.category }}</div>
     <div v-else class="badge badge-ghost">Categoria sconosciuta</div>
 </template>
 

@@ -1,19 +1,51 @@
 <script setup>
-import { onMounted } from 'vue'
-import { emergenciesInProgress, getEmergenciesInProgress } from '../data/emergencies'
+import { ref, onMounted } from 'vue'
 import { ChevronDoubleRightIcon } from "@heroicons/vue/24/solid"
 
 import Mappa from "../components/Mappa/Mappa.vue"
 import BadgeCategoria from '@/components/Badge/BadgeCategoria.vue'
 
-// Ottengo l'ora attuale
+const apiEmergencies = import.meta.env.VITE_API_BASE_URL + "/emergencies/";
+const emergenciesInProgress = ref([]);
+
+// Funzione per ottenere l'ora attuale
 const oraUltimoAggiornamento = new Date().toLocaleString('it-IT', {
     hour: '2-digit',
     minute: '2-digit'
 });
 
+// Funzione per ottenere la data delle emergenze
+function formattaData(date) {
+    return new Date(date).toLocaleString("it-IT", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+}
+
+// Funzione per recuperare l'id delle emergenze
+function recuperaId(self) {
+    return self.substring(self.lastIndexOf("/") + 1);
+}
+
 onMounted(() => {
-    getEmergenciesInProgress()
+    fetch(apiEmergencies + "?state=in_corso")
+        .then((response) => response.json())
+        .then((data) => {
+            emergenciesInProgress.value = data.map((data) => {
+                return {
+                    ...data,
+                    startDate: formattaData(data.startDate),
+                    id: recuperaId(data.self),
+                };
+            });
+        })
+        .catch((error) => {
+            console.error("Errore nella chiamata ", apiEmergencies, "?state=in_corso: ", error);
+            emergenciesInProgress.value = null;
+        });
 })
 </script>
 

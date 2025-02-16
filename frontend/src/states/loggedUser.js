@@ -5,6 +5,7 @@ import { resetEmergencies } from '@/data/emergencies';
 import { resetReports } from '@/data/reports';
 
 const loggedUser = reactive({
+    saveDate: undefined,
     self: undefined,
     token: undefined,
     id: undefined,
@@ -20,11 +21,20 @@ function loadUserFromCookies() {
     const userData = Cookies.get('loggedUser');
 
     if (userData) {
-        Object.assign(loggedUser, JSON.parse(userData))
+        const parsedUserData = JSON.parse(userData);
+        const timeLimit = 24 * 60 * 60 * 1000;
+
+        // Check if saveDate is older than 24 hours
+        if (parsedUserData.saveDate && (Date.now() - new Date(parsedUserData.saveDate).getTime()) > timeLimit) {
+            clearLoggedUser();
+        } else {
+            Object.assign(loggedUser, parsedUserData);
+        }
     }
 };
 
 function setLoggedUser(data) {
+    loggedUser.saveDate = new Date();
     loggedUser.self = data.self;
     loggedUser.token = data.token;
     loggedUser.id = data.id;
@@ -35,10 +45,11 @@ function setLoggedUser(data) {
     loggedUser.updatedAt = data.updatedAt;
 
     // Save to cookies
-    Cookies.set('loggedUser', JSON.stringify(loggedUser), { expires: 90 }); // expires in 3 months
+    Cookies.set('loggedUser', JSON.stringify(loggedUser), { expires: 30 * 6 }); // Scadenza tra 6 mesi
 }
 
 function clearLoggedUser() {
+    loggedUser.saveDate = undefined;
     loggedUser.self = undefined;
     loggedUser.token = undefined;
     loggedUser.id = undefined;
