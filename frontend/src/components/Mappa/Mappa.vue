@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { loggedUser } from '../../states/loggedUser.js'
 
 import { LMap, LTileLayer, LMarker, LPopup, LPolygon } from "@vue-leaflet/vue-leaflet"
@@ -36,12 +36,14 @@ onMounted(() => {
         .catch(error => {
             console.error('Errore caricamento mappa:', error);
         });
-
-    filteredEmergencies.value = props.emergencies?.filter(emergency => {
-        return emergency.coordinates.lat !== null &&
-            emergency.coordinates.lon !== null;
-    })
 });
+
+// Filtro le emergenze con coordinate parziali o mancanti
+watch(() => props.emergencies, (newEmergencies) => {
+    filteredEmergencies.value = newEmergencies?.filter(emergency => 
+        emergency.coordinates.lat !== null && emergency.coordinates.lon !== null
+    );
+}, { immediate: true });
 </script>
 
 <template>
